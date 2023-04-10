@@ -145,6 +145,7 @@ const App = () => {
         <Button type="primary" htmlType="submit">
           Register
         </Button>
+        Or <a href="/login">Login now!</a>
       </Form.Item>
     </Form>
     </div>
