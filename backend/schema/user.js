@@ -1,6 +1,6 @@
 const joi = require('joi')
 
-const loginRegisterSchema = joi.object({
+const registerSchema = joi.object({
     username: joi.string().alphanum().min(1).max(16).required(),
     email: joi.string().email().required(),
     role: joi.string().required(),
@@ -9,4 +9,10 @@ const loginRegisterSchema = joi.object({
     repeatPwd: joi.ref('password')
 })
 
-module.exports.lrSchema = loginRegisterSchema
+const loginSchema = joi.object({
+    email: joi.string().email().required(),
+    password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,16}$')).required()
+})
+
+module.exports.registerSchema = registerSchema
+module.exports.loginSchema = loginSchema

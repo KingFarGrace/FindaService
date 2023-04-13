@@ -1,7 +1,8 @@
 // const bcrypt = require('bcryptjs')
 const userModel = require('../db/user_model').userModel
 const verify = require('../utils/validateUtil').verify
-const lrSchema = require('../schema/user').lrSchema
+const registerSchema = require('../schema/user').registerSchema
+const loginSchema = require('../schema/user').loginSchema
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('./code_msg').success
 const failRtn = require('./code_msg').failure
@@ -16,7 +17,7 @@ function register(req, res) {
         failRtn.accessInvalid.msg
     )
     // Data validation
-    var { msg, valid } = verify(lrSchema, body)
+    var { msg, valid } = verify(registerSchema, body)
     if (!valid) return rtnJson(
         res, 
         failRtn.accountDataInvalid.code, 
@@ -60,6 +61,7 @@ function register(req, res) {
                 })
         })
     // All done
+    // Q: find in db or just write hear?
     return rtnJson(
         res, 
         successRtn.register.code, 
@@ -78,6 +80,42 @@ function register(req, res) {
 
 function login(req, res) {
     // console.log(req.body)
+    var body = req.body
+    var { msg, valid } = verify(loginSchema, body)
+    if (!valid) return rtnJson(
+        res,
+        failRtn.accountDataInvalid.code,
+        failRtn.accountDataInvalid.msg + msg
+    )
+    userModel.findOne({ email: body.email }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError.code,
+            failRtn.dbOperationError.msg + err
+        )
+        if (data === null) return rtnJson(
+            res,
+            failRtn.noSuchUser.code,
+            failRtn.noSuchUser.msg + body.email
+        )
+        if (body.password !== data.password) return rtnJson(
+            res,
+            failRtn.incorrectPwd.code,
+            failRtn.incorrectPwd.msg
+        )
+        return rtnJson(
+            res,
+            successRtn.login.code,
+            successRtn.login.msg,
+            {
+                username: data.username,
+                email: data.email,
+                role: data.email,
+                address: data.address,
+                postcode: data.postcode
+            }
+        )
+    })
 }
 
 module.exports.register = register;
