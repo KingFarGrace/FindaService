@@ -11,6 +11,10 @@ const loginSuccess = { code: 100, msg: 'Login successfully.' }
 
 const accessInvalid = { code: 101, msg: 'Invalid access (unknown role of visitor). Error: ' }
 
+const noSuchUser = { code: 102, msg: 'Email address not exists. Eamil: ' }
+
+const incorrectPwd = { code: 103, msg: 'Incorrect password.' }
+
 /**
  * Return group: register
  * Group code: 1
@@ -35,8 +39,10 @@ module.exports.success = {
 module.exports.failure = {
     /* Group 1 */
     accessInvalid: accessInvalid,
+    noSuchUser: noSuchUser,
     accountDataInvalid: accountDataInvalid,
     duplicatedField: duplicatedField,
+    incorrectPwd: incorrectPwd,
     /* Group 2 */
 
     /* Group 3 */
