@@ -1,10 +1,79 @@
 // const bcrypt = require('bcryptjs')
 const userModel = require('../db/user_model').userModel
+const verify = require('../utils/validateUtil').verify
+const lrSchema = require('../schema/user').lrSchema
+const rtnJson = require('../utils/respUtil').rtnJson
+const successRtn = require('./code_msg').success
+const failRtn = require('./code_msg').failure
+
 function register(req, res) {
-    console.log(req.body)
-    userModel.find({}).then((data, err) => {
-        console.log(data)
-    })
+    var body = req.body
+    // Check field: role
+    const roleArr = ['customer', 'admin', 'serviceProvider']
+    if (roleArr.indexOf(body.role) === -1) return rtnJson(
+        res, 
+        failRtn.accessInvalid.code, 
+        failRtn.accessInvalid.msg
+    )
+    // Data validation
+    var { msg, valid } = verify(lrSchema, body)
+    if (!valid) return rtnJson(
+        res, 
+        failRtn.accountDataInvalid.code, 
+        failRtn.accountDataInvalid.msg + msg
+    )
+    // Is username duplicated?
+    userModel.find({ username: body.username })
+        .then((data, err) => {
+            if (err) return rtnJson(
+                res, 
+                failRtn.dbOperationError.code, 
+                failRtn.dbOperationError.msg + err
+            )
+            if (data.length !== 0) return rtnJson(
+                res, 
+                failRtn.duplicatedField.code, 
+                failRtn.duplicatedField.msg + 'username'
+            )
+            // Is userModel duplicated?
+            userModel.find({ email: body.email })
+                .then((data, err) => {
+                    if (err) return rtnJson(
+                        res, 
+                        failRtn.dbOperationError.code, 
+                        failRtn.dbOperationError.msg + err
+                    )
+                    if (data.length !== 0) return rtnJson(
+                        res, 
+                        failRtn.duplicatedField.code, 
+                        failRtn.duplicatedField.msg + 'email'
+                    )
+                    // Insert user data into db
+                    var userData = new userModel(body)
+                    userData.save().then((data, err) => {
+                        if (err) return rtnJson(
+                            res, 
+                            failRtn.dbOperationError.code, 
+                            failRtn.dbOperationError.msg + err
+                        )
+                    })
+                })
+        })
+    // All done
+    return rtnJson(
+        res, 
+        successRtn.register.code, 
+        successRtn.register.msg,
+        {
+            userInfo: {
+                username: body.username,
+                email: body.email,
+                role: body.role,
+                address: 'Fill out this blank to benefit your searching.',
+                postcode: 'Postcode should be valid and match your address.'
+            }
+        }
+    )
 }
 
 function login(req, res) {
@@ -13,72 +82,3 @@ function login(req, res) {
 
 module.exports.register = register;
 module.exports.login = login;
-
-// exports.regUser = (req, res) => {
-
-// // 接收表单数据
-// const userinfo = req.body
-
-// // 判断数据是否合法，输入内容是否为空
-// if (!userinfo.username || !userinfo.password) {{
-//   return res.send({ status: 1, message: '用户名或密码不能为空！' })
-// }
-//     res.send('reguser OK')
-//   }
-
-//   //定义sql语句，查询用户名是否占用，上面已经判断过是否为空
-// const sqlString = `select * from ev_users where username=?`
-// db.query(sql, [userinfo.username], function (err, results) {
-//     // 执行 SQL 语句失败
-//     if (err) {
-//       return res.send({ status: 1, message: err.message })
-//     }
-//     // 用户名被占用
-//     if (results.length > 0) {
-//       return res.send({ status: 1, message: '用户名被占用，请更换其他用户名！' })
-//     }
-    
-//     // 对用户的密码,进行 bcrype 加密，返回值是加密之后的密码字符串
-//     userinfo.password = bcrypt.hashSync(userinfo.password, 10)
-
-//     //定义插入新用户sql语句
-//     const sql = 'insert into ev_users set ?'
-//     //调用
-//     db.query(sql, { username: userinfo.username, password: userinfo.password }, function (err, results) {
-//   // 执行 SQL 语句失败
-//   if (err) return res.send({ status: 1, message: err.message })
-//   // SQL 语句执行成功，但影响行数不为 1
-//   if (results.affectedRows !== 1) {
-//     return res.send({ status: 1, message: '注册用户失败，请稍后再试！' })
-//   }
-//   // 注册成功
-//   res.send({ status: 0, message: '注册成功！' })
-// })
-//   })
-// }
-//   // 登录的处理函数
-//   exports.login = (req, res) => {
-//     //接受表单数据
-//     const userinfo = req.body
-//     //定义sql语句
-//     const sql = `select * from ev_users where username=?`
-//     //执行sql语句根据用户名查询用户信息
-//     db.query(sql, userinfo.username, function (err, results) {
-//         // 执行 SQL 语句失败
-//         if (err) return res.cc(err)
-//         // 执行 SQL 语句成功，但是查询到数据条数不等于 1
-//         if (results.length !== 1) return res.cc('登录失败！')
-        
-//         // 拿着用户输入的密码,和数据库中存储的密码进行对比
-//         const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
-//         // 如果对比的结果等于 false, 则证明用户输入的密码错误
-//         if (!compareResult) {
-
-//             return res.cc('登录失败！')
-//         }
-
-//         res.send('登陆成功')
-    
-//       })
-   
-//   }
