@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import logo from '../../assets/images/logo192.png'
 import './login.css'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';//从antd上直接拿组件，注意看依赖v4和之前的极其不兼容，网上教程都是v3
+import { Button, Checkbox, Form, Input, message } from 'antd';//从antd上直接拿组件，注意看依赖v4和之前的极其不兼容，网上教程都是v3
 import { reqLogin } from '../../api';
 import storageUtils from '../../utils/storageUtils';
 import { useHistory } from 'react-router-dom';
@@ -15,6 +15,7 @@ const App = () => {
     history.push('/admin')
     //跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
     console.log('Received values of form: ', values);
+    message.success('login successfully')
     
     const {username, password} = values;
     const res = await reqLogin(username, password);//把用户名密码传过去，用了ES6的async，await
@@ -26,8 +27,25 @@ const App = () => {
       // 跳转到导航页面
       history.replace('/admin')
       // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
-      
+      message.success('login successfully')
+
+    }else{
+      message.error(res.msg);
     }
+    // validatorPwd = (rule, value, callback) => {
+    //   value = value.trim();
+    //   if (!value) {
+    //     callback('非空');
+    //   } else if (value.length < 4) {
+    //     callback('小于4位');
+    //   } else if (value.length > 12) {
+    //     callback('大于12位');
+    //   } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+    //     callback('英文、数字或者下划线')
+    //   } else {
+    //     callback();
+    //   }
+    // }
   };
 
     //嘎嘎偷
@@ -50,25 +68,53 @@ const App = () => {
     >
       <Form.Item
         name="username"
+        //自定义式的验证各种出错,这个是声明式验证
         rules={[
           {
             required: true,
-            message: 'Please input your Username!',
+            message: 'Please input your Username!',                 
           },
+          { 
+            min: 1, 
+            message: 'user name must be longer than 1 characters' 
+          },
+          { 
+            max: 16, 
+            message: 'user name must be shorter than 16 characters' 
+          },
+          { 
+            pattern: /^[a-zA-Z\d_]+$/, 
+            message: 'Must be composed of English, numbers or underscores' 
+          }
         ]}
       >
         <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
       </Form.Item>
       <Form.Item
         name="password"
+        
         rules={[
+          // { validator: this.validatorPwd }          
           {
             required: true,
             message: 'Please input your Password!',
           },
+
+          { 
+            min: 6, 
+            message: 'user name must be longer than 6 characters' 
+          },
+          { 
+            max: 16, 
+            message: 'user name must be shorter than 16 characters' 
+          },
+          { 
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,16}/, 
+            message: 'Must contain uppercase letters, lowercase letters, numbers and special characters' 
+          }
         ]}
       >
-      {/* 输入为空时弹行字 */}
+      {/* 输入不对时弹行字 */}
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
