@@ -1,18 +1,20 @@
 const joi = require('joi')
 
-const registerSchema = joi.object({
+// TODO: validation for admin and sp, password validate
+const userRegisterSchema = joi.object({
     username: joi.string().alphanum().min(1).max(16).required(),
     email: joi.string().email().required(),
     role: joi.string().required(),
-    // TODO: match special charactors and at least have one uppercase letter, one lowercase letter, one number and one special charactor
-    password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,16}$')).required(),
+    password: joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,16}')).min(6).max(16).required(),
     repeatPwd: joi.ref('password')
 })
 
 const loginSchema = joi.object({
+    username: joi.string().alphanum().min(1).max(16).required(),
     email: joi.string().email().required(),
-    password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,16}$')).required()
+    password: joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,16}')).min(6).max(16).required()
 })
+    .xor('username', 'email')
 
-module.exports.registerSchema = registerSchema
+module.exports.userRegisterSchema = userRegisterSchema
 module.exports.loginSchema = loginSchema
