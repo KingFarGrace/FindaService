@@ -1,7 +1,7 @@
 // const bcrypt = require('bcryptjs')
 const userModel = require('../db/user_model').userModel
 const verify = require('../utils/validateUtil').verify
-const registerSchema = require('../schema/user').registerSchema
+const userRegisterSchema = require('../schema/user').userRegisterSchema
 const loginSchema = require('../schema/user').loginSchema
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('./code_msg').success
@@ -17,7 +17,7 @@ function register(req, res) {
         failRtn.accessInvalid.msg
     )
     // Data validation
-    var { msg, valid } = verify(registerSchema, body)
+    var { msg, valid } = verify(userRegisterSchema, body)
     if (!valid) return rtnJson(
         res, 
         failRtn.accountDataInvalid.code, 
