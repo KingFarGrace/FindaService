@@ -6,14 +6,15 @@ import Register from './pages/Reg/Reg';
 
 
 
+
 export default class App extends Component {
   render() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path='/login' component={Login}/>
-          <Route path='/admin' component={Admin}/>        
-          <Route path='/register' component={Register} /> 
+          <Route path='/login' component={Login}/>          
+          <Route exact path='/register' component={Register} /> 
+          <Route path='/' component={Admin}/>        
         </Switch>
       </BrowserRouter>
     )
