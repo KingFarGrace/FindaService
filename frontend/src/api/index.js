@@ -16,3 +16,17 @@ export const reqLogin = (username, password) =>{
     )
 }
 
+export const reqRegister = (email, password,nickname,role) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/register',
+            data:{
+                email,
+                password,
+                nickname,
+                role
+            }
+        }
+    )
+}
