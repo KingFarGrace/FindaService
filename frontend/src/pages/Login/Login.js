@@ -129,8 +129,8 @@ const App = () => {
                       message: 'user name must be shorter than 16 characters'
                     },
                     {
-                      pattern: /^[a-zA-Z\d_]+$/,
-                      message: 'Must be composed of English, numbers or underscores'
+                      pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                      message: 'Must be entered a valid email address must '
                     }
                   ]}
                 >
