@@ -1,6 +1,6 @@
 import './admin.css'
 import storageUtils from '../../utils/storageUtils'
-import { Redirect , Link } from 'react-router-dom';
+import { Redirect, Link, Switch, Route , withRouter} from 'react-router-dom';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -8,34 +8,32 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Breadcrumb, Layout, Menu, useLocation } from 'antd';
 import React, { useState } from 'react';
 import Logo from '../../assets/images/logo192.png';
 
 import LeftNav from './../../components/LeftNav/index';
+import Home from '../Home/home';
+import Servicemenu from '../ServiceMenu/servicemenu';
+import Servicerecord from '../ServiceRecord/servicerecord';
+import Userinfo from '../Userinfo/userinfo';
+import MHeader from '../../components/HeadNav/index';
+
 const { Header, Content, Footer, Sider } = Layout;
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  };
-}
-const items = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'), 
-    getItem('Team 2', '8')
-  ]),
-  getItem('Files', '9', <FileOutlined />),
-];
+// function getItem(label, key, icon, children) {
+//   return {
+//     key,
+//     icon,
+//     children,
+//     label,
+//   };
+// }
+// const items = [
+//     getItem('Home', '/home', <PieChartOutlined />),
+//     getItem('Service menu', '/menu', <DesktopOutlined />),
+//     getItem('User information', '/user', <UserOutlined />),
+//     getItem('My service', '/record', <TeamOutlined />),
+// ];
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const user = storageUtils.getUser();
@@ -43,44 +41,35 @@ const App = () => {
   if (!user.username) {
     return <Redirect to='/login' />
   }
+  
   return (
     <Layout
       style={{
         minHeight: '100vh',
       }}
     >
-      <LeftNav collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-      
-      </LeftNav>
+     <LeftNav></LeftNav>
       <Layout className="site-layout">
-        <Header
+        {/* <Header
           className="site-layout-background"
           style={{
             padding: 0,
           }}
-        />
+        /> */}
+        <MHeader></MHeader>
         <Content
           style={{
-            margin: '0 16px',
+            margin: '0 0px',
           }}
         >
-          <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>ab</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            className="site-layout-background"
-            style={{
-              padding: 24,
-              minHeight: 500,
-            }}
-          >
-            Bill is a cat.
-          </div>
+          <Switch>
+            <Route path='/menu' component={Servicemenu}></Route>
+            <Route path='/home' component={Home}></Route>
+            <Route path='/record' component={Servicerecord}></Route>
+            <Route path='/user' component={Userinfo}></Route>
+            <Redirect to='/home' />
+          </Switch>
+
         </Content>
         <Footer
           style={{
