@@ -71,6 +71,37 @@ export const reqCommentbyId = (serviceId) => {
                 serviceId
             }
         }
+    )}
 
+export const reqRegister = (email, username, role, password, repeatPwd) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/register',
+            data:{
+                email,
+                password,
+                username,
+                role,
+                repeatPwd
+            }
+        }
     )
 }
+
+export const reqServiceRegister = (email, username, role, password, repeatPwd, description, address, postcode) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/register',
+            data:{
+                email,
+                username,
+                role,
+                password,
+                repeatPwd,
+                description,
+                address,
+                postcode
+            }
+        })}

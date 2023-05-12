@@ -13,8 +13,8 @@ export default class Subscribe extends Component {
         //把用户数据拿出来存起来
         let id = this.props.match.params.id
         //把url末尾的当前服务id拿出来存起来
-        console.log('邮箱是'+user.email)
-        console.log('目标服务id是'+id)
+        // console.log('邮箱是'+user.email)
+        // console.log('目标服务id是'+id)
         this.emailValue = user.email
         this.serviceID =id
         console.log('发到后端的邮箱'+this.emailValue)
