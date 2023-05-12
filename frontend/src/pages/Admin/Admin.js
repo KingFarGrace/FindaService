@@ -39,9 +39,10 @@ const App = () => {
   const user = storageUtils.getUser();
   //若内存中存了用户名，则已登录，否则跳转至登录界面
   // 前后跑通再取消注释是
-  // if (!user.username) {
-  //   return <Redirect to='/login' />
-  // }
+  //打个异或
+  if (!((!user.username)^(!user.email))) {
+    return <Redirect to='/login' />
+  }
 
   return (
 
