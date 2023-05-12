@@ -5,6 +5,7 @@ import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
 import { reqServices, reqSearchServices } from '../../api';
 import { useHistory } from 'react-router-dom'
+import Subscribe from './subscribe';
 // const data = [
 //     {
 //       key: '1',
@@ -83,8 +84,14 @@ export default class servicemenu extends Component {
         this.columns = [
             {
                 title: 'service name',
-                dataIndex: 'name',
+                dataIndex: 'service',
                 width: '15%',
+                align: 'center'
+            },
+            {
+                title: 'catagory',
+                dataIndex: 'catagory',
+                width: '10%',
                 align: 'center'
             },
             {
@@ -94,8 +101,8 @@ export default class servicemenu extends Component {
                 align: 'center'
             },
             {
-                title: 'catagory',
-                dataIndex: 'catagory',
+                title: 'area',
+                dataIndex: 'area',
                 width: '10%',
                 align: 'center'
             },
@@ -106,17 +113,26 @@ export default class servicemenu extends Component {
                 align: 'center'
             },
             {
-                title: 'status',
+                title: 'Availability',
                 dataIndex: 'availability',
                 width: '10%',
-                align: 'center'
+                align: 'center',
+
+                // onFilter: (value, record) => record.availability.indexOf(value) === 0,
+                // filters: [
+                //     {
+                //       text: 'True',
+                //       value: 'true',
+                //     },
+                //     {
+                //       text: 'False',
+                //       value: 'false',
+                //     },
+                //   ],
+                // 筛选 
+                  
             },
-            {
-                title: 'area',
-                dataIndex: 'area',
-                width: '10%',
-                align: 'center'
-            },
+
             {
                 title: 'operation',
                 align: 'center',
@@ -128,22 +144,23 @@ export default class servicemenu extends Component {
                             <Button
                                 type="primary"
                                 onClick={() => {
-                                    console.log(service);
-                                    console.log(service.id);
-                                    console.log(this.props.history);
+                                    // console.log(service);
+                                    // console.log(service.id);
+                                    // console.log(this.props.history);
                                     //跳转详情页面
                                     this.props.history.push('/menu/detail/' + service.id);
                                 }}
                             >details
                             </Button>
+              
                         </span>
                     )
                 }
             }
         ]
-    
+
     }
-    
+
     handleSelect = (value) => {
         //select组件直接能传出来
         if (typeof value === 'undefined') {
@@ -172,47 +189,63 @@ export default class servicemenu extends Component {
             services: [
                 {
                     key: '1',
-                    name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    id:'asjdflkawjefl'
+                    catagory: 'cleaning',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    area: 'london',
+                    availability: 'true',
+                    id: 'asdfasdklfjskl'
                     //每个数据一个id
                 },
                 {
                     key: '2',
-                    name: 'Joe Black',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
+                    catagory: 'cleaning',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    area: 'london',
+                    availability: 'true',
+                    id: 'asdasdfaslkfsadf215'
                 },
                 {
                     key: '3',
-                    name: 'Jim Green',
-                    age: 32,
-                    address: 'Sidney No. 1 Lake Park',
+                    service: 'AAA',
+                    catagory: 'FFF',
+                    description: 'SDFSFSFSFf',
+                    area: 'CCC',
+                    availability: 'false',
                 },
                 {
                     key: '4',
-                    name: 'Jim Red',
-                    age: 32,
-                    address: 'London No. 2 Lake Park',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
                 },
                 {
                     key: '5',
-                    name: 'Jim Red',
-                    age: 32,
-                    address: 'London No. 2 Lake Park',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
                 },
                 {
                     key: '6',
-                    name: 'Jim Red',
-                    age: 32,
-                    address: 'London No. 2 Lake Park',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
                 },
                 {
                     key: '7',
-                    name: 'Jim Red',
-                    age: 32,
-                    address: 'London No. 2 Lake Park',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
                 },
             ],
             //假数据
@@ -220,7 +253,15 @@ export default class servicemenu extends Component {
         }
     }
 
-    获取分页
+    // getService = () => {
+    //     this.realservices.availability.map((value, index) => {
+    //         for (let i = 0; i < data.length; i++) {
+    //             if (data[i].name.indexof(value) === 0) {
+    //                 showData.push(data[i]);
+    //             }}})
+    // }
+
+    获取分页获取表格数据
     getService = async (pageNum) => {
 
         let result;
@@ -230,30 +271,30 @@ export default class servicemenu extends Component {
             let select = this.selectValue
             let input = this.inputValue
             result = await reqSearchServices({
-                pageNum,
+                pageNum:pageNum,
                 pageSize: PAGE_SIZE,
-                select,
-                input
+                select:select,
+                input:input
             })
         }
         if (result.code === '100') {
             const { serviceList, total } = result.obj;
             this.setState({
                 services: serviceList,
-                total
+                total:total
             })
         }
     }
     componentWillMount() {
         this.initColumns();
-      }
+    }
 
     componentDidMount() {
         this.getService(1);
     }
 
     render() {
-        const {services, total } = this.state;
+        const { services, total } = this.state;
         // const onSearch = (value) => {
         //     console.log(value)
         //     console.log(this.state.selectType)

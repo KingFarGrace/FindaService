@@ -52,9 +52,20 @@ export const reqSearchServices = ({ pageNum, pageSize, searchCategory, searchCit
         }
     )
 }
-
+//按id搜索
 export const reqServicebyId = (serviceId) => {
     return ajax(BASE + '/service/info',
+        {
+            params: {
+                serviceId
+            }
+        }
+
+    )
+}
+
+export const reqCommentbyId = (serviceId) => {
+    return ajax(BASE + '/review/info',
         {
             params: {
                 serviceId
