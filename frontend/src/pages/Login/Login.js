@@ -12,7 +12,7 @@ import { Tabs } from 'antd';
 const App = () => {
   const history = useHistory()
   const onFinish_email = async (values) => {
-
+    console.log(values);
     storageUtils.saveUser(values)
     history.push('/admin')
     //跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
@@ -113,7 +113,7 @@ const App = () => {
                 onFinish={onFinish_email}
               >
                 <Form.Item
-                  name="username"
+                  name="email"
                   //自定义式的验证各种出错,这个是声明式验证
                   rules={[
                     {

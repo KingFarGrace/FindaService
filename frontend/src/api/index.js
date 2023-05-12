@@ -52,7 +52,7 @@ export const reqSearchServices = ({ pageNum, pageSize, searchCategory, searchCit
         }
     )
 }
-
+//按id搜索
 export const reqServicebyId = (serviceId) => {
     return ajax(BASE + '/service/info',
         {
@@ -63,6 +63,15 @@ export const reqServicebyId = (serviceId) => {
 
     )
 }
+
+export const reqCommentbyId = (serviceId) => {
+    return ajax(BASE + '/review/info',
+        {
+            params: {
+                serviceId
+            }
+        }
+    )}
 
 export const reqRegister = (email, username, role, password, repeatPwd) =>{
     return ajax(
@@ -95,6 +104,4 @@ export const reqServiceRegister = (email, username, role, password, repeatPwd, d
                 address,
                 postcode
             }
-        }
-    )
-}
+        })}

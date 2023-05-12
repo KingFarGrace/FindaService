@@ -38,11 +38,14 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const user = storageUtils.getUser();
   //若内存中存了用户名，则已登录，否则跳转至登录界面
-  if (!user.username) {
+  // 前后跑通再取消注释是
+  //打个异或
+  if (!((!user.username)^(!user.email))) {
     return <Redirect to='/login' />
   }
-  
+
   return (
+
     <Layout
       style={{
         minHeight: '100vh',
@@ -57,6 +60,7 @@ const App = () => {
           }}
         /> */}
         <MHeader></MHeader>
+
         <Content
           style={{
             margin: '0 0px',
