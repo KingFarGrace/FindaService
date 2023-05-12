@@ -6,6 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Comment } from '@ant-design/compatible';
 
 import { Switch , Route} from 'react-router-dom';
+import memoryUtils from '../../utils/memoryUtils';
 
 export default class Detail extends Component {
   constructor(props) {
@@ -67,6 +68,7 @@ export default class Detail extends Component {
   }
 
   getService = async () => {
+    console.log('拿到啦'+memoryUtils.service.service);
     console.log(this.props.match.params.id)
     //获取当前url结尾（service专属id）
     const id = this.props.match.params.id;
@@ -89,6 +91,8 @@ export default class Detail extends Component {
 
   }
   componentDidMount() {
+
+    
     this.getService();
     this.getCommand();
   }
@@ -97,6 +101,7 @@ export default class Detail extends Component {
     
     const extra = (
       <Button type='primary' onClick={() => {
+          
           this.props.history.push('/menu/subscribe/' + this.props.match.params.id);
         }}
         >

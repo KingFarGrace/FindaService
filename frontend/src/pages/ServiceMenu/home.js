@@ -6,6 +6,7 @@ import Link from 'antd/es/typography/Link';
 import { reqServices, reqSearchServices } from '../../api';
 import { useHistory } from 'react-router-dom'
 import Subscribe from './subscribe';
+import memoryUtils from '../../utils/memoryUtils';
 // const data = [
 //     {
 //       key: '1',
@@ -148,6 +149,9 @@ export default class servicemenu extends Component {
                                     // console.log(service.id);
                                     // console.log(this.props.history);
                                     //跳转详情页面
+                                    
+                                    memoryUtils.service = service;
+                                    // console.log('看这里'+ memoryUtils.service);
                                     this.props.history.push('/menu/detail/' + service.id);
                                 }}
                             >details
@@ -252,14 +256,6 @@ export default class servicemenu extends Component {
             total: 0 //总页数
         }
     }
-
-    // getService = () => {
-    //     this.realservices.availability.map((value, index) => {
-    //         for (let i = 0; i < data.length; i++) {
-    //             if (data[i].name.indexof(value) === 0) {
-    //                 showData.push(data[i]);
-    //             }}})
-    // }
 
     获取分页获取表格数据
     getService = async (pageNum) => {
