@@ -1,61 +1,54 @@
 // const bcrypt = require('bcryptjs')
 const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
-const userRegisterSchema = require('../schema/user').userRegisterSchema
-const loginSchema = require('../schema/user').loginSchema
+const userRegisterSchema = require('../validation/user').userRegisterSchema
+const loginSchema = require('../validation/user').loginSchema
 const rtnJson = require('../utils/respUtil').rtnJson
-const successRtn = require('./codeMsg').success
-const failRtn = require('./codeMsg').failure
+const successRtn = require('../resp/resps').success
+const failRtn = require('../resp/resps').failure
 
-function register(req, res) {
+function customerRegister(req, res) {
     var body = req.body
     // Check field: role
     const roleArr = ['customer', 'admin', 'serviceProvider']
     if (roleArr.indexOf(body.role) === -1) return rtnJson(
-        res, 
-        failRtn.accessInvalid.code, 
-        failRtn.accessInvalid.msg
+        res,
+        failRtn.accessInvalid
     )
     // Data validation
     var { msg, valid } = verify(userRegisterSchema, body)
     if (!valid) return rtnJson(
         res, 
-        failRtn.accountDataInvalid.code, 
-        failRtn.accountDataInvalid.msg + msg
+        failRtn.accountDataInvalid
     )
     // Is username duplicated?
     userModel.find({ username: body.username })
         .then((data, err) => {
             if (err) return rtnJson(
                 res, 
-                failRtn.dbOperationError.code, 
-                failRtn.dbOperationError.msg + err
+                failRtn.dbOperationError 
             )
             if (data.length !== 0) return rtnJson(
                 res, 
-                failRtn.duplicatedField.code, 
-                failRtn.duplicatedField.msg + 'username'
+                failRtn.duplicatedField
             )
             // Is userModel duplicated?
             userModel.find({ email: body.email })
                 .then((data, err) => {
                     if (err) return rtnJson(
                         res, 
-                        failRtn.dbOperationError.code, 
-                        failRtn.dbOperationError.msg + err
+                        failRtn.dbOperationError
                     )
                     if (data.length !== 0) return rtnJson(
                         res, 
-                        failRtn.duplicatedField.code, 
-                        failRtn.duplicatedField.msg + 'email'
+                        failRtn.duplicatedField 
                     )
                     // Insert user data into db
                     var userData = new userModel(body)
                     userData.save().then((data, err) => {
                         if (err) return rtnJson(
                             res, 
-                            failRtn.dbOperationError.code, 
-                            failRtn.dbOperationError.msg + err
+                            failRtn.dbOperationError
                         )
                     })
                 })
@@ -64,8 +57,7 @@ function register(req, res) {
     // Q: find in db or just write hear?
     return rtnJson(
         res, 
-        successRtn.register.code, 
-        successRtn.register.msg,
+        successRtn.register,
         {
             userInfo: {
                 username: body.username,
@@ -78,35 +70,34 @@ function register(req, res) {
     )
 }
 
+function providerRegister(req, res) {
+
+}
+
 function login(req, res) {
     // console.log(req.body)
     var body = req.body
     var { msg, valid } = verify(loginSchema, body)
     if (!valid) return rtnJson(
         res,
-        failRtn.accountDataInvalid.code,
-        failRtn.accountDataInvalid.msg + msg
+        failRtn.accountDataInvalid
     )
     userModel.findOne({ email: body.email }).then((data, err) => {
         if (err) return rtnJson(
             res,
-            failRtn.dbOperationError.code,
-            failRtn.dbOperationError.msg + err
+            failRtn.dbOperationError
         )
         if (data === null) return rtnJson(
             res,
-            failRtn.noSuchUser.code,
-            failRtn.noSuchUser.msg + body.email
+            failRtn.noSuchUser
         )
         if (body.password !== data.password) return rtnJson(
             res,
-            failRtn.incorrectPwd.code,
-            failRtn.incorrectPwd.msg
+            failRtn.incorrectPwd
         )
         return rtnJson(
             res,
-            successRtn.login.code,
-            successRtn.login.msg,
+            successRtn.login,
             {
                 username: data.username,
                 email: data.email,
@@ -118,5 +109,6 @@ function login(req, res) {
     })
 }
 
-module.exports.register = register;
+module.exports.customerRegister = customerRegister;
+module.exports.providerRegister = providerRegister;
 module.exports.login = login;

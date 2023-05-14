@@ -21,4 +21,23 @@ function rtnJson(res, code, msg, obj) {
     )
 }
 
+function rtnJson(res, resp) {
+    return res.json(
+        JSON.stringify({
+            code: resp.getCode(),
+            msg: resp.getMsg()
+        })
+    )
+}
+
+function rtnJson(res, resp, obj) {
+    return res.json(
+        JSON.stringify({
+            code: resp.getCode(),
+            msg: resp.getMsg(),
+            obj: obj
+        })
+    )
+}
+
 module.exports.rtnJson = rtnJson

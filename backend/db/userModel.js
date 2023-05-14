@@ -5,6 +5,10 @@ const userSchema = mongoose.Schema({
     email: String,
     role: String,
     password: String,
+    description: {
+        type: String,
+        default: 'Nothing here.'
+    },
     address: {
         type: String,
         default: 'Fill out this blank to benefit your searching.'
@@ -12,6 +16,10 @@ const userSchema = mongoose.Schema({
     postcode: {
         type: String,
         default: 'Postcode should be valid and match your address.'
+    },
+    available: {
+        type: Boolean,
+        default: false
     }
 })
 
