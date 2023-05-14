@@ -1,4 +1,4 @@
-import { Card, Button, Input, Modal ,message} from 'antd'
+import { Card, Button, Input, Modal, message } from 'antd'
 import React, { Component } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import memoryUtils from '../../utils/memoryUtils';
@@ -8,7 +8,7 @@ import { reqSubscribeService } from '../../api';
 const { TextArea } = Input;
 const { confirm } = Modal;
 
-export default class Subscribe extends Component {
+export default class record_detail extends Component {
     dataPreparation = () => {
         let user = memoryUtils.user
         //把用户数据拿出来存起来
@@ -19,15 +19,15 @@ export default class Subscribe extends Component {
         this.userEmail = user.email
         this.serviceEmail = service.email
         this.serviceName = service.service
-        console.log('发到后端的客户邮箱'+this.userEmail)
-        console.log('发到后端的服务商邮箱'+this.serviceEmail)
-        console.log('发到后端的服务名字'+this.serviceName)
+        console.log('发到后端的客户邮箱' + this.userEmail)
+        console.log('发到后端的服务商邮箱' + this.serviceEmail)
+        console.log('发到后端的服务名字' + this.serviceName)
     }
     //把存到本地的用户数据里的邮箱拿出来
     componentDidMount() {
         this.dataPreparation();
     }
-    
+
     onChange = (e) => {
         console.log(e.target.value);
         this.inputValue = e.target.value
@@ -38,7 +38,7 @@ export default class Subscribe extends Component {
             title: 'are you sure you want to subscribe?',
             onOk: () => {
                 this.onSubmit();
-                this.props.history.replace('/menu');
+                this.props.history.replace('/record');
                 //前后端连上把注释去掉
                 message.success('submitted successfully');
             },
@@ -48,13 +48,13 @@ export default class Subscribe extends Component {
         });
     }
 
-    onSubmit = async() => {
+    onSubmit = async () => {
         const content = this.inputValue;
         const userEmail = this.userEmail;
-        const providerEmail =this.serviceEmail;
+        const providerEmail = this.serviceEmail;
         const provider = this.serviceName;
-        const res = await reqSubscribeService(content,userEmail,providerEmail,provider);
-        if (res.Code==100){message.success('submitted successfully');}
+        const res = await reqSubscribeService(content, userEmail, providerEmail, provider);
+        if (res.Code == 100) { message.success('submitted successfully'); }
     }
 
 
