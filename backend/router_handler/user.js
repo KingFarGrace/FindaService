@@ -1,11 +1,11 @@
 // const bcrypt = require('bcryptjs')
-const userModel = require('../db/user_model').userModel
+const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
 const userRegisterSchema = require('../schema/user').userRegisterSchema
 const loginSchema = require('../schema/user').loginSchema
 const rtnJson = require('../utils/respUtil').rtnJson
-const successRtn = require('./code_msg').success
-const failRtn = require('./code_msg').failure
+const successRtn = require('./codeMsg').success
+const failRtn = require('./codeMsg').failure
 
 function register(req, res) {
     var body = req.body
