@@ -22,6 +22,23 @@ const menuList = [
     key: '/user',
     icon: 'safety',
   },
+  {
+    title: 'History service',
+    key: '/history',
+    icon: 'safety',
+  },
+  {
+    key:'/message',
+    title: 'Messages'
+  },
+  {
+    key:'/user/edit',
+    title: 'Edit imformation'
+  },
+  {
+    key:'/user/password',
+    title: 'Change Password'
+  }
 
 ]
 

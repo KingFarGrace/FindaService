@@ -6,6 +6,8 @@ import {
     PieChartOutlined,
     TeamOutlined,
     UserOutlined,
+    HistoryOutlined,
+    AppstoreOutlined
 } from '@ant-design/icons';
 import Logo from '../../assets/images/logo192.png';
 import { Breadcrumb, Layout, Menu } from 'antd';
@@ -86,7 +88,7 @@ class LeftNav extends Component {
                 <Menu
                     theme="dark"
                     defaultSelectedKeys={defaultkey}
-                    mode="inline" 
+                    mode="inline"
                 >
                     <Menu.Item key="/home">
                         <DesktopOutlined />
@@ -94,18 +96,23 @@ class LeftNav extends Component {
                         HOME
                     </Menu.Item>
                     <Menu.Item key="/menu">
-                    <FileOutlined/>
-                        Service menu
+                        <AppstoreOutlined />
+                        SERVICE MENU
                         <Link to='/menu'></Link>
                     </Menu.Item>
                     <Menu.Item key="/record">
-                    <TeamOutlined />
-                    My service
+                        <TeamOutlined />
+                        CURRENT SERVICE
                         <Link to='/record'></Link>
                     </Menu.Item>
+                    <Menu.Item key="/history">
+                        <HistoryOutlined />
+                        HISTORY SERVICE
+                        <Link to='/history'></Link>
+                    </Menu.Item>
                     <Menu.Item key="/user">
-                    <UserOutlined />
-                    User information
+                        <UserOutlined />
+                        USER INFORMATION
                         <Link to='/user'></Link>
                     </Menu.Item>
                 </Menu>

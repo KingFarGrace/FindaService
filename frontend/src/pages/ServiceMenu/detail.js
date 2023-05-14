@@ -1,22 +1,77 @@
 import React, { Component } from 'react'
-import { reqServicebyId } from '../../api'
-import { Card, List, Tooltip, Comment, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { reqCommentbyId, reqServicebyId } from '../../api'
+import { Card, List, Tooltip, Button, Badge, Descriptions } from 'antd'
+import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Comment } from '@ant-design/compatible';
+import { Comment } from '@ant-design/compatible';
+import moment from 'moment';
+import { Switch, Route } from 'react-router-dom';
+import memoryUtils from '../../utils/memoryUtils';
 
 export default class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      service: {key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park'
-    }
+      service:
+      {
+        key: '1',
+        service: 'John Brown',
+        category: 'cleaning',
+        area: 'london',
+        description: 'good cleaning services in london, love from UK',
+        availability: 'AVAILABLE',
+        price: '15£'
+      },
+      //经典假数据
+      comment: [
+        {
+          username: 'asjflsafjl',
+          content:
+            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+          ,
+          ctime: '5-10-2023 11:22:33',
+        },
+        {
+          username: 'ieauflva',
+          content:
+            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+          ,
+          ctime: '5-10-2023 11:22:33',
+        },
+        {
+          username: 'asfwefd',
+          content:
+            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+          ,
+          ctime: '5-10-2023 11:22:33',
+        },
+        {//留一个老样式的假数据
+          username: 'asfweasfaw',
+          content: (
+            <p>
+              We supply a series of design principles, practical patterns and high quality design
+              resources (Sketch and Axure), to help people create their product prototypes beautifully and
+              efficiently.
+            </p>
+          ),
+          ctime: (
+            <Tooltip title="">
+              <span>5-10-2023 11:22:33</span>
+            </Tooltip>
+          ),
+
+
+        },
+      ]
+
+
     }
   }
+
   getService = async () => {
+    // console.log('拿到啦'+memoryUtils.service.service);
     console.log(this.props.match.params.id)
+    //获取当前url结尾（service专属id）
     const id = this.props.match.params.id;
     const res = await reqServicebyId(id);
     console.log(res);
@@ -24,11 +79,50 @@ export default class Detail extends Component {
       this.setState({ service: res.obj })
     }
   }
+
+  getCommand = async () => {
+    console.log(this.props.match.params.id)
+    //获取当前url结尾（service专属id）
+    const id = this.props.match.params.id;
+    const res = await reqCommentbyId(id);
+    console.log(res);
+    if (res.status === 100) {
+      this.setState({ comment: res.review })
+    }
+
+  }
   componentDidMount() {
+
+
     this.getService();
+    this.getCommand();
   }
 
+
+  getTooltip = (time) => {
+
+    let currentTime = moment();
+    let previousTime = moment(time);
+    console.log('当前时间' + currentTime)
+    console.log(typeof (currentTime))
+    console.log('之前时间' + previousTime)
+    console.log(typeof (previousTime))
+    let time_diff = currentTime.diff(previousTime, 'days')
+    console.log('时间差' + time_diff)
+    return time_diff
+  }
   render() {
+
+    const extra = (
+      <Button type='primary' onClick={() => {
+
+        this.props.history.push('/menu/subscribe/' + this.props.match.params.id);
+      }}
+      >
+
+        Subscription Services
+      </Button>
+    )
     const title = (
       <span>
         <Button
@@ -38,33 +132,57 @@ export default class Detail extends Component {
             this.props.history.goBack();
           }}>
         </Button>
-        商品详情
+        SERVICE DETAILS
       </span>
     )
-    const {service} = this.state;
+    const { service, comment } = this.state;
     return (
-      <Card title={title}>
-        <List>
-          <List.Item>
-            <p>
-              <h3>service name</h3>
-              <span>{service.name}</span>
-            </p>
-          </List.Item>
-          <List.Item>
-            
-          </List.Item>
-          <List.Item>
-            
-          </List.Item>
-          <List.Item>
-            
-          </List.Item>
-          <List.Item>
-            
-          </List.Item>
-        </List>
+      <Card
+        title={title}
+        extra={extra}
+      >
+        <Descriptions
+          title="User Information"
+          layout="vertical"
+          bordered
+        >
+          <Descriptions.Item label="Service Name" >{service.service}</Descriptions.Item>
+          <Descriptions.Item label="Catagory" span={2}>{service.category}</Descriptions.Item>
+          <Descriptions.Item label="Area" >{service.area}</Descriptions.Item>
+          <Descriptions.Item label="Price" span={2}>{service.price}</Descriptions.Item>
+          <Descriptions.Item label="Service Description" span={3}>
+            {service.description}
+          </Descriptions.Item>
+          <Descriptions.Item label="Service Comment" span={3}>
+            <List
+              bordered
+              className="comment-list"
+              header={`${comment.length} comments`}
+              size='large'
+              dataSource={comment}
+              renderItem={(item) => (
+                <li>
+                  <Comment
+                    actions={item.actions}
+                    author={item.username}
+                    avatar={"https://robohash.org/" + item.username}
+                    content={
+                      <p>{item.content}</p>
+                    }
+
+                    datetime={
+                      <Tooltip title={this.getTooltip(item.ctime) + "days ago"}>
+                        <span>{item.ctime}</span>
+                      </Tooltip>}
+                  />
+                </li>
+              )}
+            />
+          </Descriptions.Item>
+        </Descriptions>
+        <br />
       </Card>
+
     )
 
   }
