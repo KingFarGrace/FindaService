@@ -11,35 +11,24 @@ import {
 import { Breadcrumb, Layout, Menu, useLocation } from 'antd';
 import React, { useState } from 'react';
 import Logo from '../../assets/images/logo192.png';
-
+import MHeader from '../../components/HeadNav/index';
 import LeftNav from './../../components/LeftNav/index';
 import Home from '../Home/home';
 import Servicemenu from '../ServiceMenu/servicemenu';
 import Servicerecord from '../ServiceRecord/servicerecord';
 import Userinfo from '../Userinfo/userinfo';
-import MHeader from '../../components/HeadNav/index';
+import ServiceHistory from '../ServiceRecord/history';
+import Message from '../Message/message';
+
 
 const { Header, Content, Footer, Sider } = Layout;
-// function getItem(label, key, icon, children) {
-//   return {
-//     key,
-//     icon,
-//     children,
-//     label,
-//   };
-// }
-// const items = [
-//     getItem('Home', '/home', <PieChartOutlined />),
-//     getItem('Service menu', '/menu', <DesktopOutlined />),
-//     getItem('User information', '/user', <UserOutlined />),
-//     getItem('My service', '/record', <TeamOutlined />),
-// ];
+
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const user = storageUtils.getUser();
   //若内存中存了用户名，则已登录，否则跳转至登录界面
   // 前后跑通再取消注释是
-  //打个异或
+
   if (!((!user.username)^(!user.email))) {
     return <Redirect to='/login' />
   }
@@ -70,7 +59,10 @@ const App = () => {
             <Route path='/menu' component={Servicemenu}></Route>
             <Route path='/home' component={Home}></Route>
             <Route path='/record' component={Servicerecord}></Route>
+            <Route path='/history' component={ServiceHistory}></Route>
             <Route path='/user' component={Userinfo}></Route>
+            <Route path='/message' component={Message}></Route>
+            
             <Redirect to='/home' />
           </Switch>
 

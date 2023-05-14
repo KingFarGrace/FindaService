@@ -1,86 +1,20 @@
+
 import React, { Component } from 'react'
-import { Button, Card, Input, Select, Space, Table } from 'antd'
+import { Button, Card, Input, Select, Space, Table , message, Modal} from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
 import { reqServices, reqSearchServices } from '../../api';
 import { useHistory } from 'react-router-dom'
-import Subscribe from './subscribe';
-import memoryUtils from '../../utils/memoryUtils';
-// const data = [
-//     {
-//       key: '1',
-//       name: 'John Brown',
-//       age: 32,
-//       address: 'New York No. 1 Lake Park',
-//     },
-//     {
-//       key: '2',
-//       name: 'Joe Black',
-//       age: 42,
-//       address: 'London No. 1 Lake Park',
-//     },
-//     {
-//       key: '3',
-//       name: 'Jim Green',
-//       age: 32,
-//       address: 'Sidney No. 1 Lake Park',
-//     },
-//     {
-//       key: '4',
-//       name: 'Jim Red',
-//       age: 32,
-//       address: 'London No. 2 Lake Park',
-//     },
-//     {
-//         key: '5',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '6',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '7',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '8',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '9',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '10',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '11',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//   ];
+import { EditOutlined,DeleteOutlined  } from '@ant-design/icons';
 
+import memoryUtils from '../../utils/memoryUtils';
+
+const { confirm } = Modal;
 const PAGE_SIZE = 5;
 const { Search } = Input;
 
-
-export default class servicemenu extends Component {
+export default class Servicerecord extends Component {
     initColumns = () => {
         this.columns = [
             {
@@ -113,26 +47,12 @@ export default class servicemenu extends Component {
                 width: '10%',
                 align: 'center'
             },
-            // {
-            //     title: 'Availability',
-            //     dataIndex: 'availability',
-            //     width: '10%',
-            //     align: 'center',
-
-            //     // onFilter: (value, record) => record.availability.indexOf(value) === 0,
-            //     // filters: [
-            //     //     {
-            //     //       text: 'True',
-            //     //       value: 'true',
-            //     //     },
-            //     //     {
-            //     //       text: 'False',
-            //     //       value: 'false',
-            //     //     },
-            //     //   ],
-            //     // 筛选 
-                  
-            // },
+            {
+                title: 'Availability',
+                dataIndex: 'availability',
+                width: '10%',
+                align: 'center',
+            },
 
             {
                 title: 'operation',
@@ -142,21 +62,45 @@ export default class servicemenu extends Component {
 
                     return (
                         <span>
+                        
                             <Button
+                            //跳转按钮
+                                icon={<EditOutlined />}
                                 type="primary"
                                 onClick={() => {
                                     // console.log(service);
                                     // console.log(service.id);
                                     // console.log(this.props.history);
                                     //跳转详情页面
-                                    
                                     memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push('/menu/detail/' + service.id);
+                                    this.props.history.push('/record/detail/' + service.id);
                                 }}
-                            >details
+                            >Update
                             </Button>
-              
+                            <pre> </pre>
+                         
+                            <Button
+                            //删除按钮
+                                icon={<DeleteOutlined />}
+                                danger
+                                type="primary"
+                                onClick={() => {
+                                    confirm({
+                                        title: 'are you sure you want to cancel?',
+                                        onOk: () => {
+                                            memoryUtils.service = service;
+                                            this.onCancel();
+                                            this.props.history.replace('/record');
+                                            message.success('cancel successfully');
+                                        },
+                                        onCancel() {
+                                            console.log('Cancel');
+                                        },
+                                    });
+                                }}
+                            >Cancel
+                            </Button>
                         </span>
                     )
                 }
@@ -164,6 +108,11 @@ export default class servicemenu extends Component {
         ]
 
     }
+
+    onCancel =()=>{
+
+    }
+
 
     handleSelect = (value) => {
         //select组件直接能传出来
@@ -194,14 +143,12 @@ export default class servicemenu extends Component {
                 {
                     key: '1',
                     catagory: 'cleaning',
-                    service: 'John Brown cleaning',
+                    service: 'John Brown',
                     description: 'abcdasdfjaldkf',
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com'
                     //每个数据一个id
                 },
                 {
@@ -212,7 +159,7 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdasdfaslkfsadf215',
-                    email:'abc@qq.com'
+                    email: 'abc@qq.com'
                 },
                 {
                     key: '3',
@@ -222,7 +169,7 @@ export default class servicemenu extends Component {
                     area: 'CCC',
                     availability: 'false',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email: 'abc@qq.com'
                 },
                 {
                     key: '4',
@@ -232,7 +179,7 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email: 'abc@qq.com'
                 },
                 {
                     key: '5',
@@ -242,7 +189,7 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email: 'abc@qq.com'
                 },
                 {
                     key: '6',
@@ -252,7 +199,7 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email: 'abc@qq.com'
                 },
                 {
                     key: '7',
@@ -261,7 +208,8 @@ export default class servicemenu extends Component {
                     catagory: 'cleaning',
                     area: 'london',
                     availability: 'true',
-                    id: 'asdfasdklfjskl'
+                    id: 'asdfasdklfjskl',
+                    email: 'abc@qq.com'
                 },
             ],
             //假数据
@@ -269,7 +217,6 @@ export default class servicemenu extends Component {
         }
     }
 
-    
     getService = async (pageNum) => {
 
         let result;
@@ -279,17 +226,17 @@ export default class servicemenu extends Component {
             let select = this.selectValue
             let input = this.inputValue
             result = await reqSearchServices({
-                pageNum:pageNum,
+                pageNum: pageNum,
                 pageSize: PAGE_SIZE,
-                select:select,
-                input:input
+                select: select,
+                input: input
             })
         }
         if (result.code === '100') {
             const { serviceList, total } = result.obj;
             this.setState({
                 services: serviceList,
-                total:total
+                total: total
             })
         }
     }
@@ -303,78 +250,6 @@ export default class servicemenu extends Component {
 
     render() {
         const { services, total } = this.state;
-        // const onSearch = (value) => {
-        //     console.log(value)
-        //     console.log(this.state.selectType)
-        // };
-        // const {selectType} = this.state;
-        const title = (
-            <span className='abc'>
-                <Space direction="horizontal"
-                >
-                    <Select
-
-                        onChange={this.handleSelect}
-                        showSearch
-                        style={{
-                            width: 200,
-                        }}
-                        placeholder="Search by category"
-                        optionFilterProp="children"
-                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={[
-                            {
-                                value: 'All',
-                                label: 'All',
-                            },
-                            {
-                                value: 'Cleaning',
-                                label: 'Cleaning',
-                            },
-                            {
-                                value: 'Babysitting',
-                                label: 'Babysitting',
-                            },
-                            {
-                                value: 'Pest Control',
-                                label: 'Pest Control',
-                            },
-                            {
-                                value: 'Plumbing maintenance',
-                                label: 'Plumbing maintenance',
-                            },
-                            {
-                                value: 'Electrical maintenance',
-                                label: 'Electrical maintenance',
-                            },
-                            {
-                                value: 'Beauty',
-                                label: 'Beauty',
-                            },
-                        ]}
-                    />
-
-                    <Search
-                        onInput={this.handleInput}
-
-                        className='city_search'
-                        placeholder="search by city"
-                        allowClear
-                        enterButton="Search"
-                        size="medium"
-                        onSearch={this.getSelectandInput}
-                    // onSearch={() => {
-                    //     this.isSearch = true;
-                    //     //搜索标识符，true就搜索过了
-                    //     this.getService(1)
-                    // }}
-                    />
-                </Space>
-            </span>
-        )
         return (
             <>
 
@@ -382,7 +257,7 @@ export default class servicemenu extends Component {
                     style={{
                         width: '100%',
                     }}
-                    title={title}
+
                 >
                     <Table
                         columns={this.columns}
@@ -391,7 +266,7 @@ export default class servicemenu extends Component {
                             defaultPageSize: PAGE_SIZE,
                             showQuickJumper: true,
                             total: total,
-                            onChange: this.getService
+                            onchange: this.getService
                         }}
                     >
 
@@ -402,4 +277,4 @@ export default class servicemenu extends Component {
             </>
         );
     }
-};
+}
