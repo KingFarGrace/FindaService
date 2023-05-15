@@ -139,6 +139,23 @@ export const reqCommentbyId = (serviceId) => {
         }
     )
 }
+// 订阅服务
+// 等后端通知接口
+export const reqSubscribeService = (email,password,username,role,repeatPwd) => {
+    return ajax.post(BASE + '待修改',
+        {
+            method: 'POST',
+            url: BASE + '/register/customer',
+            data:{
+                email,
+                password,
+                username,
+                role,
+                repeatPwd
+            }
+        }
+    )
+}
 
 export const reqAcptServer = (adminKey,provider,service) =>{
     return ajax(
@@ -169,6 +186,17 @@ export const reqDelComment = (adminKey,provider,service,username) =>{
     )
 }
 
+export const reqRequest = (username) => {
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/request',
+            data: {
+                username,
+            }
+        }
+    )
+}
 export const reqDecServer = (adminKey,provider,service) =>{
     return ajax(
         {
@@ -196,7 +224,7 @@ export const reqUpdateInformation = (email, username,address,postcode, descripti
                 address,
                 postcode,
                 description
-
+            }}）}
               
 // 订阅服务
 // 等后端通知接口

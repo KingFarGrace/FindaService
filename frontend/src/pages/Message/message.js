@@ -14,8 +14,8 @@ export default class Message extends Component {
         this.state = {
             messages: [
                 {
-                    provider: 'Service provider 1',
-                    service: 'service name 1'
+                    provider: 'Service provider 2',
+                    service: 'service name 2'
                     , status: 'further details requested'
                     , content: 'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
                     , key: '1'

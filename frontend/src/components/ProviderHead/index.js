@@ -25,7 +25,7 @@ class MHeader extends Component {
   }
   message = () => {
     this.setState({ num : 0})
-    this.props.history.replace('/manager/message');
+    this.props.history.replace('/provider/message');
   }
   logout = () => {
     confirm({
@@ -34,7 +34,7 @@ class MHeader extends Component {
         storageUtils.removeUser();
         // memoryUtils.user = {};
         // this.props.removeUser();
-        this.props.history.replace('/manager');
+        this.props.history.replace('/provider');
       },
       onCancel() {
         console.log('Cancel');
