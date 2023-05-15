@@ -1,12 +1,12 @@
 
 import React, { Component } from 'react'
-import { Button, Card, Input, Select, Space, Table , message, Modal} from 'antd'
+import { Button, Card, Input, Select, Space, Table, message, Modal } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices } from '../../api';
+import { reqUpdateRequest, reqMyRequest,reqRejectRequest } from '../../api';
 import { useHistory } from 'react-router-dom'
-import { EditOutlined,DeleteOutlined  } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import memoryUtils from '../../utils/memoryUtils';
 
@@ -18,53 +18,43 @@ export default class Servicerecord extends Component {
     initColumns = () => {
         this.columns = [
             {
+                title: 'service provider',
+                dataIndex: 'provider',
+                width: '20%',
+                align: 'center'
+            },
+            {
                 title: 'service name',
                 dataIndex: 'service',
-                width: '15%',
+                width: '20%',
+                align: 'center'
+            },
+           
+            {
+                title: 'request number',
+                dataIndex: 'id',
+                width: '20%',
                 align: 'center'
             },
             {
-                title: 'catagory',
-                dataIndex: 'catagory',
-                width: '10%',
-                align: 'center'
-            },
-            {
-                title: 'description',
-                dataIndex: 'description',
-                // width: '15%',
-                align: 'center'
-            },
-            {
-                title: 'area',
-                dataIndex: 'area',
-                width: '10%',
-                align: 'center'
-            },
-            {
-                title: 'price',
-                dataIndex: 'price',
-                width: '10%',
-                align: 'center'
-            },
-            {
-                title: 'Availability',
-                dataIndex: 'availability',
-                width: '10%',
+                title: 'Status',
+                dataIndex: 'status',
+                width: '20%',
                 align: 'center',
             },
 
             {
                 title: 'operation',
                 align: 'center',
-                width: '10%',
-                render: (service) => {
+                width: '20%',
+                render: (request) => {
 
                     return (
                         <span>
-                        
+
                             <Button
-                            //跳转按钮
+                                //跳转按钮
+                                disabled ={this.disabled(request)}
                                 icon={<EditOutlined />}
                                 type="primary"
                                 onClick={() => {
@@ -72,26 +62,29 @@ export default class Servicerecord extends Component {
                                     // console.log(service.id);
                                     // console.log(this.props.history);
                                     //跳转详情页面
-                                    memoryUtils.service = service;
+                                    memoryUtils.request = request;
                                     // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push('/record/detail/' + service.id);
+                                    this.props.history.push('/record/detail/' + request.id);
                                 }}
                             >Update
                             </Button>
                             <pre> </pre>
-                         
+
                             <Button
-                            //删除按钮
+                                //删除按钮
                                 icon={<DeleteOutlined />}
                                 danger
                                 type="primary"
                                 onClick={() => {
+                                    memoryUtils.request = request;
+                                    console.log('')
                                     confirm({
+                                        
                                         title: 'are you sure you want to cancel?',
                                         onOk: () => {
-                                            memoryUtils.service = service;
+                                            
                                             this.onCancel();
-                                            this.props.history.replace('/record');
+                                           // this.props.history.replace('/record');
                                             message.success('cancel successfully');
                                         },
                                         onCancel() {
@@ -108,11 +101,46 @@ export default class Servicerecord extends Component {
         ]
 
     }
-
-    onCancel =()=>{
-
+    dataPreparation = () => {
+        let user = memoryUtils.user
+        //把用户数据拿出来存起来
+        let request = memoryUtils.request
+        //把url末尾的当前服务id拿出来存起来
+        // console.log('邮箱是'+user.email)
+        // console.log('目标服务id是'+id)
+        this.userEmail = user.email
+        this.serviceEmail = request.email
+        this.serviceName = request.service
+        this.serviceId = request.id
+        console.log('发到后端的客户邮箱' + this.userEmail)
+        console.log('发到后端的服务商邮箱' + this.serviceEmail)
+        console.log('发到后端的服务名字' + this.serviceName)
+        console.log('发到后端的request ID' + this.serviceId)
+    }
+    onCancel = async () => {
+        let user = memoryUtils.user
+        //把用户数据拿出来存起来
+        let request = memoryUtils.request
+        this.serviceId = request.id
+        // const content = this.inputValue;
+        const content = '';
+        const userEmail = this.userEmail;
+        const providerEmail = this.serviceEmail;
+        const serviceName = this.serviceName;
+        const id =this.serviceId;
+        const status = 'rejected'
+        console.log(id, status)
+        const res = await reqRejectRequest(id, status);
+        
     }
 
+    disabled (request) {
+        if (request.status === 'further details requested') {
+            return false
+        }else {
+            return true
+        }
+    }
 
     handleSelect = (value) => {
         //select组件直接能传出来
@@ -139,7 +167,7 @@ export default class Servicerecord extends Component {
     constructor() {
         super()
         this.state = {
-            services: [
+            requests: [
                 {
                     key: '1',
                     catagory: 'cleaning',
@@ -147,8 +175,12 @@ export default class Servicerecord extends Component {
                     description: 'abcdasdfjaldkf',
                     area: 'london',
                     availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    id: '1',
+                    email: 'abc@qq.com',
+                    status: 'further details requested',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                     //每个数据一个id
                 },
                 {
@@ -158,8 +190,12 @@ export default class Servicerecord extends Component {
                     description: 'abcdasdfjaldkf',
                     area: 'london',
                     availability: 'true',
-                    id: 'asdasdfaslkfsadf215',
-                    email: 'abc@qq.com'
+                    id: '2',
+                    email: 'abc@qq.com',
+                    status: 'pending for agree',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '3',
@@ -168,8 +204,12 @@ export default class Servicerecord extends Component {
                     description: 'SDFSFSFSFf',
                     area: 'CCC',
                     availability: 'false',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    id: '3',
+                    email: 'abc@qq.com',
+                    status: 'need new info',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '4',
@@ -178,8 +218,12 @@ export default class Servicerecord extends Component {
                     catagory: 'cleaning',
                     area: 'london',
                     availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    id: '4',
+                    email: 'abc@qq.com',
+                    status: 'further details requested',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '5',
@@ -189,7 +233,11 @@ export default class Servicerecord extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '6',
@@ -199,7 +247,11 @@ export default class Servicerecord extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '7',
@@ -209,7 +261,11 @@ export default class Servicerecord extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com'
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
             ],
             //假数据
@@ -220,22 +276,11 @@ export default class Servicerecord extends Component {
     getService = async (pageNum) => {
 
         let result;
-        if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
-        } else {
-            let select = this.selectValue
-            let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum: pageNum,
-                pageSize: PAGE_SIZE,
-                select: select,
-                input: input
-            })
-        }
+        result = await reqMyRequest(pageNum, PAGE_SIZE);
         if (result.code === '100') {
-            const { serviceList, total } = result.obj;
+            const { requestList, total } = result.obj;
             this.setState({
-                services: serviceList,
+                request: requestList,
                 total: total
             })
         }
@@ -246,10 +291,11 @@ export default class Servicerecord extends Component {
 
     componentDidMount() {
         this.getService(1);
+        this.dataPreparation();
     }
 
     render() {
-        const { services, total } = this.state;
+        const { requests, total } = this.state;
         return (
             <>
 
@@ -261,7 +307,7 @@ export default class Servicerecord extends Component {
                 >
                     <Table
                         columns={this.columns}
-                        dataSource={services}
+                        dataSource={requests}
                         pagination={{
                             defaultPageSize: PAGE_SIZE,
                             showQuickJumper: true,

@@ -57,19 +57,6 @@ export default class History_comment extends Component {
 
         }
     }
-
-    getService = async () => {
-        // console.log('拿到啦'+memoryUtils.service.service);
-        console.log(this.props.match.params.id)
-        //获取当前url结尾（service专属id）
-        const id = this.props.match.params.id;
-        const res = await reqServicebyId(id);
-        console.log(res);
-        if (res.status === 100) {
-            this.setState({ service: res.obj })
-        }
-    }
-
     getCommand = async () => {
         
         console.log(this.props.match.params.id)
@@ -97,7 +84,6 @@ export default class History_comment extends Component {
     }
 
     componentDidMount() {
-        this.getService();
         this.getCommand();
     }
 
@@ -114,7 +100,7 @@ export default class History_comment extends Component {
                 History service
             </span>
         )
-        const { service, comment } = this.state;
+        const { comment } = this.state;
         return (
 
             <Card
