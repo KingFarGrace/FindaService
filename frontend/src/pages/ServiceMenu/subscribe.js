@@ -38,7 +38,7 @@ export default class Subscribe extends Component {
             title: 'are you sure you want to subscribe?',
             onOk: () => {
                 this.onSubmit();
-                this.props.history.replace('/menu');
+               this.props.history.replace('/menu');
                 //前后端连上把注释去掉
                 message.success('submitted successfully');
             },
@@ -52,8 +52,9 @@ export default class Subscribe extends Component {
         const content = this.inputValue;
         const userEmail = this.userEmail;
         const providerEmail =this.serviceEmail;
-        const provider = this.serviceName;
-        const res = await reqSubscribeService(content,userEmail,providerEmail,provider);
+        const serviceName = this.serviceName;
+        console.log(userEmail, providerEmail, serviceName, content)
+        const res = await reqSubscribeService(userEmail,providerEmail,serviceName, content,);
         if (res.Code==100){message.success('submitted successfully');}
     }
 
