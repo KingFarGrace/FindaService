@@ -37,6 +37,11 @@ const invalidEmail = new ResBody(2, 2, 'Email not exists.')
 const updateSuccess = new ResBody(3, _suci, 'Successfully update data.')
 const duplicatedPwd = new ResBody(3, 1, 'The new password is the same as the old one, please change.')
 
+/** 
+ * Return group: 
+ * Gourp code: 4
+ */
+
 /**
  * Return group: common
  * Group code: 5

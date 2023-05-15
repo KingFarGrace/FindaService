@@ -168,7 +168,7 @@ function login(req, res) {
 
 function getUserInfo(req, res) {
     var username = req.query.username
-    userModel.findOne({ username: username }).then((data, err) => {
+    userModel.findOne({ username: username, available: true }).then((data, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
@@ -195,37 +195,31 @@ function updateUserInfo(req, res) {
         failRtn.accountDataInvalid,
         msg
     )
-    userModel.findOne({ email: body.email }).then((data, err) => {
+    userModel.find({ username: body.username }).then((data, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
         )
-        if (data === null) return rtnJson(
+        if (data.length !== 0) return rtnJson(
             res,
-            failRtn.invalidEmail,
-            body.email
+            failRtn.duplicatedUsername,
+            body.username
         )
-        userModel.find({ username: body.username }).then((data, err) => {
+        userModel.findOneAndUpdate({ email: body.email }, {
+            username: body.username,
+            address: body.address,
+            postcode: body.postcode,
+            description: body.description
+        }).then((data, err) => {
             if (err) return rtnJson(
                 res,
                 failRtn.dbOperationError
             )
-            if (data.length !== 0) return rtnJson(
+            if (data === null) return rtnJson(
                 res,
-                failRtn.duplicatedUsername,
-                body.username
+                failRtn.invalidEmail,
+                body.email
             )
-            userModel.updateOne({ email: body.email }, {
-                username: body.username,
-                address: body.address,
-                postcode: body.postcode,
-                description: body.description
-            }).then((data, err) => {
-                if (err) return rtnJson(
-                    res,
-                    failRtn.dbOperationError
-                )
-            })
         })
     })
     return rtnJson(
@@ -246,7 +240,8 @@ function updatePwd(req, res) {
         res,
         failRtn.duplicatedPwd
     )
-    userModel.findOne({ email: body.email }).then((data, err) => {
+    userModel.findOneAndUpdate({ email: body.email }, { password: body.newPwd })
+    .then((data, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
@@ -256,13 +251,6 @@ function updatePwd(req, res) {
             failRtn.invalidEmail,
             body.email
         )
-        userModel.updateOne({ email: body.email }, { password: body.newPwd })
-        .then((data, err) => {
-            if (err) return rtnJson(
-                res,
-                failRtn.dbOperationError
-            )
-        })
     })
     return rtnJson(
         res,
