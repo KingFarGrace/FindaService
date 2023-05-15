@@ -2,7 +2,7 @@ const rtnJson = require('../utils/respUtil').rtnJson
 const exists = require('../utils/validateUtil').exists
 const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure
-const serviceModel = require('../db/serviceModel')
+const serviceModel = require('../db/serviceModel').serviceModel
 
 function makeQuery(catagory, city) {
     var isCatagoryExist = exists(catagory)

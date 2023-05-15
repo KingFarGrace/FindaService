@@ -1,4 +1,4 @@
-const userModel = require('../db/userModel')
+const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
 const validationSchemas = require('../validation/user')
 const rtnJson = require('../utils/respUtil').rtnJson

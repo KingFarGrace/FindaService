@@ -1,4 +1,4 @@
-const reviewModel = require('../db/reviewModel')
+const reviewModel = require('../db/reviewModel').reviewModel
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure

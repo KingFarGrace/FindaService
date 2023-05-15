@@ -33,6 +33,8 @@ const noMatchedService = new ResBody(2, 3, 'No matched services.')
 const noServicesFound = new ResBody(2, 4, 'No services found.')
 const noMatchedReview = new ResBody(2, 5, 'No matched reviews.')
 const noReviewsFound = new ResBody(2, 6, 'No reviews found.')
+const noMatchedRequest = new ResBody(2, 7, 'No matched requests.')
+const noRequestsFound = new ResBody(2, 8, 'No requests found.')
 
 /**
  * Return group: update
@@ -84,6 +86,8 @@ module.exports.failure = {
     noServicesFound: noServicesFound,
     noMatchedReview: noMatchedReview,
     noReviewsFound: noReviewsFound,
+    noMatchedRequest: noMatchedRequest,
+    noRequestsFound: noRequestsFound,
     /* Group 3 */
     duplicatedPwd: duplicatedPwd,
     alreadyActivated: alreadyActivated,
