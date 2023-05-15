@@ -27,12 +27,11 @@ function getServices(req, res) {
             res,
             failRtn.noMatchedService
         )
-        // TODO: return count or Math.ceil(count / pageCap)
-        // pageNum: start by 0 or 1?
-        serviceModel.find({ serviceQuery }).limit(pageCap).skip(pageCap * query.pageNum)
+
+        serviceModel.find({ serviceQuery }).limit(pageCap).skip(pageCap * (query.pageNum - 1))
         .then((data, err) => {
             // data.count = count
-            // data.pageCount = Math.ceil(count / query.pageCap)
+            data.pageCount = Math.ceil(count / query.pageCap)
             if (err) return rtnJson(
                 res,
                 failRtn.dbOperationError

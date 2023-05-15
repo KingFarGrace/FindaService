@@ -30,7 +30,9 @@ const retrieveSuccess = new ResBody(2, _suci, 'Successfully retrieve the data.')
 const invalidUsername = new ResBody(2, 1, 'Username not exists.')
 const invalidEmail = new ResBody(2, 2, 'Email not exists.')
 const noMatchedService = new ResBody(2, 3, 'No matched services.')
-const noReviewsFound = new ResBody(2, 4, 'No reviews found.')
+const noServicesFound = new ResBody(2, 4, 'No services found.')
+const noMatchedReview = new ResBody(2, 5, 'No matched reviews.')
+const noReviewsFound = new ResBody(2, 6, 'No reviews found.')
 
 /**
  * Return group: update
@@ -42,22 +44,29 @@ const alreadyActivated = new ResBody(3, 2, 'The service / account has already be
 
 /** 
  * Return group: create
- * Gourp code: 4
+ * Group code: 4
  */
 const createSuccess = new ResBody(4, _suci, 'Successfully create the document.')
 
 /**
- * Return group: common
+ * Return group: delete
  * Group code: 5
  */
-const dbOperationError = new ResBody(5, 1, 'Unable to connect to the data server, please try later or contact administrators.')
+const deleteSuccess = new ResBody(5, _suci, 'Successfully deleted document.')
+
+/**
+ * Return group: common
+ * Group code: 6
+ */
+const dbOperationError = new ResBody(6, 1, 'Unable to connect to the data server, please try later or contact administrators.')
 
 module.exports.success = {
     login: loginSuccess,
     register: registerSuccess,
     retrieve: retrieveSuccess,
     update: updateSuccess,
-    create: createSuccess
+    create: createSuccess,
+    delete: deleteSuccess
 }
 
 module.exports.failure = {
@@ -72,6 +81,8 @@ module.exports.failure = {
     invalidUsername: invalidUsername,
     invalidEmail: invalidEmail,
     noMatchedService: noMatchedService,
+    noServicesFound: noServicesFound,
+    noMatchedReview: noMatchedReview,
     noReviewsFound: noReviewsFound,
     /* Group 3 */
     duplicatedPwd: duplicatedPwd,
