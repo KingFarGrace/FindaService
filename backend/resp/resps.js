@@ -30,6 +30,7 @@ const retrieveSuccess = new ResBody(2, _suci, 'Successfully retrieve the data.')
 const invalidUsername = new ResBody(2, 1, 'Username not exists.')
 const invalidEmail = new ResBody(2, 2, 'Email not exists.')
 const noMatchedService = new ResBody(2, 3, 'No matched services.')
+const noReviewsFound = new ResBody(2, 4, 'No reviews found.')
 
 /**
  * Return group: update
@@ -71,6 +72,7 @@ module.exports.failure = {
     invalidUsername: invalidUsername,
     invalidEmail: invalidEmail,
     noMatchedService: noMatchedService,
+    noReviewsFound: noReviewsFound,
     /* Group 3 */
     duplicatedPwd: duplicatedPwd,
     alreadyActivated: alreadyActivated,

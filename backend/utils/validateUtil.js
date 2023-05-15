@@ -1,6 +1,6 @@
 /* Some encapsulated functions for joi verification */
 function verify(schema, data) {
-    const { error, value } = schema.validate(data)
+    var { error, value } = schema.validate(data)
     if (error) {
         var message = ''
         for (i = 0, length = error.details.length; i < length; i++) {
@@ -17,4 +17,12 @@ function verify(schema, data) {
     }
 }
 
-module.exports.verify = verify
+function exists(arg) {
+    if (arg !== '' && arg !== undefined && arg !== null) return true
+    return false
+}
+
+module.exports = {
+    verify: verify,
+    exists: exists
+}

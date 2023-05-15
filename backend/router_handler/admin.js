@@ -1,6 +1,6 @@
 const userModel = require('../db/userModel')
 const serviceModel = require('../db/serviceModel')
-const rtnJson = require('../utils/respUtil')
+const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure
 
@@ -15,7 +15,8 @@ function setUserStatus(req, res, available) {
             res,
             failRtn.incorrectPwd
         }
-        userModel.findOneAndUpdate({ email: body.email }, { available: available }).then((data, err) => {
+        userModel.findOneAndUpdate({ email: body.email }, { available: available })
+        .then((data, err) => {
             if (err) return rtnJson(
                 res,
                 failRtn.dbOperationError

@@ -1,13 +1,12 @@
-const rtnJson = require('../utils/respUtil')
+const rtnJson = require('../utils/respUtil').rtnJson
+const exists = require('../utils/validateUtil').exists
 const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure
-const serviceModel = require('../db/serviceModel').serviceModel
+const serviceModel = require('../db/serviceModel')
 
 function makeQuery(catagory, city) {
-    var isCatagoryExist = false
-    var isCityExist = false
-    if (catagory !== '' && catagory !== undefined && catagory !== null) isCatagoryExist = true
-    if (city !== '' && city !== undefined && city !== null) isCityExist = true
+    var isCatagoryExist = exists(catagory)
+    var isCityExist = exists(city)
     if (isCatagoryExist && isCityExist) return { catagory: catagory, city: { $regex: new RegExp(city, 'i') } }
     if (isCatagoryExist && !isCityExist) return { catagory: catagory }
     if (!isCatagoryExist && isCityExist) return { city: { $regex: new RegExp(city, 'i') } }
