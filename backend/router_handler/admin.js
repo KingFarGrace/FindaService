@@ -107,6 +107,25 @@ function rmReviews(req, res) {
     )
 }
 
+function getUnavailableUser(req, res) {
+    userModel.find({ available: false }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            ':unavailable user',
+            data
+        )
+    })
+}
+
+function getLowLevelProvider(req, res) {
+    
+}
+
 module.exports = {
     activateUser: activateUser,
     rmUser: rmUser,
