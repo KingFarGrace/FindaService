@@ -155,7 +155,7 @@ function login(req, res) {
             {
                 username: data.username,
                 email: data.email,
-                role: data.email,
+                role: data.role,
                 description: data.description,
                 address: data.address,
                 postcode: data.postcode,
