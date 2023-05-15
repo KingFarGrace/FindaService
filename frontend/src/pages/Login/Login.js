@@ -12,22 +12,27 @@ import { Tabs } from 'antd';
 const App = () => {
   const history = useHistory()
   const onFinish_email = async (values) => {
-    console.log(values);
-    storageUtils.saveUser(values)
-    history.push('/manager')
-    //跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
-    console.log('Received values of form: ', values);
-    message.success('login successfully')
+    // console.log(values);
+    // storageUtils.saveUser(values)
+    // history.push('/manager')
+    // // 跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
+    // console.log('Received values of form: ', values);
+    // message.success('login successfully')
 
     const { email, password } = values;
-    const res = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
-    console.log(res);
-    //登录成功传回来的code是100时，把用户信息存到本地。
+    const res_json = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
+    console.log("芝士res" + res_json.data);
+    const res = JSON.parse(res_json.data);
+    console.log(res)
+    console.log(res.return_obj)
+    
+    console.log("Successfully")
+    // 登录成功传回来的code是100时，把用户信息存到本地。
     if (res.code === 100) {
       const user = res.userInfo;
-      storageUtils.saveUser(user);
+      storageUtils.saveUser(res.return_obj);
       // 跳转到导航页面
-      history.replace('/manager')
+      history.replace('/')
       // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
       message.success('login successfully')
 

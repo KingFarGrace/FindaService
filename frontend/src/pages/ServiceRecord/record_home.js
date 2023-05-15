@@ -4,7 +4,7 @@ import { Button, Card, Input, Select, Space, Table, message, Modal } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqUpdateRequest, reqMyRequest,reqRejectRequest } from '../../api';
+import { reqUpdateRequest, reqMyRequest, reqRejectRequest } from '../../api';
 import { useHistory } from 'react-router-dom'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
@@ -29,7 +29,7 @@ export default class Servicerecord extends Component {
                 width: '20%',
                 align: 'center'
             },
-           
+
             {
                 title: 'request number',
                 dataIndex: 'id',
@@ -54,7 +54,7 @@ export default class Servicerecord extends Component {
 
                             <Button
                                 //跳转按钮
-                                disabled ={this.disabled(request)}
+                                disabled={this.disabled(request)}
                                 icon={<EditOutlined />}
                                 type="primary"
                                 onClick={() => {
@@ -79,12 +79,12 @@ export default class Servicerecord extends Component {
                                     memoryUtils.request = request;
                                     console.log('')
                                     confirm({
-                                        
+
                                         title: 'are you sure you want to cancel?',
                                         onOk: () => {
-                                            
+
                                             this.onCancel();
-                                           // this.props.history.replace('/record');
+                                            // this.props.history.replace('/record');
                                             message.success('cancel successfully');
                                         },
                                         onCancel() {
@@ -127,17 +127,17 @@ export default class Servicerecord extends Component {
         const userEmail = this.userEmail;
         const providerEmail = this.serviceEmail;
         const serviceName = this.serviceName;
-        const id =this.serviceId;
+        const id = this.serviceId;
         const status = 'rejected'
         console.log(id, status)
         const res = await reqRejectRequest(id, status);
-        
+
     }
 
-    disabled (request) {
+    disabled(request) {
         if (request.status === 'further details requested') {
             return false
-        }else {
+        } else {
             return true
         }
     }
@@ -178,9 +178,9 @@ export default class Servicerecord extends Component {
                     id: '1',
                     email: 'abc@qq.com',
                     status: 'further details requested',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                     //每个数据一个id
                 },
                 {
@@ -193,9 +193,9 @@ export default class Servicerecord extends Component {
                     id: '2',
                     email: 'abc@qq.com',
                     status: 'pending for agree',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '3',
@@ -207,9 +207,9 @@ export default class Servicerecord extends Component {
                     id: '3',
                     email: 'abc@qq.com',
                     status: 'need new info',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '4',
@@ -221,9 +221,9 @@ export default class Servicerecord extends Component {
                     id: '4',
                     email: 'abc@qq.com',
                     status: 'further details requested',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '5',
@@ -235,9 +235,9 @@ export default class Servicerecord extends Component {
                     id: 'asdfasdklfjskl',
                     email: 'abc@qq.com',
                     status: 'active',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '6',
@@ -249,9 +249,9 @@ export default class Servicerecord extends Component {
                     id: 'asdfasdklfjskl',
                     email: 'abc@qq.com',
                     status: 'active',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '7',
@@ -263,9 +263,9 @@ export default class Servicerecord extends Component {
                     id: 'asdfasdklfjskl',
                     email: 'abc@qq.com',
                     status: 'active',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
             ],
             //假数据

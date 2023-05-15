@@ -1,6 +1,6 @@
 //接口请求函数
 import ajax from './ajax';
-const BASE = 'http://localhost:3000';
+const BASE = '';
 
 //用户名登录
 export const reqLogin_username = (username, password) => {
@@ -224,23 +224,23 @@ export const reqUpdateInformation = (email, username,address,postcode, descripti
                 address,
                 postcode,
                 description
-            }}）}
+            }})}
               
-// 订阅服务
-// 等后端通知接口
-export const reqSubscribeService = (userEmail, providerEmail, serviceName, content) => {
-    return ajax.post(BASE + '待修改',
-        {
+// // 订阅服务
+// // 等后端通知接口
+// export const reqSubscribeService = (userEmail, providerEmail, serviceName, content) => {
+//     return ajax.post(BASE + '待修改',
+//         {
 
-            data: {
-                userEmail,
-                providerEmail,
-                serviceName,
-                content
-            }
-        }
-    )
-}
+//             data: {
+//                 userEmail,
+//                 providerEmail,
+//                 serviceName,
+//                 content
+//             }
+//         }
+//     )
+// }
 
 //获取正在进行的服务    
 export const reqMyRequest = (email) => {
