@@ -23,6 +23,21 @@ const duplicatedEmail = new ResBody(1, 12, 'Email has been used, please change.'
 const duplicatedUsername = new ResBody(1, 13, 'Username has been used, please change.')
 
 /**
+ * Return group: retrieve
+ * Group code: 2
+ */
+const retrieveSuccess = new ResBody(2, _suci, 'Successfully retrieve data.')
+const invalidUsername = new ResBody(2, 1, 'Username not exists.')
+const invalidEmail = new ResBody(2, 2, 'Email not exists.')
+
+/**
+ * Return group: update
+ * Group code: 3
+ */
+const updateSuccess = new ResBody(3, _suci, 'Successfully update data.')
+const duplicatedPwd = new ResBody(3, 1, 'The new password is the same as the old one, please change.')
+
+/**
  * Return group: common
  * Group code: 5
  */
@@ -30,7 +45,9 @@ const dbOperationError = new ResBody(1, 1, 'Unable to connect to the data server
 
 module.exports.success = {
     login: loginSuccess,
-    register: registerSuccess
+    register: registerSuccess,
+    retrieve: retrieveSuccess,
+    update: updateSuccess
 }
 
 module.exports.failure = {
@@ -42,9 +59,10 @@ module.exports.failure = {
     duplicatedUsername: duplicatedUsername,
     incorrectPwd: incorrectPwd,
     /* Group 2 */
-
+    invalidUsername: invalidUsername,
+    invalidEmail: invalidEmail,
     /* Group 3 */
-
+    duplicatedPwd: duplicatedPwd,
     /* Group 4 */
 
     /* Group 5 */

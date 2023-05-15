@@ -27,6 +27,25 @@ const loginSchema = joi.object({
 })
     .xor('username', 'email')
 
-module.exports.customerRegisterSchema = customerRegisterSchema
-module.exports.providerRegisterSchema = providerRegisterSchema
-module.exports.loginSchema = loginSchema
+const infoUpdateSchema = joi.object({
+    email: joi.string().email().required(),
+    username: joi.string().alphanum().min(1).max(16).required(),
+    description: joi.string().required(),
+    address: joi.string().required(),
+    postcode: joi.string().alphanum().required()
+})
+
+const pwdUpdateSchema = joi.object({
+    email: joi.string().email().required(),
+    oldPwd: joi.string().pattern(new RegExp('^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)(?=.*?[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{6,16}$')).required(),
+    newPwd: joi.string().pattern(new RegExp('^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)(?=.*?[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{6,16}$')).required(),
+    repeatPwd: joi.ref('password')
+})
+
+module.exports = {
+    customerRegisterSchema: customerRegisterSchema,
+    providerRegisterSchema: providerRegisterSchema,
+    loginSchema: loginSchema,
+    infoUpdateSchema: infoUpdateSchema,
+    pwdUpdateSchema: pwdUpdateSchema
+}

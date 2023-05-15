@@ -1,9 +1,6 @@
-// const bcrypt = require('bcryptjs')
 const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
-const customerRegisterSchema = require('../validation/user').customerRegisterSchema
-const providerRegisterSchema = require('../validation/user').providerRegisterSchema
-const loginSchema = require('../validation/user').loginSchema
+const validationSchemas = require('../validation/user')
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure
@@ -17,7 +14,7 @@ function customerRegister(req, res) {
         failRtn.accessInvalid
     )
     // Data validation
-    var { msg, valid } = verify(customerRegisterSchema, body)
+    var { msg, valid } = verify(validationSchemas.customerRegisterSchema, body)
     if (!valid) return rtnJson(
         res, 
         failRtn.accountDataInvalid,
@@ -83,7 +80,7 @@ function providerRegister(req, res) {
         failRtn.accessInvalid
     )
     
-    var { msg, valid } = verify(providerRegisterSchema, body)
+    var { msg, valid } = verify(validationSchemas.providerRegisterSchema, body)
     if (!valid) return rtnJson(
         res, 
         failRtn.accountDataInvalid,
@@ -131,7 +128,7 @@ function providerRegister(req, res) {
 function login(req, res) {
     // console.log(req.body)
     var body = req.body
-    var { msg, valid } = verify(loginSchema, body)
+    var { msg, valid } = verify(validationSchemas.loginSchema, body)
     if (!valid) return rtnJson(
         res,
         failRtn.accountDataInvalid,
@@ -169,6 +166,115 @@ function login(req, res) {
     })
 }
 
-module.exports.customerRegister = customerRegister;
-module.exports.providerRegister = providerRegister;
-module.exports.login = login;
+function getUserInfo(req, res) {
+    var username = req.query.username
+    userModel.findOne({ username: username }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        if (data === null) return rtnJson(
+            res,
+            failRtn.invalidUsername,
+            username
+        )
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            ' User: ' + username,
+            data
+        )
+    })
+}
+
+function updateUserInfo(req, res) {
+    var body = req.body
+    var { msg, valid } = verify(validationSchemas.infoUpdateSchema, body)
+    if (!valid) return rtnJson(
+        res,
+        failRtn.accountDataInvalid,
+        msg
+    )
+    userModel.findOne({ email: body.email }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        if (data === null) return rtnJson(
+            res,
+            failRtn.invalidEmail,
+            body.email
+        )
+        userModel.find({ username: body.username }).then((data, err) => {
+            if (err) return rtnJson(
+                res,
+                failRtn.dbOperationError
+            )
+            if (data.length !== 0) return rtnJson(
+                res,
+                failRtn.duplicatedUsername,
+                body.username
+            )
+            userModel.updateOne({ email: body.email }, {
+                username: body.username,
+                address: body.address,
+                postcode: body.postcode,
+                description: body.description
+            }).then((data, err) => {
+                if (err) return rtnJson(
+                    res,
+                    failRtn.dbOperationError
+                )
+            })
+        })
+    })
+    return rtnJson(
+        res,
+        successRtn.update
+    )
+}
+
+function updatePwd(req, res) {
+    var body = req.body
+    var { msg, valid } = verify(validationSchemas.pwdUpdateSchema, body)
+    if (!valid) return rtnJson(
+        res, 
+        failRtn.accountDataInvalid,
+        msg
+    )
+    if (body.oldPwd === body.newPwd) return rtnJson(
+        res,
+        failRtn.duplicatedPwd
+    )
+    userModel.findOne({ email: body.email }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        if (data === null) return rtnJson(
+            res,
+            failRtn.invalidEmail,
+            body.email
+        )
+        userModel.updateOne({ email: body.email }, { password: body.newPwd })
+        .then((data, err) => {
+            if (err) return rtnJson(
+                res,
+                failRtn.dbOperationError
+            )
+        })
+    })
+    return rtnJson(
+        res,
+        successRtn.update
+    )
+}
+
+module.exports = {
+    customerRegister: customerRegister,
+    providerRegister: providerRegister,
+    login: login,
+    getUserInfo: getUserInfo,
+    updateUserInfo: updateUserInfo,
+    updatePwd: updatePwd
+}
