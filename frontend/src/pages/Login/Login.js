@@ -14,7 +14,7 @@ const App = () => {
   const onFinish_email = async (values) => {
     console.log(values);
     storageUtils.saveUser(values)
-    history.push('/admin')
+    history.push('/manager')
     //跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
     console.log('Received values of form: ', values);
     message.success('login successfully')
@@ -27,7 +27,7 @@ const App = () => {
       const user = res.userInfo;
       storageUtils.saveUser(user);
       // 跳转到导航页面
-      history.replace('/admin')
+      history.replace('/manager')
       // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
       message.success('login successfully')
 
@@ -52,7 +52,7 @@ const App = () => {
   const onFinish_username = async (values) => {
 
     storageUtils.saveUser(values)
-    history.push('/admin')
+    history.replace('/manager')
     //跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
     console.log('Received values of form: ', values);
     message.success('login successfully')
@@ -65,7 +65,7 @@ const App = () => {
       const user = res.userInfo;
       storageUtils.saveUser(user);
       // 跳转到导航页面
-      history.replace('/admin')
+      history.replace('/manager')
       // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
       message.success('login successfully')
 
