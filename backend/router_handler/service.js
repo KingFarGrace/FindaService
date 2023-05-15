@@ -15,6 +15,7 @@ function makeQuery(catagory, city) {
 }
 
 function getServices(req, res) {
+    // TODO: search by provider name?
     var query = req.query
     var pageCap = 5
     var serviceQuery = makeQuery(query.catagory, query.city)
@@ -61,4 +62,9 @@ function addService(req, res) {
         successRtn.create,
         ' Waiting for acception from admin...'
     )
+}
+
+module.exports = {
+    getServices: getServices,
+    addService: addService
 }

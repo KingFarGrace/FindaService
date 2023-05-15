@@ -8,8 +8,11 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 const userRouter = require('./router/user')
 const adminRouter = require('./router/admin')
+const serviceRouter = require('./router/service')
 app.use('/', userRouter)
 app.use('/', adminRouter)
+// BASE?
+app.user('/', serviceRouter)
 
 // Run server
 app.listen(3000,() =>{
