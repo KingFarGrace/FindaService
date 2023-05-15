@@ -1,4 +1,5 @@
 class ResBody {
+
     constructor(groupCode, idx, msg) {
         this.groupCode = groupCode
         this.idx = idx
@@ -6,7 +7,7 @@ class ResBody {
     }
 
     getCode() {
-        return this.groupCode * 100 + idx
+        return this.groupCode * 100 + this.idx
     }
 
     getMsg() {

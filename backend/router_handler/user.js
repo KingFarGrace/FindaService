@@ -1,7 +1,8 @@
 // const bcrypt = require('bcryptjs')
 const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
-const userRegisterSchema = require('../validation/user').userRegisterSchema
+const customerRegisterSchema = require('../validation/user').customerRegisterSchema
+const providerRegisterSchema = require('../validation/user').providerRegisterSchema
 const loginSchema = require('../validation/user').loginSchema
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('../resp/resps').success
@@ -16,62 +17,115 @@ function customerRegister(req, res) {
         failRtn.accessInvalid
     )
     // Data validation
-    var { msg, valid } = verify(userRegisterSchema, body)
+    var { msg, valid } = verify(customerRegisterSchema, body)
     if (!valid) return rtnJson(
         res, 
-        failRtn.accountDataInvalid
+        failRtn.accountDataInvalid,
+        msg
     )
     // Is username duplicated?
-    userModel.find({ username: body.username })
-        .then((data, err) => {
+    userModel.find({ username: body.username }).then((data, err) => {
+        if (err) return rtnJson(
+            res, 
+            failRtn.dbOperationError 
+        )
+        if (data.length !== 0) return rtnJson(
+            res, 
+            failRtn.duplicatedUsername
+        )
+        // Is email duplicated?
+        userModel.find({ email: body.email }).then((data, err) => {
             if (err) return rtnJson(
                 res, 
-                failRtn.dbOperationError 
+                failRtn.dbOperationError
             )
             if (data.length !== 0) return rtnJson(
                 res, 
-                failRtn.duplicatedField
+                failRtn.duplicatedEmail 
             )
-            // Is userModel duplicated?
-            userModel.find({ email: body.email })
-                .then((data, err) => {
-                    if (err) return rtnJson(
-                        res, 
-                        failRtn.dbOperationError
-                    )
-                    if (data.length !== 0) return rtnJson(
-                        res, 
-                        failRtn.duplicatedField 
-                    )
-                    // Insert user data into db
-                    var userData = new userModel(body)
-                    userData.save().then((data, err) => {
-                        if (err) return rtnJson(
-                            res, 
-                            failRtn.dbOperationError
-                        )
-                    })
-                })
-        })
-    // All done
-    // Q: find in db or just write hear?
-    return rtnJson(
-        res, 
-        successRtn.register,
-        {
-            userInfo: {
-                username: body.username,
+            // Insert user data into db
+            userModel.create({
                 email: body.email,
+                username: body.username,
                 role: body.role,
-                address: 'Fill out this blank to benefit your searching.',
-                postcode: 'Postcode should be valid and match your address.'
-            }
-        }
-    )
+                password: body.password,
+                available: true
+            }).then((data, err) => {
+                if (err) return rtnJson(
+                    res, 
+                    failRtn.dbOperationError
+                )
+            })
+        })
+    })
+    // All done
+    userModel.findOne({ email: body.email }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        return rtnJson(
+            res, 
+            successRtn.register,
+            '',
+            data
+        )
+    })
+    
 }
 
 function providerRegister(req, res) {
+    var body = req.body
 
+    const roleArr = ['customer', 'admin', 'serviceProvider']
+    if (roleArr.indexOf(body.role) === -1) return rtnJson(
+        res,
+        failRtn.accessInvalid
+    )
+    
+    var { msg, valid } = verify(providerRegisterSchema, body)
+    if (!valid) return rtnJson(
+        res, 
+        failRtn.accountDataInvalid,
+        msg
+    )
+
+    userModel.find({ username: body.username }).then((data, err) => {
+        if (err) return rtnJson(
+            res, 
+            failRtn.dbOperationError 
+        )
+        if (data.length !== 0) return rtnJson(
+            res, 
+            failRtn.duplicatedUsername
+        )
+        userModel.find({ email: body.email }).then((data, err) => {
+            if (err) return rtnJson(
+                res, 
+                failRtn.dbOperationError
+            )
+            if (data.length !== 0) return rtnJson(
+                res, 
+                failRtn.duplicatedEmail 
+            )
+            userModel.create({
+                email: body.email,
+                username: body.username,
+                role: body.role,
+                password: body.password,
+                available: false
+            }).then((data, err) => {
+                if (err) return rtnJson(
+                    res, 
+                    failRtn.dbOperationError
+                )
+            })
+        })
+    })
+    return rtnJson(
+        res,
+        successRtn.register
+    )
 }
 
 function login(req, res) {
@@ -80,9 +134,11 @@ function login(req, res) {
     var { msg, valid } = verify(loginSchema, body)
     if (!valid) return rtnJson(
         res,
-        failRtn.accountDataInvalid
+        failRtn.accountDataInvalid,
+        msg
     )
-    userModel.findOne({ email: body.email }).then((data, err) => {
+    userModel.findOne( { $or: [{ email: body.email }, { username: body.username }] })
+    .then((data, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
@@ -98,12 +154,16 @@ function login(req, res) {
         return rtnJson(
             res,
             successRtn.login,
+            '',
             {
                 username: data.username,
                 email: data.email,
                 role: data.email,
+                description: data.description,
                 address: data.address,
-                postcode: data.postcode
+                postcode: data.postcode,
+                available: data.available,
+                ctime: data.ctime
             }
         )
     })

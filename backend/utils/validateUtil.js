@@ -1,6 +1,4 @@
 /* Some encapsulated functions for joi verification */
-const joi = require('joi')
-
 function verify(schema, data) {
     const { error, value } = schema.validate(data)
     if (error) {

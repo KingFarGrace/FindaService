@@ -20,6 +20,10 @@ const userSchema = mongoose.Schema({
     available: {
         type: Boolean,
         default: false
+    },
+    ctime: {
+        type: Date,
+        default: Date.now
     }
 })
 
