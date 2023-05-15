@@ -67,17 +67,32 @@ export const reqServiceRegister = (email, username, role, password, repeatPwd, d
 
 
 // 获取所有服务
-export const reqServices = (pageNum, pageSize) => {
+export const reqServices = (pageNum, pageSize,searchCategory,searchCity) => {
     return ajax(BASE + '/service/info',
         {
             params: {
                 pageNum,
-                pageSize
+                pageSize,
+                searchCategory,
+                searchCity
             }
         }
     )
 }
 
+export const reqProviders = (pageNum, pageSize) => {
+    return ajax(BASE + '/user/info',
+        {
+            params: {
+                pageNum,
+                pageSize,
+            }
+        }
+    )
+}
+
+
+//搜索
 //搜索服务（按分类和地址）
 export const reqSearchServices = ({ pageNum, pageSize, searchCategory, searchCity }) => {
     return ajax(BASE + '/service/search',
@@ -102,6 +117,18 @@ export const reqServicebyId = (serviceId) => {
 
     )
 }
+
+export const reqReviewRate = (serviceId) => {
+    return ajax(BASE + '/user/review',
+        {
+            params: {
+                serviceId
+            }
+        }
+
+    )
+}
+
 //按service的id获取评论
 export const reqCommentbyId = (serviceId) => {
     return ajax(BASE + '/review/info',
@@ -117,8 +144,75 @@ export const reqCommentbyId = (serviceId) => {
 export const reqSubscribeService = (待修改, a, b, c) => {
     return ajax.post(BASE + '待修改',
         {
-            data: {
-                a
+            method: 'POST',
+            url: BASE + '/register/customer',
+            data:{
+                email,
+                password,
+                username,
+                role,
+                repeatPwd
+            }
+        }
+    )
+}
+
+export const reqAcptServer = (adminKey,provider,service) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/service/acpt',
+            data:{
+                adminKey,
+                provider,
+                service
+            }
+        }
+    )
+}
+
+export const reqDelComment = (adminKey,provider,service,username) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/service/acpt',
+            data:{
+                adminKey,
+                provider,
+                service,
+                username
+            }
+        }
+    )
+}
+
+export const reqDecServer = (adminKey,provider,service) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/service/acpt',
+            data:{
+                adminKey,
+                provider,
+                service
+            }
+        }
+    )
+}
+
+
+
+export const reqUpdateInformation = (email, username,address,postcode, description) =>{
+    return ajax(
+        {
+            method: 'POST',
+            url: BASE + '/user/update',
+            data:{
+                email,
+                username,
+                address,
+                postcode,
+                description
             }
         }
     )
