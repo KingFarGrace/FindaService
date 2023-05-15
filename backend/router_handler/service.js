@@ -26,7 +26,7 @@ function getServices(req, res) {
         )
         if (count === 0) return rtnJson(
             res,
-            failRtn.noSuchService
+            failRtn.noMatchedService
         )
         // TODO: return count or Math.ceil(count / pageCap)
         // pageNum: start by 0 or 1?
@@ -64,7 +64,30 @@ function addService(req, res) {
     )
 }
 
+function displayServices(req, res) {
+    var query = req.query
+    // Paging?
+    serviceModel.find({ provider: query.provider, available: true }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        if (data.length === 0) return rtnJson(
+            res,
+            failRtn.noMatchedService,
+            ' provider: ' + query.provider
+        )
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            ' provider: ' + query.provider,
+            data
+        )
+    })
+}
+
 module.exports = {
     getServices: getServices,
-    addService: addService
+    addService: addService,
+    displayServices: displayServices
 }

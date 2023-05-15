@@ -12,7 +12,7 @@ const serviceRouter = require('./router/service')
 app.use('/', userRouter)
 app.use('/', adminRouter)
 // BASE?
-app.user('/', serviceRouter)
+app.use('/', serviceRouter)
 
 // Run server
 app.listen(3000,() =>{
