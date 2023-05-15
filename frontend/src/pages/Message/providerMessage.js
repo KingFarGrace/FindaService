@@ -60,7 +60,7 @@ export default class Message extends Component {
         const extra = (
             <Button type='primary' onClick={() => {
 
-                this.props.history.push('/menu/subscribe/' + this.props.match.params.id);
+                this.props.history.push('/provider/servicerequest');
             }}
             >
                 work

@@ -5,62 +5,54 @@ import { Avatar, List, Card, Button, Collapse } from 'antd';
 const { Panel } = Collapse;
 const data = [
     {
-        serviceProviderName: 'Service provider 2',
-        serviceName:'service name 2'
-        ,serviceStatus:'service subscribe submitted'
-        ,serviceContent:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
     {
-        serviceProviderName: 'Service provider 2',
-        serviceName:'service name 2'
-        ,serviceStatus:'service requested update'
-        ,serviceContent:'A rat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
     {
-        serviceProviderName: 'Service provider 3',
-        serviceName:'service name 3'
-        ,serviceStatus:'service accomplish'
-        ,serviceContent:'A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
     {
-        serviceProviderName: 'Service provider 4',
-        serviceName:'service name'
-        ,serviceStatus:'service requested update'
-        ,serviceContent:'A cat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
     {
-        serviceProviderName: 'Service provider 5',
-        serviceName:'service name'
-        ,serviceStatus:'service subscribe submitted'
-        ,serviceContent:'A turtle is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
     {
-        serviceProviderName: 'Service provider 6',
-        serviceName:'service name'
-        ,serviceStatus:'service accomplish'
-        ,serviceContent:'A phynix is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
+        ProviderName: 'Service provider 1',
+        Email:'sdasme 1'
+        ,Description:'service subscribe submitted'
+        ,Address:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
+        ,Postcode:'131'
     },
-
 ];
 export default class Message extends Component {
 
     render() {
         const extra = (
             <Button type='primary' onClick={() => {
-
-                this.props.history.push('/menu/subscribe/' + this.props.match.params.id);
+                this.props.history.push('/manager/provider');
             }}
             >
                 work
@@ -90,7 +82,6 @@ export default class Message extends Component {
                                     bordered={false}
                                     ghost={true}
                                 >
-
                                         <p style={{paddingLeft: 0,}}
                                          >
                                             {item.serviceName}

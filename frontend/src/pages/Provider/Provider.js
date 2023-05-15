@@ -1,4 +1,4 @@
-import './manager.css'
+import './provider.css'
 import storageUtils from '../../utils/storageUtils'
 import { Redirect, Link, Switch, Route , withRouter} from 'react-router-dom';
 import {
@@ -11,14 +11,14 @@ import {
 import { Breadcrumb, Layout, Menu, useLocation } from 'antd';
 import React, { useState } from 'react';
 import Logo from '../../assets/images/logo192.png';
-import ManagerHome from '../AdminHome/AdminHome'
-import LeftNav from '../../components/AdminLeft/index';
+import Home from '../ProviderHome/ProviderHome'
+import LeftNav from '../../components/ProviderLeft/index';
 import Servicemenu from '../AdminServiceMenu/AdminServiceMenu'
-import providermanager from '../ProviderManager/providermanager'
-import providermenu from '../pm/AdminServiceMenu'
+import providermanager from '../ProviderRequest/providerRequest'
+import providermenu from '../ProviderMenu/AdminServiceMenu'
 import Userinfo from '../Userinfo/userinfo';
-import MHeader from '../../components/AdminHead/index';
-import Message from '../Message/adminMessage';
+import MHeader from '../../components/ProviderHead/index';
+import Message from '../Message/providerMessage';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -51,12 +51,11 @@ const App = () => {
           }}
         >
           <Switch>
-            <Route path='/manager/managerhome' component={ManagerHome}></Route>   
-            <Route path='/manager/service' component={Servicemenu}></Route>
-            <Route path='/manager/provider' component={providermanager}></Route>  
-            <Route path='/manager/providermanage' component={providermenu}></Route>  
-            <Route path='/manager/message' component={Message}></Route>  
-            <Redirect to='/manager/managerhome' />
+            <Route path='/provider/providerhome' component={Home}></Route>   
+            <Route path='/provider/servicelist' component={providermenu}></Route>  
+            <Route path='/provider/servicerequest' component={providermanager}></Route>  
+            <Route path='/provider/message' component={Message}></Route>  
+            <Redirect to='/provider/providerhome' />
           </Switch>
 
         </Content>

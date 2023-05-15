@@ -11,7 +11,6 @@ import {
 import './index.css'
 // 通过connect高级组件 对普通组件进行包装
 import { connect } from "react-redux";
-
 const { Header } = Layout;
 const { confirm } = Modal;
 
