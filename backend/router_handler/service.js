@@ -7,10 +7,10 @@ const serviceModel = require('../db/serviceModel').serviceModel
 function makeQuery(catagory, city) {
     var isCatagoryExist = exists(catagory)
     var isCityExist = exists(city)
-    if (isCatagoryExist && isCityExist) return { catagory: catagory, city: { $regex: new RegExp(city, 'i') } }
-    if (isCatagoryExist && !isCityExist) return { catagory: catagory }
-    if (!isCatagoryExist && isCityExist) return { city: { $regex: new RegExp(city, 'i') } }
-    if (!isCatagoryExist && !isCityExist) return {  }
+    if (isCatagoryExist && isCityExist) return { catagory: catagory, area: { $regex: new RegExp(city, 'i') }, available: true }
+    if (isCatagoryExist && !isCityExist) return { catagory: catagory, available: true }
+    if (!isCatagoryExist && isCityExist) return { area: { $regex: new RegExp(city, 'i') }, available: true }
+    if (!isCatagoryExist && !isCityExist) return { available: true }
 }
 
 function getServices(req, res) {
@@ -18,7 +18,7 @@ function getServices(req, res) {
     var query = req.query
     var pageCap = 5
     var serviceQuery = makeQuery(query.catagory, query.city)
-    serviceModel.countDocuments({ serviceQuery }).then((count, err) => {
+    serviceModel.countDocuments(serviceQuery).then((count, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
@@ -27,20 +27,21 @@ function getServices(req, res) {
             res,
             failRtn.noMatchedService
         )
-
-        serviceModel.find({ serviceQuery }).limit(pageCap).skip(pageCap * (query.pageNum - 1))
+        serviceModel.find(serviceQuery).limit(pageCap).skip(pageCap * (query.pageNum - 1))
         .then((data, err) => {
-            // data.count = count
-            data.pageCount = Math.ceil(count / query.pageCap)
             if (err) return rtnJson(
                 res,
                 failRtn.dbOperationError
             )
+            pageCount = Math.ceil(count / pageCap)
             return rtnJson(
                 res,
                 successRtn.retrieve,
                 'catagory=' + query.catagory + '&city=' + query.city + '&pageNum=' + query.pageNum,
-                data
+                {
+                    data: data,
+                    pageCount: pageCount
+                }
             )
         })
     })
@@ -54,12 +55,13 @@ function addService(req, res) {
             res,
             failRtn.dbOperationError
         )
+        return rtnJson(
+            res,
+            successRtn.create,
+            ' Waiting for acception from admin...'
+        )
     })
-    return rtnJson(
-        res,
-        successRtn.create,
-        ' Waiting for acception from admin...'
-    )
+    
 }
 
 function displayServices(req, res) {

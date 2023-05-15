@@ -11,12 +11,12 @@ function sendRequest(req, res) {
             res,
             failRtn.dbOperationError
         )
+        return rtnJson(
+            res,
+            successRtn.create,
+            ':Request'
+        )
     })
-    return rtnJson(
-        res,
-        successRtn.create,
-        ':Request'
-    )
 }
 
 function updateRequest(req, res) {
@@ -33,11 +33,11 @@ function updateRequest(req, res) {
             failRtn.noMatchedRequest,
             '_id: ' + body._id
         )
+        return rtnJson(
+            res,
+            successRtn.update
+        )
     })
-    return rtnJson(
-        res,
-        successRtn.update
-    )
 }
 
 function getRequests(req, res) {

@@ -26,12 +26,12 @@ function setUserStatus(req, res, available) {
                 res,
                 failRtn.invalidEmail
             )
+            return rtnJson(
+                res,
+                successRtn.update
+            )
         })
     })
-    return rtnJson(
-        res,
-        successRtn.update
-    )
 }
 
 function activateUser(req, res) {
@@ -69,13 +69,13 @@ function activareService(req, res) {
                 res,
                 failRtn.alreadyActivated
             ) 
+            return rtnJson(
+                res, 
+                successRtn.update,
+                ' provider: ' + body.provider + ' service: ' + body.service
+            )
         })
     })
-    return rtnJson(
-        res, 
-        successRtn.update,
-        ' provider: ' + body.provider + ' service: ' + body.service
-    )
 }
 
 function rmReviews(req, res) {
@@ -99,12 +99,12 @@ function rmReviews(req, res) {
                 res,
                 failRtn.noMatchedReview
             )
+            return rtnJson(
+                res,
+                successRtn.delete
+            )
         })
     })
-    return rtnJson(
-        res,
-        successRtn.delete
-    )
 }
 
 function getUnavailableUsers(req, res) {

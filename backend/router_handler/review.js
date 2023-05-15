@@ -43,15 +43,16 @@ function addReview(req, res) {
                     res,
                     failRtn.dbOperationError
                 )
+                return rtnJson(
+                    res,
+                    successRtn.create,
+                    '',
+                    body
+                )
             })
         })
     })
-    return rtnJson(
-        res,
-        successRtn.create,
-        '',
-        body
-    )
+    
 }
 
 function displayReviews(req, res) {
