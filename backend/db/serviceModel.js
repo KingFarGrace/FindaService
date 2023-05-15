@@ -8,6 +8,10 @@ const serviceSchema = mongoose.Schema({
     area: String,
     availability: String,
     price: String,
+    favrate: {
+        type: Number,
+        default: 0
+    },
     available: {
         type: Boolean,
         default: false

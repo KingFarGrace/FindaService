@@ -18,7 +18,7 @@ function getServices(req, res) {
     var query = req.query
     var pageCap = 5
     var serviceQuery = makeQuery(query.catagory, query.city)
-    serviceModel.countDocuments({ serviceQuery }).then((err, count) => {
+    serviceModel.countDocuments({ serviceQuery }).then((count, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
