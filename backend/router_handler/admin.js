@@ -107,7 +107,7 @@ function rmReviews(req, res) {
     )
 }
 
-function getUnavailableUser(req, res) {
+function getUnavailableUsers(req, res) {
     userModel.find({ available: false }).then((data, err) => {
         if (err) return rtnJson(
             res,
@@ -122,13 +122,61 @@ function getUnavailableUser(req, res) {
     })
 }
 
-function getLowLevelProvider(req, res) {
-    
+function getLowLevelProviders(req, res) {
+    userModel.aggregate([
+        {
+            $match: { role: 'serviceProvider' }
+        },
+        {
+            $lookup: {
+                from: 'service',
+                localField: 'username',
+                foreignField: 'provider',
+                as: 'services'
+            }
+        },
+        {
+            $lookup: {
+                from: 'review',
+                localField: 'services',
+                foreignField: 'service',
+                as: 'reviews'
+            }
+        }
+    ]).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        var avgProviderRate = []
+        for (i = 0; i < data.length; i++) {
+            var provider = data[i].username
+            var services = data[i].services
+            var sumrate = 0
+            for (j = 0; j < services.length; j++) {
+                var service = services[j]
+                sumrate += service.favrate
+            }
+            var avgrate = sumrate / services.length
+            if (avgrate < 0.9) avgProviderRate.push({ 
+                provider: provider, 
+                avgrate: avgrate 
+            })
+        }
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            'Low level providers.',
+            avgProviderRate
+        )
+    })
 }
 
 module.exports = {
     activateUser: activateUser,
     rmUser: rmUser,
     activareService: activareService,
-    rmReviews: rmReviews
+    rmReviews: rmReviews,
+    getUnavailableUsers: getUnavailableUsers,
+    getLowLevelProviders: getLowLevelProviders
 }
