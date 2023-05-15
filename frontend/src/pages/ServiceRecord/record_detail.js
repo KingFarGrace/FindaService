@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
-import { reqSubscribeService } from '../../api';
+import { reqSubscribeService, reqUpdateRequest } from '../../api';
 
 const { TextArea } = Input;
 const { confirm } = Modal;
@@ -12,13 +12,13 @@ export default class record_detail extends Component {
     dataPreparation = () => {
         let user = memoryUtils.user
         //把用户数据拿出来存起来
-        let service = memoryUtils.service
+        let request = memoryUtils.request;
         //把url末尾的当前服务id拿出来存起来
         // console.log('邮箱是'+user.email)
         // console.log('目标服务id是'+id)
         this.userEmail = user.email
-        this.serviceEmail = service.email
-        this.serviceName = service.service
+        this.serviceEmail = request.email
+        this.serviceName = request.service
         console.log('发到后端的客户邮箱' + this.userEmail)
         console.log('发到后端的服务商邮箱' + this.serviceEmail)
         console.log('发到后端的服务名字' + this.serviceName)
@@ -35,12 +35,12 @@ export default class record_detail extends Component {
 
     onClick = () => {
         confirm({
-            title: 'are you sure you want to subscribe?',
+            title: 'Do you want to update your request?',
             onOk: () => {
                 this.onSubmit();
                 this.props.history.replace('/record');
                 //前后端连上把注释去掉
-                message.success('submitted successfully');
+                message.success('Updated successfully');
             },
             onCancel() {
                 console.log('Cancel');
@@ -53,7 +53,7 @@ export default class record_detail extends Component {
         const userEmail = this.userEmail;
         const providerEmail = this.serviceEmail;
         const provider = this.serviceName;
-        const res = await reqSubscribeService(content, userEmail, providerEmail, provider);
+        const res = await reqUpdateRequest(content, userEmail, providerEmail, provider);
         if (res.Code == 100) { message.success('submitted successfully'); }
     }
 
@@ -69,7 +69,7 @@ export default class record_detail extends Component {
                         this.props.history.goBack();
                     }}>
                 </Button>
-                Subscribe service
+                My service request
             </span>
 
         )

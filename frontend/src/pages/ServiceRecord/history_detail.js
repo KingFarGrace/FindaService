@@ -5,6 +5,7 @@ import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
 import { reqSubscribeService , reqAddReview } from '../../api';
 import moment from 'moment';
+// import { request } from './../../../../../test/my-project/src/app';
 const { TextArea } = Input;
 const { confirm } = Modal;
 
@@ -12,21 +13,21 @@ export default class History_detail extends Component {
     dataPreparation = () => {
         let user = memoryUtils.user
         //把用户数据拿出来存起来
-        let service = memoryUtils.service
+        let request = memoryUtils.request
         //把url末尾的当前服务id拿出来存起来
         // console.log('邮箱是'+user.email)
         // console.log('目标服务id是'+id)
         let currentTime = moment().format('YYYY-MM-DD HH:mm:ss')
         this.userEmail = user.email
-        this.serviceEmail = service.email
-        this.serviceName = service.service
-        this.serviceProvider = service.provider
+        this.serviceEmail = request.email
+        this.serviceName = request.service
+        this.serviceProvider = request.provider
         this.currentTime = currentTime
         this.userName = user.username
         console.log('发到后端的服务名字' + this.serviceName)
         console.log('发到后端的服务商名字' + this.serviceProvider)
         console.log('发到后端的当前时间'+this.currentTime)
-        console.log()
+
         console.log('发到后端的当前用户名字'+this.userName)
     
     }

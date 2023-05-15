@@ -84,11 +84,36 @@ export default class servicemenu extends Component {
     initColumns = () => {
         this.columns = [
             {
+                title: 'service provider',
+                // dataIndex: 'provider',
+                width: '10%',
+                align: 'center',
+                render: (service) => {
+
+                    return (
+                        <span>
+                            <Button
+                                type='link'
+                                onClick={() => {
+                                   memoryUtils.service = service;
+                                    // console.log('看这里'+ memoryUtils.service);
+                                    this.props.history.push('/menu/detail/' + service.id);
+                                }}
+                            >{service.provider}
+                            </Button>
+              
+                        </span>
+                    )
+                }
+            },
+            {
                 title: 'service name',
                 dataIndex: 'service',
                 width: '15%',
-                align: 'center'
+                align: 'center',
+                
             },
+            
             {
                 title: 'catagory',
                 dataIndex: 'catagory',
@@ -212,7 +237,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdasdfaslkfsadf215',
-                    email:'abc@qq.com'
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '3',
@@ -222,7 +249,9 @@ export default class servicemenu extends Component {
                     area: 'CCC',
                     availability: 'false',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '4',
@@ -232,7 +261,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '5',
@@ -242,7 +273,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '6',
@@ -252,7 +285,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com'
+                    email:'abc@qq.com',
+                    provider:'John Brown',
+                    price:'15£'
                 },
                 {
                     key: '7',
@@ -261,7 +296,9 @@ export default class servicemenu extends Component {
                     catagory: 'cleaning',
                     area: 'london',
                     availability: 'true',
-                    id: 'asdfasdklfjskl'
+                    id: 'asdfasdklfjskl',
+                    provider:'John Brown',
+                    price:'15£'
                 },
             ],
             //假数据
