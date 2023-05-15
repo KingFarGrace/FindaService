@@ -1,23 +1,12 @@
-function rtnJson(res, code, msg) {
-    return res.json(
-        JSON.stringify(
-            {
-                code: code,
-                msg: msg
-            }
-        )
-    )
-}
+const ResBody = require("../resp/resBody")
 
-function rtnJson(res, code, msg, obj) {
+function rtnJson(res, resp, sysMsg, obj) {
     return res.json(
-        JSON.stringify(
-            {
-                code: code,
-                msg: msg,
-                return_obj: obj
-            }
-        )
+        JSON.stringify({
+            code: resp.getCode(),
+            msg: resp.getMsg() + sysMsg,
+            return_obj: obj
+        })
     )
 }
 

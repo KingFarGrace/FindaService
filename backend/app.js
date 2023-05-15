@@ -7,7 +7,14 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 const userRouter = require('./router/user')
+const adminRouter = require('./router/admin')
+const serviceRouter = require('./router/service')
+const reviewRouter = require('./router/review')
 app.use('/', userRouter)
+app.use('/', adminRouter)
+// BASE?
+app.use('/', serviceRouter)
+app.use('/', reviewRouter)
 
 // Run server
 app.listen(3000,() =>{
