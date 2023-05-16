@@ -4,20 +4,20 @@ const successRtn = require('../resp/resps').success
 const failRtn = require('../resp/resps').failure
 const serviceModel = require('../db/serviceModel').serviceModel
 
-function makeQuery(category, city) {
-    var isCategoryExist = exists(category)
+function makeQuery(catagory, city) {
+    var isCatagoryExist = exists(catagory)
     var isCityExist = exists(city)
-    if (isCategoryExist && isCityExist) return { category: category, area: { $regex: new RegExp(city, 'i') }, available: true }
-    if (isCategoryExist && !isCityExist) return { category: category, available: true }
-    if (!isCategoryExist && isCityExist) return { area: { $regex: new RegExp(city, 'i') }, available: true }
-    if (!isCategoryExist && !isCityExist) return { available: true }
+    if (isCatagoryExist && isCityExist) return { catagory: catagory, area: { $regex: new RegExp(city, 'i') }, available: true }
+    if (isCatagoryExist && !isCityExist) return { catagory: catagory, available: true }
+    if (!isCatagoryExist && isCityExist) return { area: { $regex: new RegExp(city, 'i') }, available: true }
+    if (!isCatagoryExist && !isCityExist) return { available: true }
 }
 
 function getServices(req, res) {
     // TODO: search by provider name?
     var query = req.query
     var pageCap = 5
-    var serviceQuery = makeQuery(query.category, query.city)
+    var serviceQuery = makeQuery(query.catagory, query.city)
     serviceModel.countDocuments(serviceQuery).then((count, err) => {
         if (err) return rtnJson(
             res,
@@ -37,7 +37,7 @@ function getServices(req, res) {
             return rtnJson(
                 res,
                 successRtn.retrieve,
-                'category=' + query.category + '&city=' + query.city + '&pageNum=' + query.pageNum,
+                'category=' + query.catagory + '&city=' + query.city + '&pageNum=' + query.pageNum,
                 {
                     data: data,
                     pageCount: pageCount
