@@ -52,22 +52,22 @@ function customerRegister(req, res) {
                     res, 
                     failRtn.dbOperationError
                 )
+            })// All done
+            userModel.findOne({ email: body.email }).then((data, err) => {
+                if (err) return rtnJson(
+                    res,
+                    failRtn.dbOperationError
+                )
+                return rtnJson(
+                    res, 
+                    successRtn.register,
+                    '',
+                    data
+                )
             })
         })
     })
-    // All done
-    userModel.findOne({ email: body.email }).then((data, err) => {
-        if (err) return rtnJson(
-            res,
-            failRtn.dbOperationError
-        )
-        return rtnJson(
-            res, 
-            successRtn.register,
-            '',
-            data
-        )
-    })
+    
     
 }
 
@@ -116,13 +116,14 @@ function providerRegister(req, res) {
                     res, 
                     failRtn.dbOperationError
                 )
+                return rtnJson(
+                    res,
+                    successRtn.register
+                )
             })
         })
     })
-    return rtnJson(
-        res,
-        successRtn.register
-    )
+    
 }
 
 function login(req, res) {
@@ -220,12 +221,13 @@ function updateUserInfo(req, res) {
                 failRtn.invalidEmail,
                 body.email
             )
+            return rtnJson(
+                res,
+                successRtn.update
+            )
         })
     })
-    return rtnJson(
-        res,
-        successRtn.update
-    )
+    
 }
 
 function updatePwd(req, res) {
@@ -251,11 +253,12 @@ function updatePwd(req, res) {
             failRtn.invalidEmail,
             body.email
         )
+        return rtnJson(
+            res,
+            successRtn.update
+        )
     })
-    return rtnJson(
-        res,
-        successRtn.update
-    )
+    
 }
 
 module.exports = {
