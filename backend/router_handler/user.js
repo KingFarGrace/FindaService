@@ -201,7 +201,7 @@ function updateUserInfo(req, res) {
             res,
             failRtn.dbOperationError
         )
-        if (data !== null && data.username !== body.username) return rtnJson(
+        if (data !== null && data.email !== body.email) return rtnJson(
             res,
             failRtn.duplicatedUsername,
             body.username
