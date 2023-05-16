@@ -196,12 +196,12 @@ function updateUserInfo(req, res) {
         failRtn.accountDataInvalid,
         msg
     )
-    userModel.find({ username: body.username }).then((data, err) => {
+    userModel.findOne({ username: body.username }).then((data, err) => {
         if (err) return rtnJson(
             res,
             failRtn.dbOperationError
         )
-        if (data.length !== 0) return rtnJson(
+        if (data !== null && data.email !== body.email) return rtnJson(
             res,
             failRtn.duplicatedUsername,
             body.username
