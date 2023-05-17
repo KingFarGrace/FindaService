@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Avatar, List, Card, Button, Collapse } from 'antd';
-import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyMessage, sendRequest, updateRequest } from '../../api';
 import { useHistory } from 'react-router-dom'
 import storageUtils from '../../utils/storageUtils';
 
@@ -23,7 +23,7 @@ export default class Message extends Component {
     }
     getService = async () => {
 
-        let result = await reqMyRequest(storageUtils.getUser().email);
+        let result = await reqMyMessage(storageUtils.getUser().email);
         //console.log("雪豹" + storageUtils.getUser().email);
       //  const response = JSON.stringify(result.data);
         const user = JSON.parse(result.data)

@@ -56,7 +56,7 @@ componentDidMount() {
         storageUtils.removeUser();
         // memoryUtils.user = {};
         // this.props.removeUser();
-        this.props.history.replace('/provider');
+        this.props.history.replace('/login');
       },
       onCancel() {
         console.log('Cancel');

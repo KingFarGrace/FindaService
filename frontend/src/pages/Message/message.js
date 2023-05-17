@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Avatar, List, Card, Button, Collapse } from 'antd';
 import memoryUtils from '../../utils/memoryUtils';
-import { reqCommentbyId } from '../../api/index';
+import { reqMyMessage } from '../../api/index';
 
 const { Panel } = Collapse;
 const data = [
@@ -13,74 +13,10 @@ export default class Message extends Component {
         super(props);
         this.state = {
             messages: [
-                {
-                    provider: 'Service provider 2',
-                    service: 'service name 2'
-                    , status: 'further details requested'
-                    , content: 'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: 'A11111122222'
-                    , email: 'abc@qq.com',
-
-
-                },
-                {
-                    provider: 'Service provider 2',
-                    service: 'service name 2'
-                    , status: 'service requested update'
-                    , content: 'A rat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: '131231414'
-                    , email: 'abc@qq.com',
-
-
-                },
-                {
-                    provider: 'Service provider 3',
-                    service: 'service name 3'
-                    , status: 'service accomplish'
-                    , content: 'A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: '35345245'
-                    , email: 'abc@qq.com',
-
-
-                },
-                {
-                    provider: 'Service provider 4',
-                    service: 'service name'
-                    , status: 'service requested update'
-                    , content: 'A cat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: 'sdfasfaf'
-                    , email: 'abc@qq.com',
-
-                },
-                {
-                    provider: 'Service provider 5',
-                    service: 'service name'
-                    , status: 'service subscribe submitted'
-                    , content: 'A turtle is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: '123123547'
-                    , email: 'abc@qq.com',
-
-                },
-                {
-                    provider: 'Service provider 6',
-                    service: 'service name'
-                    , status: 'service accomplish'
-                    , content: 'A phynix is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-                    , key: '1'
-                    , id: 'asdfasdxc12312'
-                    , email: 'abc@qq.com',
-
-                },
             ]
         }
 
     }
-
 
     dataPreparation = () => {
         let user = memoryUtils.user
@@ -94,29 +30,20 @@ export default class Message extends Component {
 
     loadMessage = async () => {
         const email = this.userEmail;
-        // const res = await this.setupState();
-        const res = await reqCommentbyId(email);
-        console.log(res);
-        if (res.status === 100) {
-            this.setState({ comment: res.message })
+        let result_json
+        console.log(email)
+        result_json = await reqMyMessage(email);
+        console.log("shut up" + result_json.data);
+        const result = JSON.parse(result_json.data);
+        console.log("shut down" + result.code);
+        if (result.code === 200) {
+            console.log("shut down" + result.return_obj);
+            this.setState({
+                messages: result.return_obj,
+            })
+            console.log("看看"+this.state.messages);
         }
     }
-
-    //test
-    // setupState() {
-    //     this.setState({
-    //         messages: [{
-    //             serviceProviderName: 'Service provider 1',
-    //             serviceName: 'service name 1'
-    //             , serviceStatus: 'service subscribe submitted'
-    //             , serviceContent: 'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-    //             , key: '1'
-    //             , serviceOrderNumber: 'A11111122222'
-    //         }]
-    //     });
-    // }
-
-
 
     disabled(request) {
         if (request.status === 'further details requested') {
@@ -147,15 +74,15 @@ export default class Message extends Component {
                                 type='primary'
                                 onClick={() => {
                                     memoryUtils.request = item;
-                                    this.props.history.push('/record/detail/' + item.id);
+                                    this.props.history.push('/record/detail/' + item._id);
                                 }}
                             >
                                 Update
                             </Button>}
                         >
                             <List.Item.Meta
-                                avatar={<Avatar src={"https://robohash.org/" + item.id + "?set=set4"} />}
-                                title={item.provider}
+                                avatar={<Avatar src={"https://robohash.org/" + item._id + "?set=set4"} />}
+                                title={item.sender}
                                 description=
                                 {
                                     <Collapse
@@ -165,11 +92,11 @@ export default class Message extends Component {
 
                                         <p style={{ paddingLeft: 0, }}
                                         >
-                                            {item.service}
+                                            {item.service.name}
                                         </p>
                                         <p style={{ paddingLeft: 0, }}
                                         >
-                                            Order number : {item.id}
+                                            Order number : {item._id}
                                         </p>
                                         <p style={{ paddingLeft: 0, }}
                                         >
@@ -177,11 +104,11 @@ export default class Message extends Component {
                                         </p>
 
                                         <Panel
-                                            header={item.status}
+                                            header= {"Current Status :" +item.status}
                                             key="2"
                                         >
                                             <p style={{ paddingLeft: 24, }} >
-                                               Request Number  {item.id} :
+                                               Dear  {item.receiver} :
                                             </p>
                                             <p style={{ paddingLeft: 24, }} >
                                                 {item.content}

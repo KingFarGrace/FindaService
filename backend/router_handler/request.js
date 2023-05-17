@@ -101,9 +101,11 @@ function getRequests2Me(req, res) {
 function getHistoryRequests(req, res) {
     var query = req.query
     requestModel.find({ 
-        receiver: query.email, 
-        status: 'rejected', 
-        status: 'completed' 
+        sender: query.email,
+        $or: [
+            { status: 'rejected' },
+            { status: 'completed' }
+        ]
     }).then((data, err) => {
         if (err) return rtnJson(
             res, 

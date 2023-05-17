@@ -26,10 +26,11 @@ const { Header, Content, Footer, Sider } = Layout;
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const user = storageUtils.getUser();
+  console.log('芝士user'+user.username)
   //若内存中存了用户名，则已登录，否则跳转至登录界面
-  // 前后跑通再取消注释是
+  // // 前后跑通再取消注释是
 
-  if (!((!user.username)^(!user.email))) {
+  if (!user.username) {
     return <Redirect to='/login' />
   }
 

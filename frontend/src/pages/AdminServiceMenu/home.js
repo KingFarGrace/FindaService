@@ -72,14 +72,14 @@ export default class servicemenu extends Component {
                                 onClick={() => {
                                     // console.log(service);
                                     memoryUtils.service = service;
-                                    console.log(service.availability);
+                                    console.log("撒大苏打"+service.availability);
                                     const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
                                     // console.log(this.props.history);
                                     //跳转详情页面
                                     
                                     memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push(operationPath + service.id);
+                                    this.props.history.push(operationPath + service.service);
                                 }}
                             >{operationText}
                             </Button>
@@ -189,23 +189,37 @@ export default class servicemenu extends Component {
 
         let result;
         if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
+            let result_json = await reqServices(null, null, pageNum);
+            console.log("雪豹" + result_json.data);
+            result = JSON.parse(result_json.data);
+            console.log("闭嘴" + result);
+            console.log("闭嘴" + result.return_obj);
+
         } else {
+            console.log("kk" + this.isSearch)
             let select = this.selectValue
             let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum:pageNum,
-                pageSize: PAGE_SIZE,
-                select:select,
-                input:input
-            })
+            console.log("进来了", select, input);
+            let result_json = await reqServices(
+                select,
+                input,
+                pageNum,
+            )
+            result = JSON.parse(result_json.data);
+            console.log("闭嘴" + result_json.data);
+            // console.log("闭嘴" + result.return_obj.data);
+
         }
-        if (result.code === '100') {
-            const { serviceList, total } = result.obj;
+        if (result.code === 200) {
+            const { data, pageCount } = result.return_obj;
+            console.log("芝士" + pageCount)
             this.setState({
-                services: serviceList,
-                total:total
+                services: data,
+                total: pageCount
             })
+        }else {
+            //message.error(result.msg)
+            this.props.history.replace('/menu')
         }
     }
     componentWillMount() {

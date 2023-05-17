@@ -3,7 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import { Layout, Button, Modal, Badge } from "antd";
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
-import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest,reqMyMessage } from '../../api';
 import menuList from '../../config/menuConfig';
 import {
   NotificationOutlined,
@@ -58,7 +58,7 @@ class MHeader extends Component {
   }
   getService = async () => {
 
-    let result = await reqMyRequest(storageUtils.getUser().email);
+    let result = await reqMyMessage(storageUtils.getUser().email);
   //  const response = JSON.stringify(result.data);
     const user = JSON.parse(result.data)
     user.return_obj = user.return_obj.filter(item => item.status != 'finished');

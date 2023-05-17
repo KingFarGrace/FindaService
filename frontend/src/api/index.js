@@ -47,7 +47,7 @@ export const reqRegister = (email, username, role, password, repeatPwd) => {
 }
 
 //服务注册
-export const reqServiceRegister = (email, username, role, password, repeatPwd, description, address, postcode) => {
+export const reqProviderRegister = (email, username, role, password, repeatPwd, description, address, postcode) => {
     return ajax(
         {
             method: 'POST',
@@ -67,14 +67,13 @@ export const reqServiceRegister = (email, username, role, password, repeatPwd, d
 
 
 // 获取所有服务
-export const reqServices = (pageNum, pageSize, searchCategory, searchCity) => {
-    return ajax(BASE + '/service/info',
+export const reqServices = (searchCategory, searchCity, pageNum) => {
+    return ajax(BASE + '/service/search?',
         {
             params: {
-                pageNum,
-                pageSize,
-                searchCategory,
-                searchCity
+                catagory: searchCategory,
+                city: searchCity,
+                pageNum: pageNum
             }
         }
     )
@@ -108,7 +107,7 @@ export const reqSearchServices = ({ pageNum, pageSize, searchCategory, searchCit
 }
 //按id搜索服务，其实这个好像用处不大了已经。
 export const reqServicebyId = (serviceId) => {
-    return ajax(BASE + '/service/info',
+    return ajax(BASE + '/service/info?',
         {
             params: {
                 serviceId
@@ -140,19 +139,40 @@ export const reqCommentbyId = (provider,service) => {
         }
     )
 }
-// 订阅服务
+//获取评论
+export const reqComment = (provider, service) => {
+    return ajax(BASE + '/review/info?', {
+        params: {
+            provider: provider,
+            service: service
+        }
+    })
+}
+
+
+
+//新建request
+// 订阅服务，注册服务提供商给管理员发送request
 // 等后端通知接口
-export const reqSubscribeService = (email, password, username, role, repeatPwd) => {
-    return ajax.post(BASE + '待修改',
+export const reqAddService = (sender,
+    receiver,
+    name,
+    cost,
+    content,
+    status,) => {
+    return ajax(
         {
             method: 'POST',
-            url: BASE + '/register/customer',
+            url: BASE + '/request/send',
             data: {
-                email,
-                password,
-                username,
-                role,
-                repeatPwd
+                sender,
+                receiver,
+                service: {
+                    name,
+                    cost
+                },
+                content,
+                status,
             }
         }
     )
@@ -187,10 +207,17 @@ export const reqDelComment = (adminKey, provider, service, username) => {
     )
 }
 
-
-
-
-
+// export const reqRequest = (username) => {
+//     return ajax(
+//         {
+//             method: 'POST',
+//             url: BASE + '/request',
+//             data: {
+//                 username,
+//             }
+//         }
+//     )
+// }
 export const reqDecServer = (adminKey, provider, service) => {
     return ajax(
         {
@@ -218,34 +245,67 @@ export const reqUpdateInformation = (email, username, address, postcode, descrip
                 postcode,
                 description
             }
-        }
-    )
+        })
 }
 
+// // 订阅服务
+// // 等后端通知接口
+// export const reqSubscribeService = (userEmail, providerEmail, serviceName, content) => {
+//     return ajax.post(BASE + '待修改',
+//         {
+
+//             data: {
+//                 userEmail,
+//                 providerEmail,
+//                 serviceName,
+//                 content
+//             }
+//         }
+//     )
+// }
+
 //获取正在进行的服务    
-export const reqMyRequest = (email) => {
-    return ajax(BASE + '/request/receiver?',
+export const reqMyRequest = (in_email) => {
+    return ajax(BASE + '/request/sender?',
         {
-            params: { email:email 
+            params: {
+                email: in_email
             }
         }
     )
 }
 
-export const reqRequest = (email) => {
-    return ajax(BASE + '/request/sender?',
+//获取正在进行的服务    
+// export const reqMyRequest = (email) => {
+//     return ajax(BASE + '/request/receiver?',
+//         {
+//             params: { email:email 
+//             }
+//         }
+//     )
+// }
+
+// export const reqRequest = (email) => {
+//     return ajax(BASE + '/request/sender?',
+//         {
+//             params: { email:email 
+export const reqMyMessage = (in_email) => {
+    return ajax(BASE + '/request/receiver?',
         {
-            params: { email:email 
+            params: {
+                email: in_email
             }
         }
     )
 }
 
 //获取已经完成的服务    
-export const reqHistoryRequest = (email) => {
-    return ajax(BASE + '待修改',
+export const reqHistoryRequest = (in_email) => {
+    return ajax(BASE + '/request/history?',
         {
-            params: { email }
+            params: { 
+                email:in_email
+            }
         }
     )
 }
@@ -256,15 +316,18 @@ export const reqAddReview = (provider,
     service,
     username,
     content,
-    ctime) => {
-    return ajax.post(BASE + '/review/add',
+    ctime,
+    level) => {
+    return ajax(BASE + '/review/add',
         {
+            method: 'POST',
             data: {
                 provider,
                 service,
                 username,
                 content,
-                ctime
+                ctime,
+                level
             }
         }
     )
@@ -277,8 +340,9 @@ export const reqEditUser = (
     address,
     postcode,
     description) => {
-    return ajax.post(BASE + '/user/update',
+    return ajax(BASE + '/user/update',
         {
+            method: 'POST',
             data: {
                 email,
                 username,
@@ -295,8 +359,9 @@ export const reqUpdatePassword = (
     oldPwd,
     newPwd,
     repeatNewPwd) => {
-    return ajax.post(BASE + '/pwd/update',
+    return ajax(BASE + '/pwd/update',
         {
+            method: 'POST',
             data: {
                 email,
                 oldPwd,
@@ -308,23 +373,23 @@ export const reqUpdatePassword = (
 
 
 //更新服务
-export const reqUpdateRequest = (userEmail, providerEmail, serviceName, content, status) => {
-    return ajax.post(BASE + '待修改',
+export const reqUpdateRequest = (in_id, in_content, in_status) => {
+    return ajax(BASE + '/request/update',
         {
+            method: 'POST',
             data: {
-                userEmail,
-                providerEmail,
-                serviceName,
-                content,
-                status
+                _id: in_id,
+                content: in_content,
+                status: in_status   
             }
         }
     )
 }
 //用户取消服务
 export const reqRejectRequest = (id, status) => {
-    return ajax.post(BASE + '待修改',
+    return ajax(BASE + '待修改',
         {
+            method: 'POST',
             data: {
                 id, status
             }
@@ -473,3 +538,23 @@ export const reqProviderService = (provider) => {
 
 
 
+//用户展示个人信息（还用来拿provider或user的邮箱）
+// export const reqUserInfo = (provider) => {
+//     return ajax(BASE + '/user/info?',
+//         {
+//             params: {
+//                 username: provider
+//             }
+//         }
+//     )
+// }
+
+export const reqUserInfo_email = (provider) => {
+    return ajax(BASE + '/user/info?',
+        {
+            params: {
+                email: provider
+            }
+        }
+    )
+}

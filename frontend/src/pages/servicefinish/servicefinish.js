@@ -3,7 +3,7 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest, reqMyMessage } from '../../api';
 import { useHistory } from 'react-router-dom'
 import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
@@ -55,8 +55,8 @@ export default class providermanager extends Component {
                                     const na = provider.service.name;
                                     const co = provider.service.cost;
                                     console.log(provider._id);
-                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is finished","finished");
-                                    let user = await updateRequest(provider._id,"Your service request is finished","finished")
+                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is finished","completed");
+                                    let user = await updateRequest(provider._id,"Your service request is finished","completed")
                                     await this.getService();
                                 }}
                             >Finish
@@ -85,7 +85,7 @@ export default class providermanager extends Component {
     获取分页
     getService = async () => {
 
-        let result = await reqMyRequest(storageUtils.getUser().email);
+        let result = await reqMyMessage(storageUtils.getUser().email);
       //  const response = JSON.stringify(result.data);
         const user = JSON.parse(result.data)
         this.setState({provider:user.return_obj})

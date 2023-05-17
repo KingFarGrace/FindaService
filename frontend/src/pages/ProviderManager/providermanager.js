@@ -3,7 +3,7 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices,reqProviders, sendRequest,reqMyRequest, reqUnProvider, acceptPro, reqRegister, reqRequest, updateRequest, removePro } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, sendRequest, reqUnProvider, acceptPro, reqRegister, reqMyRequest, updateRequest, removePro } from '../../api';
 import { useHistory } from 'react-router-dom'
 import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
@@ -61,13 +61,13 @@ export default class servicemenu extends Component {
                                 onClick={async() => {
                                     console.log("s撒打算"+storageUtils.getUser().password);
                                     console.log("的撒覅就"+provider.email);
-                                    let result = await reqRequest(provider.email)
+                                    let result = await reqMyRequest(provider.email)
       //  const response = JSON.stringify(result.data);
                                     const user = JSON.parse(result.data)
                                     const id = user.return_obj[0]._id
                                     const re = await updateRequest(id,"your account is passed","finished")
                                     //const request = await sendRequest(storageUtils.getUser().email,provider.name,null,"Update your account","");
-                                    const req = await acceptPro(storageUtils.getUser().password,provider.email);
+                                    const req = await acceptPro("A19?dM83iN",provider.email);
                                     this.getService()
                                 }}
                             >Accept
@@ -85,7 +85,7 @@ export default class servicemenu extends Component {
                                 onClick={async() => {
                                     console.log(storageUtils.getUser().email);
                                     console.log(provider.name);
-                                    let result = await reqRequest(provider.email)
+                                    let result = await reqMyRequest(provider.email)
       //  const response = JSON.stringify(result.data);
                                     const user = JSON.parse(result.data)
                                     const id = user.return_obj[0]._id
