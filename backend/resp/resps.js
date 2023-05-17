@@ -35,6 +35,7 @@ const noMatchedReview = new ResBody(2, 5, 'No matched reviews.')
 const noReviewsFound = new ResBody(2, 6, 'No reviews found.')
 const noMatchedRequest = new ResBody(2, 7, 'No matched requests.')
 const noRequestsFound = new ResBody(2, 8, 'No requests found.')
+const invalidQuery = new ResBody(2, 9, 'Invalid query.')
 
 /**
  * Return group: update
@@ -88,6 +89,7 @@ module.exports.failure = {
     noReviewsFound: noReviewsFound,
     noMatchedRequest: noMatchedRequest,
     noRequestsFound: noRequestsFound,
+    invalidQuery: invalidQuery,
     /* Group 3 */
     duplicatedPwd: duplicatedPwd,
     alreadyActivated: alreadyActivated,

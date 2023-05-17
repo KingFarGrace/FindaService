@@ -1,5 +1,6 @@
 const userModel = require('../db/userModel').userModel
 const verify = require('../utils/validateUtil').verify
+const exists = require('../utils/validateUtil').exists
 const validationSchemas = require('../validation/user')
 const rtnJson = require('../utils/respUtil').rtnJson
 const successRtn = require('../resp/resps').success
@@ -168,6 +169,39 @@ function login(req, res) {
 }
 
 function getUserInfo(req, res) {
+    var emailFlag = exists(req.query.email)
+    var usernameFlag = exists(req.query.username)
+    if (emailFlag && usernameFlag) return getUserInfoByEmail(req, res)
+    if (emailFlag && !usernameFlag) return getUserInfoByEmail(req, res)
+    if (!emailFlag && usernameFlag) return getUserInfoByUsername(req, res)
+    if (!emailFlag && !usernameFlag) return rtnJson(
+        res,
+        failRtn.invalidQuery
+    )
+}
+
+function getUserInfoByEmail(req, res) {
+    var email = req.query.email
+    userModel.findOne({ email: email, available: true }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        if (data === null) return rtnJson(
+            res,
+            failRtn.invalidEmail,
+            email
+        )
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            ' Email: ' + email,
+            data
+        )
+    })
+}
+
+function getUserInfoByUsername(req, res) {
     var username = req.query.username
     userModel.findOne({ username: username, available: true }).then((data, err) => {
         if (err) return rtnJson(
