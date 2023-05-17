@@ -20,7 +20,7 @@ export default class record_detail extends Component {
             title: 'Do you want to update your request?',
             onOk: () => {
                 this.onSubmit();
-                // this.props.history.replace('/record');
+                this.props.history.replace('/record');
                 //前后端连上把注释去掉
 
             },
@@ -40,7 +40,7 @@ export default class record_detail extends Component {
 
 
         const res = JSON.parse(result_json.data);
-        if (res.Code == 300) { message.success('submitted successfully'); }
+        if (res.code == 300) { message.success('submitted successfully'); }
         else{message.error(res.msg)}
         
     }

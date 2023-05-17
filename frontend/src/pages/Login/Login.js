@@ -20,7 +20,6 @@ const App = () => {
     // // 跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
     // console.log('Received values of form: ', values);
     // message.success('login successfully')
-
     // const { email, password } = values;
     // const res_json = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
     // console.log("芝士res" + res_json.data);
@@ -81,6 +80,7 @@ const App = () => {
     } else {
       message.error(res.msg);
     }
+
   };
   const onFinish_username = async (values) => {
 
