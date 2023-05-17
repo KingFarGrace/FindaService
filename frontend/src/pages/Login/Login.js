@@ -21,23 +21,63 @@ const App = () => {
     // console.log('Received values of form: ', values);
     // message.success('login successfully')
 
+    // const { email, password } = values;
+    // const res_json = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
+    // console.log("芝士res" + res_json.data);
+    // const res = JSON.parse(res_json.data);
+    // console.log(res)
+    // console.log(res.return_obj)
+
+    // console.log("Successfully")
+    // // 登录成功传回来的code是100时，把用户信息存到本地。
+    // if (res.code === 100) {
+    //   const user = res.userInfo;
+    //   storageUtils.saveUser(res.return_obj);
+    //   // 跳转到导航页面
+    //   history.replace('/')
+    //   // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
+    //   message.success('login successfully')
+
+    // } else {
+    //   message.error(res.msg);
+    // }
+    
     const { email, password } = values;
     const res_json = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
     console.log("芝士res" + res_json.data);
     const res = JSON.parse(res_json.data);
     console.log(res)
-    console.log(res.return_obj)
-
-    console.log("Successfully")
+    // console.log(res.return_obj)
+    //console.log(res.return_obj.role)
     // 登录成功传回来的code是100时，把用户信息存到本地。
     if (res.code === 100) {
       const user = res.userInfo;
       storageUtils.saveUser(res.return_obj);
+      console.log("跳1")
       // 跳转到导航页面
-      history.replace('/')
-      // 本来想用this.props.history.replace('/admin')的，但是antd这里form有点怪props我没搞明白，直接用文档里的例子了。
-      message.success('login successfully')
-
+      if (res.return_obj.role === "customer") {
+        console.log("跳2")
+        history.replace('/')
+        message.success('login successfully')
+      } else if (res.return_obj.role === "admin") {
+        history.replace('/manager')
+        message.success('login successfully')
+      } else if (res.return_obj.role === "serviceProvider") {
+        console.log("跳3")
+        console.log(JSON.stringify(res.return_obj))
+        console.log("Available:", res.return_obj.available);
+        if (res.return_obj.available ) {
+          console.log("跳4")
+          history.replace('/provider')
+          message.success('login successfully')
+        }
+        else {
+          console.log("跳5")
+          history.replace('/waitProvider')
+          message.info('Require further information')
+        }
+        
+      }
     } else {
       message.error(res.msg);
     }
@@ -55,22 +95,30 @@ const App = () => {
     if (res.code === 100) {
       const user = res.userInfo;
       storageUtils.saveUser(res.return_obj);
+      console.log("跳1")
       // 跳转到导航页面
       if (res.return_obj.role === "customer") {
+        console.log("跳2")
         history.replace('/')
         message.success('login successfully')
       } else if (res.return_obj.role === "admin") {
         history.replace('/manager')
         message.success('login successfully')
       } else if (res.return_obj.role === "serviceProvider") {
+        console.log("跳3")
+        console.log(JSON.stringify(res.return_obj))
+        console.log("Available:", res.return_obj.available);
         if (res.return_obj.available ) {
+          console.log("跳4")
           history.replace('/provider')
           message.success('login successfully')
         }
         else {
+          console.log("跳5")
           history.replace('/waitProvider')
           message.info('Require further information')
         }
+        
       }
     } else {
       message.error(res.msg);

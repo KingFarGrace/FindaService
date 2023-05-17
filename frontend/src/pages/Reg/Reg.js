@@ -3,7 +3,7 @@ import logo from '../../assets/images/logo192.png'
 import './register.css'
 
 import { useHistory } from 'react-router-dom';
-import { reqServiceRegister, reqRegister, reqProviderRegister,  } from '../../api';
+import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService} from '../../api';
 import {
   AutoComplete,
   Button,
@@ -70,7 +70,7 @@ const App = () => {
     console.log('Received values of form' + description, address, postcode);
     console.log(role);
     if (role == "customer") {
-      
+
       const res_json = await reqRegister(email, username, role, password, confirm);
       console.log("芝士" + res_json);
       const res = JSON.parse(res_json.data);
@@ -88,13 +88,20 @@ const App = () => {
       const res = JSON.parse(res_json.data);
       console.log(res);
       if (res.code === 110) {
+        
         openNotification();
+        sendrequest(email,)
         history.replace('/login')
       } else {
         message.error(res.msg);
       }
     }
   };
+
+  const sendrequest = async (email) => {
+    const res = await reqAddService(email,'admin@admin.com',null,null,null,'newaccount')
+  }
+
 
   const handleRoleChange = (e) => {
     const roleValue = e.target.value;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Button, Select, Input, Table, Badge, Descriptions } from 'antd';
+import memoryUtils from '../../utils/memoryUtils';
 
 export default class Userinfo_detail extends Component {
     constructor() {
@@ -16,7 +17,13 @@ export default class Userinfo_detail extends Component {
             }
         }
     }
-
+    componentDidMount() {
+        this.getUser()
+    }
+    getUser = async () => {
+        let user = memoryUtils.user
+        console.log(user)
+    }
     render() {
         const extra = (
             <Button type='primary' onClick={() => {
