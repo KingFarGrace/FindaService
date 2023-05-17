@@ -33,6 +33,9 @@ class MHeader extends Component {
       title: 'Log out？',
       onOk: () => {
         storageUtils.removeUser();
+        memoryUtils.service = {}
+        memoryUtils.request = {}
+        memoryUtils.message = {}
         // memoryUtils.user = {};
         // this.props.removeUser();
         this.props.history.replace('/login');
@@ -78,7 +81,7 @@ componentDidMount() {
 }
 
   render() {
-    const user = memoryUtils.user;
+    const user = storageUtils.getUser()
     const { num } = this.state;
     // const user = this.props.user;
     console.log(user.username + '123');

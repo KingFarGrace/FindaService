@@ -57,7 +57,8 @@ export default class providermanager extends Component {
                                     console.log(provider._id);
                                     let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is finished","completed");
                                     let user = await updateRequest(provider._id,"Your service request is finished","completed")
-                                    await this.getService();
+                                    // await this.getService();
+                                    this.props.history.replace('/provider');
                                 }}
                             >Finish
                             </Button>
@@ -107,6 +108,8 @@ export default class providermanager extends Component {
         this.getService();
     }
 
+    
+
     render() {
         let {provider, total } = this.state;
         // const onSearch = (value) => {
@@ -114,7 +117,13 @@ export default class providermanager extends Component {
         //     console.log(this.state.selectType)
         // };
         // const {selectType} = this.state;
+  
         provider = provider.filter(item => item.status === 'accepted');
+        // if (provider.length === 0) {
+        //     return (
+        //         <div>No providers found.</div>
+        //     );
+        // }
         return (
             <>
 

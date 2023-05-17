@@ -151,6 +151,105 @@ export default class Servicerecord extends Component {
         super()
         this.state = {
             requests: [
+                {
+                    key: '1',
+                    catagory: 'cleaning',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    area: 'london',
+                    availability: 'true',
+                    id: '1',
+                    email: 'abc@qq.com',
+                    status: 'further details requested',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                    //每个数据一个id
+                },
+                {
+                    key: '2',
+                    catagory: 'cleaning',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    area: 'london',
+                    availability: 'true',
+                    id: '2',
+                    email: 'abc@qq.com',
+                    status: 'pending for agree',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
+                {
+                    key: '3',
+                    service: 'AAA',
+                    catagory: 'FFF',
+                    description: 'SDFSFSFSFf',
+                    area: 'CCC',
+                    availability: 'false',
+                    id: '3',
+                    email: 'abc@qq.com',
+                    status: 'need new info',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
+                {
+                    key: '4',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
+                    id: '4',
+                    email: 'abc@qq.com',
+                    status: 'further details requested',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
+                {
+                    key: '5',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
+                    id: 'asdfasdklfjskl',
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
+                {
+                    key: '6',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
+                    id: 'asdfasdklfjskl',
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
+                {
+                    key: '7',
+                    service: 'John Brown',
+                    description: 'abcdasdfjaldkf',
+                    catagory: 'cleaning',
+                    area: 'london',
+                    availability: 'true',
+                    id: 'asdfasdklfjskl',
+                    email: 'abc@qq.com',
+                    status: 'active',
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
+                },
             ],
             //假数据
             total: 0 //总页数

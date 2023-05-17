@@ -56,6 +56,9 @@ componentDidMount() {
         storageUtils.removeUser();
         // memoryUtils.user = {};
         // this.props.removeUser();
+        memoryUtils.service = {}
+        memoryUtils.request = {}
+        memoryUtils.message = {}
         this.props.history.replace('/login');
       },
       onCancel() {
@@ -79,7 +82,7 @@ componentDidMount() {
   }
 
   render() {
-    const user = memoryUtils.user;
+    const user = storageUtils.getUser();
     const { num } = this.state;
     // const user = this.props.user;
     console.log(user.username + '123');
