@@ -3,27 +3,32 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices,reqProviders,reqLowProvider } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest, reqMyMessage } from '../../api';
 import { useHistory } from 'react-router-dom'
-import providerUtils from '../../utils/providerUtils';
+import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
 const { Search } = Input;
 
 
-
-export default class providemenu extends Component {
+export default class providermanager extends Component {
     initColumns = () => {
         this.columns = [
             {
-                title: 'Service Provider Name',
-                dataIndex: 'provider',
-                width: '60%',
+                title: 'Service  Name',
+                dataIndex: ['service', 'name'],
+                width: '10%',
                 align: 'center'
             },
             {
-                title: 'Negative Review Rate',
-                dataIndex: 'avgrate',
-                width: '30%',
+                title: 'Service  Price',
+                dataIndex: ['service', 'cost'],
+                width: '10%',
+                align: 'center'
+            },
+            {
+                title: 'Content',
+                dataIndex: 'content',
+                width: '60%',
                 align: 'center'
             },
             {
@@ -31,7 +36,6 @@ export default class providemenu extends Component {
                 align: 'center',
                 width: '10%',
                 render: (provider) => {
-                    let operationText = provider.availability === 'true' ? 'Delate' : 'Accpet';
                     return (
                         <div
                         style={{
@@ -47,20 +51,15 @@ export default class providemenu extends Component {
                                   }}
                                 type="primary"
                                 name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                //    memoryUtils.service = service;
-                                 //   console.log(service.availability);
-                                   // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
-                                    
-                              //      memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                                    providerUtils.provider = provider;
-                                    this.props.history.push('/manager/providermanage/service/' + provider.provider);
+                                onClick={async() => {
+                                    const na = provider.service.name;
+                                    const co = provider.service.cost;
+                                    console.log(provider._id);
+                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is finished","completed");
+                                    let user = await updateRequest(provider._id,"Your service request is finished","completed")
+                                    await this.getService();
                                 }}
-                            >Details
+                            >Finish
                             </Button>
                         </div>
                     )
@@ -69,27 +68,29 @@ export default class providemenu extends Component {
         ]
     
     }
+    
 
     constructor() {
         super()
         this.state = {
             provider: [
-            
+                {
+                }
             ],
             //假数据
-            total: 0 //总页数
+      //      total: 0 //总页数
         }
     }
 
     获取分页
     getService = async () => {
 
-        let result = await reqLowProvider()
-        const response = JSON.stringify(result.data);
+        let result = await reqMyMessage(storageUtils.getUser().email);
+      //  const response = JSON.stringify(result.data);
         const user = JSON.parse(result.data)
         this.setState({provider:user.return_obj})
-        console.log("雪豹" + user.return_obj[0].provider);
-        
+        console.log("雪豹" + user.return_obj[0].service.name);
+       
         // if (result.code === '100') {
         //     const { providerList, total } = result.obj;
         //     this.setState({
@@ -107,12 +108,13 @@ export default class providemenu extends Component {
     }
 
     render() {
-        const {provider, total } = this.state;
+        let {provider, total } = this.state;
         // const onSearch = (value) => {
         //     console.log(value)
         //     console.log(this.state.selectType)
         // };
         // const {selectType} = this.state;
+        provider = provider.filter(item => item.status === 'accepted');
         return (
             <>
 

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { reqCommentbyId, reqServicebyId, reqDelComment } from '../../api'
+import { reqCommentbyId, reqServicebyId, reqDelComment, addService, sendRequest } from '../../api'
 import storageUtils from '../../utils/storageUtils'
 import { Card, List, Tooltip, Button, Input } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons';
 // import { Comment } from '@ant-design/compatible';
 import { Comment } from '@ant-design/compatible';
-
+//import storageUtils from '../../utils/storageUtils'
 import { Switch, Route } from 'react-router-dom';
 import memoryUtils from '../../utils/memoryUtils';
 
@@ -20,8 +20,8 @@ export default class newService extends Component {
                 category: '',
                 area: '',
                 description: '',
-                availability: '',
-
+                availability: 'false',
+                price: ''
             },
             //经典假数据
             comment: [
@@ -74,7 +74,7 @@ export default class newService extends Component {
         this.setState({ service: updatedService });
     };
 
-    handleSave = () => {
+    handleSave = async() => {
         // Save the updated service data
         // You can make an API call here to save the data to the server
         // For demonstration purposes, let's log the updated service data
@@ -82,7 +82,6 @@ export default class newService extends Component {
 
         // Define the valid category options
         const validCategories = [
-            "All",
             "Cleaning",
             "Babysitting",
             "Pest Control",
@@ -95,8 +94,15 @@ export default class newService extends Component {
             alert("Please enter a valid category.");
             return;
         }
+        else{
+        const request = await addService(storageUtils.getUser().username,service.service,service.category,service.description,service.area,service.availability,service.price);
+        console.log("撒大大"+storageUtils.getUser().username,service.service,service.category,service.description,service.area,service.availability,service.price);
+        const ser = service.service
+        const cos = service.price
+        const re = await sendRequest(storageUtils.getUser().username,"admin",{ser,cos},"create a service","new service")
         this.props.history.push('/provider/servicelist/');
-        console.log(this.state.service);
+        console.log(this.state.service.availability);
+        }
     };
 
 
@@ -167,12 +173,12 @@ export default class newService extends Component {
             >
                 <List className="test" bordered itemLayout="horizontal" size="small">
                     <List.Item>
-                        <List.Item.Meta title="Service Name" />
+                        <List.Item.Meta title="Name" />
                         <Input placeholder="Please input your service name" value={service.service} onChange={(e) => this.handleInputChange('service', e)} />
                     </List.Item>
                     <List.Item>
                         <List.Item.Meta title="Category" />
-                        <Input placeholder="Please input the category of your service ('All',
+                        <Input placeholder="Please input the category of your service (
             'Cleaning',
             'Babysitting',
             'Pest Control',
@@ -194,7 +200,7 @@ export default class newService extends Component {
                     </List.Item>
                     <List.Item>
                         <List.Item.Meta title="Price" />
-                        <Input placeholder="Please input the price of your service" value={service.price} onChange={(e) => this.handleInputChange('price', e)} />
+                        <Input type="number" placeholder="Please input the price of your service" value={service.price} onChange={(e) => this.handleInputChange('price', e)} />
                     </List.Item>
                 </List>
                 {/* <Button type="primary" onClick={this.handleSave}>

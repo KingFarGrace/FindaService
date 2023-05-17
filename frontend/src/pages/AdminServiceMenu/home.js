@@ -3,7 +3,7 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices } from '../../api';
+import { reqServices, reqSearchServices, getunService } from '../../api';
 import { useHistory } from 'react-router-dom'
 import memoryUtils from '../../utils/memoryUtils';
 
@@ -45,10 +45,11 @@ export default class servicemenu extends Component {
                 align: 'center'
             },
             {
-                title: 'Availability',
-                dataIndex: 'availability',
+                title: 'available',
+                dataIndex: 'available',
                 width: '10%',
                 align: 'center',
+                render: (available) => String(available)
             },
 
             {
@@ -56,7 +57,7 @@ export default class servicemenu extends Component {
                 align: 'center',
                 width: '10%',
                 render: (service) => {
-                    let operationText = service.availability === 'true' ? 'Details' : 'Check';
+                    let operationText = service.available === true ? 'Details' : 'Check';
                     return (
                         <span>
                             <Button
@@ -72,14 +73,14 @@ export default class servicemenu extends Component {
                                 onClick={() => {
                                     // console.log(service);
                                     memoryUtils.service = service;
-                                    console.log(service.availability);
-                                    const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
+                                    console.log("撒大苏打"+service.available);
+                                    const operationPath = service.available === true ? '/manager/service/detail/' : '/manager/service/check/';
                                     // console.log(this.props.history);
                                     //跳转详情页面
                                     
-                                    memoryUtils.service = service;
+                                  //  memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push(operationPath + service.id);
+                                    this.props.history.push(operationPath + service.service);
                                 }}
                             >{operationText}
                             </Button>
@@ -118,66 +119,7 @@ export default class servicemenu extends Component {
         super()
         this.state = {
             services: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdfasdklfjskl213'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdasdfaslkfsadf215'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'false',
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cafaning',
-                    area: 'london',
-                    availability: 'true',
-                },
+               
             ],
             //假数据
             total: 0 //总页数
@@ -186,34 +128,18 @@ export default class servicemenu extends Component {
 
     获取分页获取表格数据
     getService = async (pageNum) => {
-
-        let result;
-        if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
-        } else {
-            let select = this.selectValue
-            let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum:pageNum,
-                pageSize: PAGE_SIZE,
-                select:select,
-                input:input
-            })
-        }
-        if (result.code === '100') {
-            const { serviceList, total } = result.obj;
-            this.setState({
-                services: serviceList,
-                total:total
-            })
-        }
+        let result = await getunService();
+        //  const response = JSON.stringify(result.data);
+          const user = JSON.parse(result.data)
+          this.setState({services:user.return_obj})
+          console.log("雪豹" + user.return_obj[0].service);
     }
     componentWillMount() {
         this.initColumns();
     }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
 
     render() {
@@ -297,7 +223,7 @@ export default class servicemenu extends Component {
                     style={{
                         width: '100%',
                     }}
-                    title={title}
+                 //   title={title}
                 >
                     <Table
                         columns={this.columns}

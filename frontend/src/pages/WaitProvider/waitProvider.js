@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { reqRequest } from '../../api';
+import { getReqeust, reqRequest, reqUserInfo,reqMyRequest,sendRequest } from '../../api';
 import storageUtils from '../../utils/storageUtils';
 import { Avatar, List, Card, Button, Collapse } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -14,13 +14,24 @@ const RequestPage = () => {
   }, []);
 
   const checkRequest = async () => {
-    // const response = await reqRequest(storageUtils.getUser().username);
-    if (true) {
-      setMessage("Please click on the button to update your information");
-      setShowDescription(true);
-    } else {
-      setMessage('请等待管理员审核');
-    }
+     try{
+      const response = await reqMyRequest(storageUtils.getUser().email);
+    // const user = JSON.parse(response.data);
+     // const user = JSON.stringify(response)
+       const user = JSON.parse(response.data)
+       const status = user.return_obj[0].status
+      console.log("雪豹" + response);
+      if(status==="Updated"){
+       setMessage("Please click on the button to update your information");
+       setShowDescription(true);
+      }
+      else{
+        setMessage("Your account was rejected, please register again!");
+      }
+   }
+   catch{
+     setMessage('Please wait for administrator review');
+   }
   };
 
   return (

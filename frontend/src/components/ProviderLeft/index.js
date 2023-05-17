@@ -105,6 +105,11 @@ class LeftNav extends Component {
                         Request SERVICE
                         <Link to='/provider/servicerequest'></Link>
                     </Menu.Item>
+                    <Menu.Item key="/provider/servicefinish">
+                        <TeamOutlined />
+                        Finish SERVICE
+                        <Link to='/provider/servicefinish'></Link>
+                    </Menu.Item>
                 </Menu>
             </Sider>
 

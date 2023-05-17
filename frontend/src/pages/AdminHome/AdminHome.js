@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import './AdminHome.css';
 import { reqUpdateInformation } from '../../api'
 import storageUtils from '../../utils/storageUtils'
+import 'animate.css'
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'johndoe@example.com',
-      username: 'johndoe123',
+      email: 'admin@admin.com',
+      username: 'admin',
       address: '123 Main St',
       postcode: '12345',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -66,112 +67,9 @@ class Home extends Component {
 
     return (
       <div className="content">
-        <div className="welcome-message">
-          WELCOME TO FIND A SERVICE
+        <div class="animate__animated animate__zoomInLeft">
+        Welcome, the distinguished administrator!
         </div>
-
-        <div className="personal-info">
-          <h2>Administator Information</h2>
-
-          <div className="info-field">
-            <div className="label" onDoubleClick={() => this.handleDoubleClick('email')}>
-              <span>Email:</span>
-            </div>
-            <div className="value">
-              {isEditing && activeField === 'email' ? (
-                <input
-                  type="text"
-                  name="email"
-                  value={email}
-                  onChange={this.handleChange}
-                  onBlur={this.handleSave}
-                  autoFocus
-                />
-              ) : (
-                <span onDoubleClick={() => this.handleDoubleClick('email')}>{email}</span>
-              )}
-            </div>
-          </div>
-
-          <div className="info-field">
-            <div className="label" onDoubleClick={() => this.handleDoubleClick('username')}>
-              <span>Username:</span>
-            </div>
-            <div className="value">
-              {isEditing && activeField === 'username' ? (
-                <input
-                  type="text"
-                  name="username"
-                  value={username}
-                  onChange={this.handleChange}
-                  onBlur={this.handleSave}
-                  autoFocus
-                />
-              ) : (
-                <span onDoubleClick={() => this.handleDoubleClick('username')}>{username}</span>
-              )}
-            </div>
-          </div>
-
-          <div className="info-field">
-            <div className="label" onDoubleClick={() => this.handleDoubleClick('address')}>
-              <span>Address:</span>
-            </div>
-            <div className="value">
-              {isEditing && activeField === 'address' ? (
-                <input
-                  type="text"
-                  name="address"
-                  value={address}
-                  onChange={this.handleChange}
-                  onBlur={this.handleSave}
-                  autoFocus
-                  />
-                  ) : (
-                  <span onDoubleClick={() => this.handleDoubleClick('address')}>{address}</span>
-                  )}
-                  </div>
-                  </div>
-
-                  <div className="info-field">
-        <div className="label" onDoubleClick={() => this.handleDoubleClick('postcode')}>
-          <span>Postcode:</span>
-        </div>
-        <div className="value">
-          {isEditing && activeField === 'postcode' ? (
-            <input
-              type="text"
-              name="postcode"
-              value={postcode}
-              onChange={this.handleChange}
-              onBlur={this.handleSave}
-              autoFocus
-            />
-          ) : (
-            <span onDoubleClick={() => this.handleDoubleClick('postcode')}>{postcode}</span>
-          )}
-        </div>
-      </div>
-
-      <div className="info-field">
-        <div className="label" onDoubleClick={() => this.handleDoubleClick('description')}>
-          <span>Description:</span>
-        </div>
-        <div className="value">
-          {isEditing && activeField === 'description' ? (
-            <textarea
-              name="description"
-              value={description}
-              onChange={this.handleChange}
-              onBlur={this.handleSave}
-              autoFocus
-            />
-          ) : (
-            <span onDoubleClick={() => this.handleDoubleClick('description')}>{description}</span>
-          )}
-        </div>
-      </div>
-    </div>
   </div>
 );}
 }

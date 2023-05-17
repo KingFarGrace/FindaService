@@ -4,6 +4,8 @@ import { Layout, Button, Modal, Badge } from "antd";
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
 import menuList from '../../config/menuConfig';
+import { reqMyMessage } from '../../api/index';
+
 import {
   NotificationOutlined,
   ArrowLeftOutlined
@@ -16,14 +18,42 @@ const { confirm } = Modal;
 
 
 class MHeader extends Component {
+  dataPreparation = () => {
+    let user = memoryUtils.user
+    this.userEmail = user.email
+    console.log('发到后端的客户邮箱' + this.userEmail)
+  }
+
+
+  loadMessage = async () => {
+    const email = this.userEmail;
+    let result_json
+    console.log(email)
+    result_json = await reqMyMessage(email);
+    console.log("shut up" + result_json.data);
+    const result = JSON.parse(result_json.data);
+    console.log("shut down" + result.code);
+    console.log("看看长度" + this.count);
+    if (result.code === 200) {
+      console.log("shut down" + result.return_obj);
+      this.setState({ count: result.return_obj.length });
+      console.log("看看长度" + this.state.count);
+    }
+  }
+
+
+
+
   constructor(props) {
     super(props);
     this.state = {
-      num:5
+      num: 5,
+      count:0,
+      
     }
   }
   message = () => {
-    this.setState({ num : 0})
+    this.setState({ count:0 })
     this.props.history.replace('/message');
   }
   logout = () => {
@@ -49,7 +79,7 @@ class MHeader extends Component {
     menuList.forEach(item => {
       if (item.key === path) {
         title = item.title;
-      } 
+      }
     })
     return title;
 
@@ -57,13 +87,15 @@ class MHeader extends Component {
   load = () => {
     this.state.num = 5
   }
-  componentDidMount(){
+  componentDidMount() {
     this.load()
+    this.dataPreparation();
+    this.loadMessage();
   }
 
   render() {
     const user = memoryUtils.user;
-    const { num } = this.state;
+    const { num , count } = this.state;
     // const user = this.props.user;
     console.log(user.username + '123');
     console.log(this.props);
@@ -80,7 +112,7 @@ class MHeader extends Component {
             </div>
             <div className='infoButton'>
               <Badge
-                count={num}
+                count={count}
                 size="small">
                 <Button
                   icon={<NotificationOutlined />}
@@ -88,7 +120,7 @@ class MHeader extends Component {
                   size='medium'
                   onClick={this.message}
                 >
-                {/* <Link to='/message'></Link> */}
+                  {/* <Link to='/message'></Link> */}
                 </Button>
               </Badge>
             </div>

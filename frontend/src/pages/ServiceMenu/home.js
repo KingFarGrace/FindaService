@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Input, Select, Space, Table } from 'antd'
+import { Button, Card, Input, Select, Space, Table,message } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
@@ -7,74 +7,6 @@ import { reqServices, reqSearchServices } from '../../api';
 import { useHistory } from 'react-router-dom'
 import Subscribe from './subscribe';
 import memoryUtils from '../../utils/memoryUtils';
-// const data = [
-//     {
-//       key: '1',
-//       name: 'John Brown',
-//       age: 32,
-//       address: 'New York No. 1 Lake Park',
-//     },
-//     {
-//       key: '2',
-//       name: 'Joe Black',
-//       age: 42,
-//       address: 'London No. 1 Lake Park',
-//     },
-//     {
-//       key: '3',
-//       name: 'Jim Green',
-//       age: 32,
-//       address: 'Sidney No. 1 Lake Park',
-//     },
-//     {
-//       key: '4',
-//       name: 'Jim Red',
-//       age: 32,
-//       address: 'London No. 2 Lake Park',
-//     },
-//     {
-//         key: '5',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '6',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '7',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '8',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '9',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '10',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//       {
-//         key: '11',
-//         name: 'Jim Red',
-//         age: 32,
-//         address: 'London No. 2 Lake Park',
-//       },
-//   ];
 
 const PAGE_SIZE = 5;
 const { Search } = Input;
@@ -95,13 +27,13 @@ export default class servicemenu extends Component {
                             <Button
                                 type='link'
                                 onClick={() => {
-                                   memoryUtils.service = service;
+                                    memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
                                     this.props.history.push('/menu/detail/' + service.id);
                                 }}
                             >{service.provider}
                             </Button>
-              
+
                         </span>
                     )
                 }
@@ -111,9 +43,9 @@ export default class servicemenu extends Component {
                 dataIndex: 'service',
                 width: '15%',
                 align: 'center',
-                
+
             },
-            
+
             {
                 title: 'catagory',
                 dataIndex: 'catagory',
@@ -138,27 +70,6 @@ export default class servicemenu extends Component {
                 width: '10%',
                 align: 'center'
             },
-            // {
-            //     title: 'Availability',
-            //     dataIndex: 'availability',
-            //     width: '10%',
-            //     align: 'center',
-
-            //     // onFilter: (value, record) => record.availability.indexOf(value) === 0,
-            //     // filters: [
-            //     //     {
-            //     //       text: 'True',
-            //     //       value: 'true',
-            //     //     },
-            //     //     {
-            //     //       text: 'False',
-            //     //       value: 'false',
-            //     //     },
-            //     //   ],
-            //     // 筛选 
-                  
-            // },
-
             {
                 title: 'operation',
                 align: 'center',
@@ -170,18 +81,18 @@ export default class servicemenu extends Component {
                             <Button
                                 type="primary"
                                 onClick={() => {
-                                    // console.log(service);
-                                    // console.log(service.id);
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
+                                    console.log(service);
+                                    console.log(service._id);
                                     
+                                    //跳转详情页面
                                     memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push('/menu/detail/' + service.id);
+                                    console.log('看这里'+ memoryUtils.service._id);
+                                    console.log(memoryUtils.service)
+                                    this.props.history.push('/menu/detail/' + service._id);
                                 }}
                             >details
                             </Button>
-              
+
                         </span>
                     )
                 }
@@ -192,11 +103,8 @@ export default class servicemenu extends Component {
 
     handleSelect = (value) => {
         //select组件直接能传出来
-        if (typeof value === 'undefined') {
-            console.log("value" + value)
-            this.selectValue = ''
-            //这个if没任何用，我也不知道为什么undefined进不来
-        } else { this.selectValue = value }
+        if (value == 'All') { value = null }
+        this.selectValue = value
     }
     handleInput = (event) => {
         this.inputValue = event.target.value
@@ -208,6 +116,7 @@ export default class servicemenu extends Component {
 
         let select = this.selectValue
         let input = this.inputValue
+
         console.log("select", select, typeof select, "input", input, typeof input);
 
     }
@@ -224,9 +133,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                     //每个数据一个id
                 },
                 {
@@ -237,9 +146,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdasdfaslkfsadf215',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '3',
@@ -249,9 +158,9 @@ export default class servicemenu extends Component {
                     area: 'CCC',
                     availability: 'false',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '4',
@@ -261,9 +170,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '5',
@@ -273,9 +182,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '6',
@@ -285,9 +194,9 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    email:'abc@qq.com',
-                    provider:'John Brown',
-                    price:'15£'
+                    email: 'abc@qq.com',
+                    provider: 'John Brown',
+                    price: '15£'
                 },
                 {
                     key: '7',
@@ -297,8 +206,8 @@ export default class servicemenu extends Component {
                     area: 'london',
                     availability: 'true',
                     id: 'asdfasdklfjskl',
-                    provider:'John Brown',
-                    price:'15£'
+                    provider: 'John Brown',
+                    price: '15£'
                 },
             ],
             //假数据
@@ -306,28 +215,42 @@ export default class servicemenu extends Component {
         }
     }
 
-    
+
     getService = async (pageNum) => {
 
         let result;
         if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
+            let result_json = await reqServices(null, null, pageNum);
+            console.log("雪豹" + result_json.data);
+            result = JSON.parse(result_json.data);
+            console.log("闭嘴" + result);
+            console.log("闭嘴" + result.return_obj);
+
         } else {
+            console.log("kk" + this.isSearch)
             let select = this.selectValue
             let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum:pageNum,
-                pageSize: PAGE_SIZE,
-                select:select,
-                input:input
-            })
+            console.log("进来了", select, input);
+            let result_json = await reqServices(
+                select,
+                input,
+                pageNum,
+            )
+            result = JSON.parse(result_json.data);
+            console.log("闭嘴" + result_json.data);
+            // console.log("闭嘴" + result.return_obj.data);
+
         }
-        if (result.code === '100') {
-            const { serviceList, total } = result.obj;
+        if (result.code === 200) {
+            const { data, pageCount } = result.return_obj;
+            console.log("芝士" + pageCount)
             this.setState({
-                services: serviceList,
-                total:total
+                services: data,
+                total: pageCount
             })
+        }else {
+            message.error(result.msg)
+            this.props.history.replace('/menu')
         }
     }
     componentWillMount() {
@@ -340,6 +263,7 @@ export default class servicemenu extends Component {
 
     render() {
         const { services, total } = this.state;
+        console.log("总页数" + total)
         // const onSearch = (value) => {
         //     console.log(value)
         //     console.log(this.state.selectType)
@@ -402,12 +326,12 @@ export default class servicemenu extends Component {
                         allowClear
                         enterButton="Search"
                         size="medium"
-                        onSearch={this.getSelectandInput}
-                    // onSearch={() => {
-                    //     this.isSearch = true;
-                    //     //搜索标识符，true就搜索过了
-                    //     this.getService(1)
-                    // }}
+                        // onSearch={this.getSelectandInput}
+                        onSearch={() => {
+                            this.isSearch = true;
+                            //搜索标识符，true就搜索过了
+                            this.getService(1)
+                        }}
                     />
                 </Space>
             </span>
@@ -427,7 +351,7 @@ export default class servicemenu extends Component {
                         pagination={{
                             defaultPageSize: PAGE_SIZE,
                             showQuickJumper: true,
-                            total: total,
+                            total: total*PAGE_SIZE,
                             onChange: this.getService
                         }}
                     >
