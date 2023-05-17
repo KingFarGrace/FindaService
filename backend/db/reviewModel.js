@@ -5,7 +5,10 @@ const reviewSchema = mongoose.Schema({
     service: String,
     username: String,
     content: String,
-    level: String,
+    level: {
+        type: String,
+        default: "good"
+    },
     ctime: {
         type: Date,
         default: Date.now
