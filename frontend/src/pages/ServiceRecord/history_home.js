@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { CommentOutlined } from '@ant-design/icons';
 
-import { Button, Card, Input, Select, Space, Table } from 'antd'
+import { Button, Card, Input, Select, Space, Table ,message} from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
@@ -9,8 +9,6 @@ import { reqServices, reqSearchServices ,reqHistoryRequest} from '../../api';
 import { useHistory } from 'react-router-dom'
 
 import memoryUtils from '../../utils/memoryUtils';
-
-
 const PAGE_SIZE = 5;
 const { Search } = Input;
 export default class ServiceHistory extends Component {
@@ -18,7 +16,7 @@ export default class ServiceHistory extends Component {
         this.columns = [
             {
                 title: 'provider name',
-                dataIndex: 'provider',
+                dataIndex: 'receiver',
                 width: '20%',
                 align: 'center'
             },
@@ -26,11 +24,12 @@ export default class ServiceHistory extends Component {
                 title: 'service name',
                 dataIndex: 'service',
                 width: '20%',
-                align: 'center'
+                align: 'center',
+                render: (service) => service.name
             },
             {
                 title: 'request number',
-                dataIndex: 'id',
+                dataIndex: '_id',
                 width: '20%',
                 align: 'center'
             },
@@ -55,7 +54,7 @@ export default class ServiceHistory extends Component {
                                 icon={<CommentOutlined />}
                                 onClick={() => {
                                     memoryUtils.request = request;
-                                    this.props.history.push('/history/detail/' + request.id);
+                                    this.props.history.push('/history/detail/' + request._id);
                                 }}
                             >comment
                             </Button>
@@ -67,153 +66,45 @@ export default class ServiceHistory extends Component {
 
     }
 
-    handleSelect = (value) => {
-        //select组件直接能传出来
-        if (typeof value === 'undefined') {
-            console.log("value" + value)
-            this.selectValue = ''
-            //这个if没任何用，我也不知道为什么undefined进不来
-        } else { this.selectValue = value }
-    }
-    handleInput = (event) => {
-        this.inputValue = event.target.value
-        //这个value要探进去找，直接传的value是个对象
-        // 万金油用法event.target.value
-        // 不能用ref.current.value，原因我也不知道
-    }
-    getSelectandInput = () => {
-
-        let select = this.selectValue
-        let input = this.inputValue
-        console.log("select", select, typeof select, "input", input, typeof input);
-
-    }
 
     constructor() {
         super()
         this.state = {
             requests: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown cleaning',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£',
-                    provider:'John Brown',
-                    status:'cancel'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdasdfaslkfsadf215',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    provider:'John Brown',
-                    status:'cancel'
-                },
             ],
-            //假数据
-            total: 0 //总页数
+            
         }
     }
 
-    获取分页获取表格数据
-    getService = async (pageNum) => {
-        let result;
-        result = await reqHistoryRequest();
-        if (result.code === '100') {
-            const { requestList, total } = result.obj;
+    getService = async () => {
+        console.trace()
+        let result_json 
+        let user = memoryUtils.user
+        const in_email = user.email
+        console.log("email"+in_email)
+        result_json = await reqHistoryRequest(in_email);
+        console.log(JSON.stringify(result_json));
+        const result = JSON.parse(result_json.data)
+        console.log(result)
+        if (result.code === 200) {
+            console.log(result.return_obj)
             this.setState({
-                requests: requestList,
-                total: total
+                requests: result.return_obj,
+                
             })
         }
+    }
+    
+    componentDidMount() {
+        this.getService();
     }
     componentWillMount() {
         this.initColumns();
     }
 
-    componentDidMount() {
-        this.getService(1);
-    }
 
     render() {
-        const { requests, total } = this.state;
-        // const onSearch = (value) => {
-        //     console.log(value)
-        //     console.log(this.state.selectType)
-        // };
-        // const {selectType} = this.state;
-
+        const { requests} = this.state;
         return (
             <>
 
@@ -229,15 +120,10 @@ export default class ServiceHistory extends Component {
                         pagination={{
                             defaultPageSize: PAGE_SIZE,
                             showQuickJumper: true,
-                            total: total,
-                            onchange: this.getService
                         }}
                     >
-
                     </Table>
                 </Card>
-
-
             </>
         );
     }

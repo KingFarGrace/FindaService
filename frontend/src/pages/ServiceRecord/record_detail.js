@@ -3,30 +3,12 @@ import React, { Component } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
-import { reqSubscribeService, reqUpdateRequest } from '../../api';
+import { reqSubscribeService, reqUpdateRequest, reqUserInfo } from '../../api';
 
 const { TextArea } = Input;
 const { confirm } = Modal;
 
 export default class record_detail extends Component {
-    dataPreparation = () => {
-        let user = memoryUtils.user
-        //把用户数据拿出来存起来
-        let request = memoryUtils.request;
-        //把url末尾的当前服务id拿出来存起来
-        // console.log('邮箱是'+user.email)
-        // console.log('目标服务id是'+id)
-        this.userEmail = user.email
-        this.serviceEmail = request.email
-        this.serviceName = request.service
-        console.log('发到后端的客户邮箱' + this.userEmail)
-        console.log('发到后端的服务商邮箱' + this.serviceEmail)
-        console.log('发到后端的服务名字' + this.serviceName)
-    }
-    //把存到本地的用户数据里的邮箱拿出来
-    componentDidMount() {
-        this.dataPreparation();
-    }
 
     onChange = (e) => {
         console.log(e.target.value);
@@ -40,7 +22,7 @@ export default class record_detail extends Component {
                 this.onSubmit();
                 this.props.history.replace('/record');
                 //前后端连上把注释去掉
-                message.success('Updated successfully');
+
             },
             onCancel() {
                 console.log('Cancel');
@@ -50,11 +32,17 @@ export default class record_detail extends Component {
 
     onSubmit = async () => {
         const content = this.inputValue;
-        const userEmail = this.userEmail;
-        const providerEmail = this.serviceEmail;
-        const provider = this.serviceName;
-        const res = await reqUpdateRequest(content, userEmail, providerEmail, provider);
-        if (res.Code == 100) { message.success('submitted successfully'); }
+        let request = memoryUtils.request
+        const _id = request._id
+        const status = "pending"
+        const result_json = await reqUpdateRequest(_id, content, status);
+        console.log("result_json: " + JSON.stringify(result_json))
+
+
+        const res = JSON.parse(result_json.data);
+        if (res.code == 300) { message.success('submitted successfully'); }
+        else{message.error(res.msg)}
+        
     }
 
 

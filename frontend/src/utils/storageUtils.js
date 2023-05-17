@@ -8,6 +8,7 @@ export default {
     },
     getUser(){
         return JSON.parse(localStorage.getItem(USER_KEY)) || {};//返回user对象或空
+
     },
     removeUser(){
         localStorage.removeItem(USER_KEY);

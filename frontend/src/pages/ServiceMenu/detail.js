@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { reqCommentbyId, reqServicebyId } from '../../api'
+import { reqCommentbyId, reqServicebyId, reqComment } from '../../api'
 import { Card, List, Tooltip, Button, Badge, Descriptions } from 'antd'
 import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 // import { Comment } from '@ant-design/compatible';
@@ -24,72 +24,35 @@ export default class Detail extends Component {
       },
       //经典假数据
       comment: [
-        {
-          username: 'asjflsafjl',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '5-10-2023 11:22:33',
-        },
-        {
-          username: 'ieauflva',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '5-10-2023 11:22:33',
-        },
-        {
-          username: 'asfwefd',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '5-10-2023 11:22:33',
-        },
-        {//留一个老样式的假数据
-          username: 'asfweasfaw',
-          content: (
-            <p>
-              We supply a series of design principles, practical patterns and high quality design
-              resources (Sketch and Axure), to help people create their product prototypes beautifully and
-              efficiently.
-            </p>
-          ),
-          ctime: (
-            <Tooltip title="">
-              <span>5-10-2023 11:22:33</span>
-            </Tooltip>
-          ),
-
-
-        },
       ]
 
 
     }
   }
 
-  getService = async () => {
-    // console.log('拿到啦'+memoryUtils.service.service);
-    console.log(this.props.match.params.id)
-    //获取当前url结尾（service专属id）
-    const id = this.props.match.params.id;
-    const res = await reqServicebyId(id);
-    console.log(res);
-    if (res.status === 100) {
-      this.setState({ service: res.obj })
-    }
+  getService() {
+    console.log('拿到啦' + memoryUtils.service);
+
+    this.setState(
+      {
+        service: memoryUtils.service
+      }
+    )
+
   }
 
   getCommand = async () => {
-    console.log(this.props.match.params.id)
-    //获取当前url结尾（service专属id）
-    const id = this.props.match.params.id;
-    const res = await reqCommentbyId(id);
-    console.log(res);
-    if (res.status === 100) {
-      this.setState({ comment: res.review })
+    let provider = memoryUtils.service.provider
+    let service = memoryUtils.service.service
+    console.log("雪", provider, service)
+    const result_json = await reqComment(provider, service)
+    console.log(result_json)
+    const result = JSON.parse(result_json.data)
+    console.log(result.code, result.msg)
+    if (result.code === 200) {
+      console.log("雪" + JSON.stringify(result.return_obj))
+      this.setState({ comment: result.return_obj })
     }
-
   }
   componentDidMount() {
 
@@ -147,10 +110,11 @@ export default class Detail extends Component {
           bordered
         >
           <Descriptions.Item label="Service Name" >{service.service}</Descriptions.Item>
-          <Descriptions.Item label="Catagory" span={2}>{service.category}</Descriptions.Item>
+          <Descriptions.Item label="Service Provider" >{service.provider}</Descriptions.Item>
+          <Descriptions.Item label="Catagory" span={2}>{service.catagory}</Descriptions.Item>
           <Descriptions.Item label="Area" >{service.area}</Descriptions.Item>
-          <Descriptions.Item label="Price" span={2}>{service.price}</Descriptions.Item>
-          <Descriptions.Item label="Service Description" span={3}>
+          <Descriptions.Item label="Price" >{service.price}</Descriptions.Item>
+          <Descriptions.Item label="Service Description" >
             {service.description}
           </Descriptions.Item>
           <Descriptions.Item label="Service Comment" span={3}>

@@ -3,10 +3,11 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices } from '../../api';
+import { reqServices, reqSearchServices, reqProviderService } from '../../api';
 import { useHistory } from 'react-router-dom'
 import memoryUtils from '../../utils/memoryUtils';
 import providerUtils from '../../utils/providerUtils';
+import storageUtils from '../../utils/storageUtils';
 
 const PAGE_SIZE = 5;
 const { Search } = Input;
@@ -52,43 +53,43 @@ export default class servicemenu extends Component {
                 align: 'center',
             },
 
-            {
-                title: 'operation',
-                align: 'center',
-                width: '10%',
-                render: (service) => {
-                    let operationText = service.availability === 'true' ? 'Details' : 'Check';
-                    return (
-                        <span>
-                            <Button
-                                style={{
-                                    backgroundColor:'white',
-                                    color : 'black',
-                                    margin : 5,
-                                    border: '1px solid red',
-                                    borderColor: 'black',
-                                  }}
-                                type="primary"
-                                name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                    memoryUtils.service = service;
-                                    // console.log(service.availability);
-                                    // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // // console.log(this.props.history);
-                                    // //跳转详情页面
+            // {
+            //     title: 'operation',
+            //     align: 'center',
+            //     width: '10%',
+            //     render: (service) => {
+            //         let operationText = service.availability === 'true' ? 'Details' : 'Check';
+            //         return (
+            //             <span>
+            //                 <Button
+            //                     style={{
+            //                         backgroundColor:'white',
+            //                         color : 'black',
+            //                         margin : 5,
+            //                         border: '1px solid red',
+            //                         borderColor: 'black',
+            //                       }}
+            //                     type="primary"
+            //                     name='judge'
+            //                     onClick={() => {
+            //                         console.log("十大"+service.category);
+            //                         memoryUtils.service = service;
+            //                         // console.log(service.availability);
+            //                         // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
+            //                         // // console.log(this.props.history);
+            //                         // //跳转详情页面
                                     
-                                    // memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push('/provider/servicelist/detail/' + service.id);
-                                }}
-                            >Edit
-                            </Button>
+            //                         // memoryUtils.service = service;
+            //                         // console.log('看这里'+ memoryUtils.service);
+            //                         this.props.history.push('/provider/servicelist/detail/' + service.id);
+            //                     }}
+            //                 >Edit
+            //                 </Button>
               
-                        </span>
-                    )
-                }
-            }
+            //             </span>
+            //         )
+            //     }
+            // }
         ]
 
     }
@@ -119,66 +120,6 @@ export default class servicemenu extends Component {
         super()
         this.state = {
             services: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdfasdklfjskl213'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdasdfaslkfsadf215'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'false',
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cafaning',
-                    area: 'london',
-                    availability: 'true',
-                },
             ],
             //假数据
             total: 0 //总页数
@@ -186,35 +127,28 @@ export default class servicemenu extends Component {
     }
 
     获取分页获取表格数据
-    getService = async (pageNum) => {
+    getService = async () => {
 
-        let result;
-        if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
-        } else {
-            let select = this.selectValue
-            let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum:pageNum,
-                pageSize: PAGE_SIZE,
-                select:select,
-                input:input
-            })
-        }
-        if (result.code === '100') {
-            const { serviceList, total } = result.obj;
-            this.setState({
-                services: serviceList,
-                total:total
-            })
-        }
+        let result = await reqProviderService(storageUtils.getUser().username);
+      //  const response = JSON.stringify(result.data);
+        const user = JSON.parse(result.data)
+        this.setState({services:user.return_obj})
+        console.log("雪豹" + user.return_obj);
+       
+        // if (result.code === '100') {
+        //     const { providerList, total } = result.obj;
+        //     this.setState({
+        //         provider: providerList,
+        //         total:total
+        //     })
+        // }
     }
     componentWillMount() {
         this.initColumns();
-    }
+      }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
 
     render() {
@@ -248,7 +182,7 @@ export default class servicemenu extends Component {
             </div>
           )
         const title = (<div>
-            Provider Id: {providerUtils.provider.id}
+            Provider Id: {storageUtils.getUser().username}
         </div>
         )
         //     <span className='abc'>

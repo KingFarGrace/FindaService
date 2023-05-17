@@ -3,11 +3,11 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices } from '../../api';
+import { reqServices, reqSearchServices, reqLowProvider,reqProviderService, reqUserInfo, removePro } from '../../api';
 import { useHistory } from 'react-router-dom'
 import memoryUtils from '../../utils/memoryUtils';
 import providerUtils from '../../utils/providerUtils';
-
+import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
 const { Search } = Input;
 
@@ -80,7 +80,7 @@ export default class servicemenu extends Component {
                                     
                                     // memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
-                                    this.props.history.push('/manager/providermanage/detail/' + service.id);
+                                    this.props.history.push('/manager/providermanage/detail/' + service.service);
                                 }}
                             >Details
                             </Button>
@@ -119,103 +119,45 @@ export default class servicemenu extends Component {
         super()
         this.state = {
             services: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdfasdklfjskl213'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdasdfaslkfsadf215'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'false',
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cafaning',
-                    area: 'london',
-                    availability: 'true',
-                },
             ],
             //假数据
-            total: 0 //总页数
+            total: 0, //总页数,
+            address: "",
+            description: " ",
+            email: ""
         }
     }
 
     获取分页获取表格数据
-    getService = async (pageNum) => {
+    getService = async () => {
 
-        let result;
-        if (!this.isSearch) {
-            result = await reqServices(pageNum, PAGE_SIZE);
-        } else {
-            let select = this.selectValue
-            let input = this.inputValue
-            result = await reqSearchServices({
-                pageNum:pageNum,
-                pageSize: PAGE_SIZE,
-                select:select,
-                input:input
-            })
-        }
-        if (result.code === '100') {
-            const { serviceList, total } = result.obj;
-            this.setState({
-                services: serviceList,
-                total:total
-            })
-        }
+        let result = await reqProviderService(providerUtils.provider.provider);
+      //  const response = JSON.stringify(result.data);
+        const user = JSON.parse(result.data)
+        this.setState({services:user.return_obj})
+        console.log("雪豹" + user.return_obj);
+        let re = await reqUserInfo(providerUtils.provider.provider);
+        const user2 = JSON.parse(re.data)
+       // 
+        console.log("雪豹" + user2.return_obj.description);
+        console.log("雪豹" + user2.return_obj.address);
+        this.setState({description:user2.return_obj.description,address:user2.return_obj.address,email:user2.return_obj.email})
+        // if (result.code === '100') {
+        //     const { providerList, total } = result.obj;
+        //     this.setState({
+        //         provider: providerList,
+        //         total:total
+        //     })
+        // }
     }
     componentWillMount() {
         this.initColumns();
-    }
+      }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
+
 
     render() {
         const { services, total } = this.state;
@@ -237,8 +179,8 @@ export default class servicemenu extends Component {
                 border: '1px solid red',
                 borderColor: 'black',
               }}
-            type='primary' onClick={() => {
-      
+            type='primary' onClick={ async() => {
+                const req = await removePro(storageUtils.getUser().password,this.state.email)
                 this.props.history.push('/manager/providermanage/');
               }}
               >
@@ -263,9 +205,16 @@ export default class servicemenu extends Component {
             </Button>
             </div>
           )
-        const title = (<div>
-            Provider Id: {providerUtils.provider.id}
+        const title = (
+        <div><div>
+            Provider Id: {providerUtils.provider.provider}
         </div>
+        <div>
+        Address: {this.state.address}
+    </div>
+    <div>
+    Description: {this.state.description}
+</div></div>
         )
         //     <span className='abc'>
         //         <Space direction="horizontal"

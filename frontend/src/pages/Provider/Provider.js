@@ -19,14 +19,16 @@ import providermenu from '../ProviderMenu/AdminServiceMenu'
 import Userinfo from '../Userinfo/userinfo';
 import MHeader from '../../components/ProviderHead/index';
 import Message from '../Message/providerMessage';
+import finish from '../servicefinish/servicefinish'
 
 
 const { Header, Content, Footer, Sider } = Layout;
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const user = storageUtils.getUser();
+  console.log(user.username)
   //若内存中存了用户名，则已登录，否则跳转至登录界面
-  if (!((!user.username)^(!user.email))) {
+  if (!user.username) {
     return <Redirect to='/login' />
   }
   
@@ -53,7 +55,8 @@ const App = () => {
           <Switch>
             <Route path='/provider/providerhome' component={Home}></Route>   
             <Route path='/provider/servicelist' component={providermenu}></Route>  
-            <Route path='/provider/servicerequest' component={providermanager}></Route>  
+            <Route path='/provider/servicerequest' component={providermanager}></Route> 
+            <Route path='/provider/servicefinish' component={finish}></Route>  
             <Route path='/provider/message' component={Message}></Route>  
             <Redirect to='/provider/providerhome' />
           </Switch>
