@@ -197,7 +197,7 @@ export default class Detail extends Component {
                   //this.props.history.push('/manager/service');
                 }}
                 >
-                  Delate
+                  Delete
                 </Button>
               </div>
             </li>

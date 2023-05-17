@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import logo from '../../assets/images/logo192.png'
 import './register.css'
+import emailjs from 'emailjs-com'
+
 
 import { useHistory } from 'react-router-dom';
-import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService} from '../../api';
+import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService } from '../../api';
 import {
   AutoComplete,
   Button,
@@ -49,6 +51,10 @@ const tailFormItemLayout = {
     },
   },
 };
+
+
+
+
 const openNotification = () => {
   notification.open({
     message: 'It takes a few seconds',
@@ -63,6 +69,31 @@ const App = () => {
   const history = useHistory()
   const [form] = Form.useForm();
   const [showDescription, setShowDescription] = useState(false);
+  const formRef = useRef();
+const [verificationCode, setVerificationCode] = useState(null);
+const sendEmail = () => {
+  const email = formRef.current.getFieldValue("email");
+  const username = formRef.current.getFieldValue("username");
+  const code = Math.floor(100000 + Math.random() * 900000);
+  setVerificationCode(code);
+  console.log(code)
+  const params = {
+    email : email,
+    username : username,
+    code : code
+  }
+  emailjs
+    .send('service_r5sgj3i', "template_qvv579v", params, "srp7GX-kcLCEPBT3R")
+    .then(
+      result => {
+        console.log(result.text)
+      },
+      error => {
+        console.log(error.text)
+        alert(error.text)
+      }
+    )
+}
   const onFinish = async (values) => {
     console.log('Received values of form: ', values);
     const { email, username, role, password, confirm, description, address, postcode } = values;
@@ -114,6 +145,7 @@ const App = () => {
       <div className='login-content'>
         <h1>Register</h1>
         <Form
+          ref={formRef}
           {...formItemLayout}
           form={form}
           name="register"
@@ -207,7 +239,47 @@ const App = () => {
           >
             <Input />
           </Form.Item>
-
+          <Form.Item
+            label="Email verification code"
+            {...formItemLayout}
+          >
+            <Row gutter={8}>
+              <Col span={16}>
+                <Form.Item
+                  name="Email verification code"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input the verification code!',
+                    },
+                    () => ({
+                      validator(_, value) {
+                        if (Number(value) === verificationCode) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('The verification code is not correct!'));
+                      },
+                    }),
+                  ]}
+                  noStyle
+                >
+                  <Input placeholder="Please input the verification code!" />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Button 
+                style={{
+                  backgroundColor:'white',
+                  color : 'black',
+                  margin : 5,
+                  border: '1px solid red',
+                  borderColor: 'black',
+                }}
+                onClick={sendEmail}
+                type="primary" htmlType="button">Send</Button>
+              </Col>
+            </Row>
+          </Form.Item>
           <Form.Item
             name="role"
             label="Role"

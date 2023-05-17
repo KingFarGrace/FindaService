@@ -21,7 +21,7 @@ export default class providemenu extends Component {
                 align: 'center'
             },
             {
-                title: 'Negative Review Rate',
+                title: 'Positive Review Rate',
                 dataIndex: 'avgrate',
                 width: '30%',
                 align: 'center'
