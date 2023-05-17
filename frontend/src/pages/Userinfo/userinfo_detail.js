@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Card, Button, Select, Input, Table, Badge, Descriptions } from 'antd';
 import memoryUtils from '../../utils/memoryUtils';
 
+import { reqUpdateRequest, reqMyRequest, reqRejectRequest, reqUserInfo } from '../../api';
 export default class Userinfo_detail extends Component {
     constructor() {
         super()
@@ -22,7 +23,12 @@ export default class Userinfo_detail extends Component {
     }
     getUser = async () => {
         let user = memoryUtils.user
-        console.log(user)
+        console.log("用户名"+user.username)
+        const res = await reqUserInfo(user.username)
+        const userInfo = JSON.parse(res.data)
+        
+        console.log("用户信息"+res.data)
+        this.setState({user: userInfo.return_obj})
     }
     render() {
         const extra = (

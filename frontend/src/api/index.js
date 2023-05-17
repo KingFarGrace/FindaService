@@ -289,8 +289,8 @@ export const reqMyMessage = (in_email) => {
 export const reqHistoryRequest = (in_email) => {
     return ajax(BASE + '/request/history?',
         {
-            params: { 
-                email:in_email
+            params: {
+                email: in_email
             }
         }
     )
@@ -366,7 +366,7 @@ export const reqUpdateRequest = (in_id, in_content, in_status) => {
             data: {
                 _id: in_id,
                 content: in_content,
-                status: in_status   
+                status: in_status
             }
         }
     )
@@ -412,6 +412,47 @@ export const reqUserInfo_email = (provider) => {
         {
             params: {
                 email: provider
+            }
+        }
+    )
+}
+
+export const reqEditUser_password = (
+
+    email,
+    
+    oldPwd,
+    newPwd,
+    repeatNewPwd) => {
+    return ajax(BASE + '/pwd/update',
+        {
+            method: 'POST',
+            data: {
+
+                    email,
+                
+                oldPwd,
+                newPwd,
+                repeatNewPwd
+            }
+        }
+    )
+}
+
+export const reqEditUser_info = (email,
+    username,
+    address,
+    postcode,
+    description) => {
+    return ajax(BASE + '/user/update',
+        {
+            method: 'POST',
+            data: {
+                email,
+                username,
+                address,
+                postcode,
+                description
             }
         }
     )
