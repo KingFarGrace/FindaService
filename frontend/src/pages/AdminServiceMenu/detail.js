@@ -17,6 +17,7 @@ export default class Detail extends Component {
       service:
       {
         key: memoryUtils.service.key,
+        provider: memoryUtils.service.provider,
         service: memoryUtils.service.service,
         category: memoryUtils.service.catagory,
         area: memoryUtils.service.area,
@@ -48,13 +49,21 @@ export default class Detail extends Component {
     // console.log(this.props.match.params.id)
     // //获取当前url结尾（service专属id）
    // const id = this.props.match.params.id;
-    const res = await reqCommentbyId(providerUtils.provider.provider,this.state.service.service);
-    console.log(res);
+    const res = await reqCommentbyId(this.state.service.provider,this.state.service.service);
+    console.log(this.state.service.provider);
       const user = JSON.parse(res.data)
       const response = JSON.stringify(res.data);
-      this.setState({comment:user.return_obj})
+      this.setState({comment: user.return_obj.map(item => ({
+        ...item,
+        actions: item.actions || [],  // 如果actions不存在，使用空数组
+        author: item.username || 'Unknown',  // 如果username不存在，使用 'Unknown'
+        avatar: "https://robohash.org/" + (item.username || 'Unknown'),
+        content: item.content || '',  // 如果content不存在，使用空字符串
+        datetime: item.ctime || new Date(),  // 如果ctime不存在，使用当前时间
+      }))});
       console.log("雪豹" + user.return_obj);
       console.log("雪豹" + response);
+      
      // this.setState({ comment: res.review })
     
 
@@ -71,7 +80,7 @@ export default class Detail extends Component {
     const extra = (
       <Button type='primary' onClick={() => {
 
-        this.props.history.push('/manager/providermanage/service/'+memoryUtils.service.id);
+        this.props.history.push('/manager/service/');
       }}
       >
 
@@ -181,7 +190,7 @@ export default class Detail extends Component {
                 onClick={async () => {
                   const user = storageUtils.getUser();
                   const adminKey = user.password
-                  const provider = providerUtils.provider.provider
+                  const provider = this.state.service.provider
                   const service = this.state.service.service
                   const username =item.username
                   console.log("Sdi 是"+adminKey,provider,service,username);

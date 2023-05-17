@@ -52,7 +52,14 @@ export default class Detail extends Component {
     console.log(res);
       const user = JSON.parse(res.data)
       const response = JSON.stringify(res.data);
-      this.setState({comment:user.return_obj})
+      this.setState({comment: user.return_obj.map(item => ({
+        ...item,
+        actions: item.actions || [],  // 如果actions不存在，使用空数组
+        author: item.username || 'Unknown',  // 如果username不存在，使用 'Unknown'
+        avatar: "https://robohash.org/" + (item.username || 'Unknown'),
+        content: item.content || '',  // 如果content不存在，使用空字符串
+        datetime: item.ctime || new Date(),  // 如果ctime不存在，使用当前时间
+      }))});
       console.log("雪豹" + user.return_obj);
       console.log("雪豹" + response);
      // this.setState({ comment: res.review })

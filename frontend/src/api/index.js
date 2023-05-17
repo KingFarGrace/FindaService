@@ -558,3 +558,16 @@ export const reqUserInfo_email = (provider) => {
         }
     )
 }
+
+export const acceptService = (adminKey,provider,service) => {
+    return ajax(BASE + '/service/acpt',
+    {
+        method: 'POST',
+        data:{
+            adminKey,
+            provider,
+            service
+        }
+    }
+    )
+}

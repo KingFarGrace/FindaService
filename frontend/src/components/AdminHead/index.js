@@ -3,7 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import { Layout, Button, Modal, Badge } from "antd";
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
-import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest,reqMyMessage } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest, reqMyMessage } from '../../api';
 import menuList from '../../config/menuConfig';
 import {
   NotificationOutlined,
@@ -61,7 +61,7 @@ class MHeader extends Component {
     let result = await reqMyMessage(storageUtils.getUser().email);
   //  const response = JSON.stringify(result.data);
     const user = JSON.parse(result.data)
-    user.return_obj = user.return_obj.filter(item => item.status != 'finished');
+    user.return_obj = user.return_obj.filter(item => item.status === 'new account' || item.status === 'new service'|| item.status === 'updated account');
     this.setState({num:user.return_obj.length})
     console.log("雪豹" + user.return_obj.length);
     // if (result.code === '100') {
@@ -96,7 +96,7 @@ componentDidMount() {
             </div>
             <div className='infoButton'>
               <Badge
-                count=" "
+                count= {this.state.num} 
                 size="small">
                 <Button
                   icon={<NotificationOutlined />}

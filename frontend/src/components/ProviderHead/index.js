@@ -30,7 +30,7 @@ class MHeader extends Component {
     let result = await reqMyRequest(storageUtils.getUser().email);
   //  const response = JSON.stringify(result.data);
     const user = JSON.parse(result.data)
-    user.return_obj = user.return_obj.filter(item => item.status === 'pending');
+    user.return_obj = user.return_obj.filter(item => item.status === 'pending'||item.status === 'refuse service');
     this.setState({num:user.return_obj.length})
     console.log("雪豹" + user.return_obj.length);
     // if (result.code === '100') {

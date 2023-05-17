@@ -44,16 +44,8 @@ export default class Message extends Component {
 
     render() {
         let {data} = this.state;
-        data = data.filter(item => item.status === 'pending');
-        const extra = (
-            <Button type='primary' onClick={() => {
-
-                this.props.history.push('/provider/servicerequest');
-            }}
-            >
-                work
-            </Button>
-        )
+        data = data.filter(item => item.status === 'pending' || item.status === 'refuse service');
+       
         return (
             <Card>
 
@@ -67,7 +59,20 @@ export default class Message extends Component {
                     }}
                     renderItem={(item, index) => (
                         <List.Item
-                            extra={extra}
+                            extra = {
+                                <Button type='primary' onClick={async() => {
+                                    if(item.status == 'pending'){
+                                        console.log("撒打算"+item._id)
+                                        this.props.history.push('/provider/servicerequest');}
+                                    else{
+                                        const as = await updateRequest(item._id,"finish","abab");
+                                        this.props.history.push('/provider/servicelist/newService');
+                                    }
+                                }}
+                                >
+                                    work
+                                </Button>
+                            }
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={"https://robohash.org/" + item.sender + "?set=set4"} />}

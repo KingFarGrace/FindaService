@@ -45,10 +45,11 @@ export default class servicemenu extends Component {
                 align: 'center'
             },
             {
-                title: 'Availability',
-                dataIndex: 'availability',
+                title: 'available',
+                dataIndex: 'available',
                 width: '10%',
                 align: 'center',
+                render: (available) => String(available)
             },
 
             {
@@ -56,7 +57,7 @@ export default class servicemenu extends Component {
                 align: 'center',
                 width: '10%',
                 render: (service) => {
-                    let operationText = service.availability === 'true' ? 'Details' : 'Check';
+                    let operationText = service.available === true ? 'Details' : 'Check';
                     return (
                         <span>
                             <Button
@@ -72,12 +73,12 @@ export default class servicemenu extends Component {
                                 onClick={() => {
                                     // console.log(service);
                                     memoryUtils.service = service;
-                                    console.log("撒大苏打"+service.availability);
-                                    const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
+                                    console.log("撒大苏打"+service.available);
+                                    const operationPath = service.available === true ? '/manager/service/detail/' : '/manager/service/check/';
                                     // console.log(this.props.history);
                                     //跳转详情页面
                                     
-                                    memoryUtils.service = service;
+                                  //  memoryUtils.service = service;
                                     // console.log('看这里'+ memoryUtils.service);
                                     this.props.history.push(operationPath + service.service);
                                 }}
@@ -118,66 +119,7 @@ export default class servicemenu extends Component {
         super()
         this.state = {
             services: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdfasdklfjskl213'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'false',
-                    id: 'asdasdfaslkfsadf215'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'false',
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cafaning',
-                    area: 'london',
-                    availability: 'true',
-                },
+               
             ],
             //假数据
             total: 0 //总页数
@@ -193,7 +135,7 @@ export default class servicemenu extends Component {
             console.log("雪豹" + result_json.data);
             result = JSON.parse(result_json.data);
             console.log("闭嘴" + result);
-            console.log("闭嘴" + result.return_obj);
+            console.log("闭嘴" + result.return_obj.data[0].available);
 
         } else {
             console.log("kk" + this.isSearch)
@@ -211,8 +153,9 @@ export default class servicemenu extends Component {
 
         }
         if (result.code === 200) {
+            console.log("闭嘴" + result.return_obj.data[0].available);
             const { data, pageCount } = result.return_obj;
-            console.log("芝士" + pageCount)
+            console.log("芝Ds 是士" + data[0].available)
             this.setState({
                 services: data,
                 total: pageCount
