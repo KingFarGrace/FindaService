@@ -6,7 +6,10 @@ const serviceSchema = mongoose.Schema({
     catagory: String,
     description: String,
     area: String,
-    availability: String,
+    availability: {
+        type: String,
+        default: "Please contact the service provider for specific availability."
+    },
     price: String,
     favrate: {
         type: Number,

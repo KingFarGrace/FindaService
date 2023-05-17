@@ -4,7 +4,10 @@ const reviewSchema = mongoose.Schema({
     provider: String,
     service: String,
     username: String,
-    content: String,
+    content: {
+        type: String,
+        default: "The user didn't leave a comment, the system default positive feedback."
+    },
     level: {
         type: String,
         default: "good"
