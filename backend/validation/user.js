@@ -39,7 +39,7 @@ const pwdUpdateSchema = joi.object({
     email: joi.string().email().required(),
     oldPwd: joi.string().pattern(new RegExp('^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)(?=.*?[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{6,16}$')).required(),
     newPwd: joi.string().pattern(new RegExp('^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)(?=.*?[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{6,16}$')).required(),
-    repeatPwd: joi.ref('password')
+    repeatNewPwd: joi.ref('newPwd')
 })
 
 module.exports = {
