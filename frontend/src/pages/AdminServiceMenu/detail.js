@@ -189,12 +189,14 @@ export default class Detail extends Component {
                 }}
                 onClick={async () => {
                   const user = storageUtils.getUser();
-                  const adminKey = user.password
+                  const adminKey = 'A19?dM83iN'
                   const provider = this.state.service.provider
                   const service = this.state.service.service
                   const username =item.username
                   console.log("Sdi 是"+adminKey,provider,service,username);
                   const res = await reqDelComment(adminKey, provider, service,username);//把用户名密码传过去，用了ES6的async，await
+                  const re = JSON.stringify(res);
+                  console.log("Sd撒打算i 是"+re);
                   this.getCommand()
                   //this.props.history.push('/manager/service');
                 }}

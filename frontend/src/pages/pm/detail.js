@@ -187,7 +187,7 @@ export default class Detail extends Component {
                 }}
                 onClick={async () => {
                   const user = storageUtils.getUser();
-                  const adminKey = user.password
+                  const adminKey =  'A19?dM83iN'
                   const provider = providerUtils.provider.provider
                   const service = this.state.service.service
                   const username =item.username

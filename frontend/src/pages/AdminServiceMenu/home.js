@@ -3,7 +3,7 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices } from '../../api';
+import { reqServices, reqSearchServices, getunService } from '../../api';
 import { useHistory } from 'react-router-dom'
 import memoryUtils from '../../utils/memoryUtils';
 
@@ -128,49 +128,18 @@ export default class servicemenu extends Component {
 
     获取分页获取表格数据
     getService = async (pageNum) => {
-
-        let result;
-        if (!this.isSearch) {
-            let result_json = await reqServices(null, null, pageNum);
-            console.log("雪豹" + result_json.data);
-            result = JSON.parse(result_json.data);
-            console.log("闭嘴" + result);
-            console.log("闭嘴" + result.return_obj.data[0].available);
-
-        } else {
-            console.log("kk" + this.isSearch)
-            let select = this.selectValue
-            let input = this.inputValue
-            console.log("进来了", select, input);
-            let result_json = await reqServices(
-                select,
-                input,
-                pageNum,
-            )
-            result = JSON.parse(result_json.data);
-            console.log("闭嘴" + result_json.data);
-            // console.log("闭嘴" + result.return_obj.data);
-
-        }
-        if (result.code === 200) {
-            console.log("闭嘴" + result.return_obj.data[0].available);
-            const { data, pageCount } = result.return_obj;
-            console.log("芝Ds 是士" + data[0].available)
-            this.setState({
-                services: data,
-                total: pageCount
-            })
-        }else {
-            //message.error(result.msg)
-            this.props.history.replace('/menu')
-        }
+        let result = await getunService();
+        //  const response = JSON.stringify(result.data);
+          const user = JSON.parse(result.data)
+          this.setState({services:user.return_obj})
+          console.log("雪豹" + user.return_obj[0].service);
     }
     componentWillMount() {
         this.initColumns();
     }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
 
     render() {
@@ -254,7 +223,7 @@ export default class servicemenu extends Component {
                     style={{
                         width: '100%',
                     }}
-                    title={title}
+                 //   title={title}
                 >
                     <Table
                         columns={this.columns}

@@ -193,10 +193,9 @@ export const reqAcptServer = (adminKey, provider, service) => {
 }
 
 export const reqDelComment = (adminKey, provider, service, username) => {
-    return ajax(
+    return ajax(BASE + '/review/rm',
         {
             method: 'POST',
-            url: BASE + '/review/rm',
             data: {
                 adminKey,
                 provider,
@@ -569,5 +568,14 @@ export const acceptService = (adminKey,provider,service) => {
             service
         }
     }
+    )
+}
+
+export const getunService = () => {
+    return ajax(BASE + '/service/unavailable',
+        {
+            params: {
+            }
+        }
     )
 }
