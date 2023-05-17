@@ -20,14 +20,9 @@ const RequestPage = () => {
      // const user = JSON.stringify(response)
        const user = JSON.parse(response.data)
        const status = user.return_obj[0].status
-      console.log("雪豹" + response);
-      if(status==="Updated"){
+       console.log("雪豹" + response);
        setMessage("Please click on the button to update your information");
        setShowDescription(true);
-      }
-      else{
-        setMessage("Your account was rejected, please register again!");
-      }
    }
    catch{
      setMessage('Please wait for administrator review');

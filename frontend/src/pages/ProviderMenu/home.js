@@ -46,12 +46,7 @@ export default class servicemenu extends Component {
                 width: '10%',
                 align: 'center'
             },
-            {
-                title: 'Availability',
-                dataIndex: 'availability',
-                width: '10%',
-                align: 'center',
-            },
+        
 
             // {
             //     title: 'operation',
