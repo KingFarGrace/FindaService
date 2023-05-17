@@ -4,6 +4,7 @@ import './register.css'
 
 import { useHistory } from 'react-router-dom';
 import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService} from '../../api';
+
 import {
   AutoComplete,
   Button,
@@ -90,30 +91,19 @@ const App = () => {
       if (res.code === 110) {
         
         openNotification();
-<<<<<<< HEAD
-        sendrequest(email,)
-=======
         sendrequest(email)
->>>>>>> 29eba585d3c119cf65fb6532919e3a177bb67b28
         history.replace('/login')
       } else {
         message.error(res.msg);
-
       }
     }
   };
-<<<<<<< HEAD
 
   const sendrequest = async (email) => {
     const res = await reqAddService(email,'admin@admin.com',null,null,null,'newaccount')
   }
 
 
-=======
-  const sendrequest = async (email) => {
-    const res = await reqAddService(email, 'admin@admin.com', null, null, null, 'newaccount')
-  }
->>>>>>> 29eba585d3c119cf65fb6532919e3a177bb67b28
   const handleRoleChange = (e) => {
     const roleValue = e.target.value;
     setShowDescription(roleValue === 'serviceProvider');

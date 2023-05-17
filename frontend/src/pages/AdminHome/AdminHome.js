@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './AdminHome.css';
 import { reqUpdateInformation } from '../../api'
 import storageUtils from '../../utils/storageUtils'
-import 'animate.css'
 
 class Home extends Component {
   constructor(props) {
