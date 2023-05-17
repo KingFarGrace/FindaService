@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withRouter, Link } from "react-router-dom";
 import { Layout, Button, Modal, Badge } from "antd";
 import memoryUtils from '../../utils/memoryUtils';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
 import storageUtils from '../../utils/storageUtils';
 import menuList from '../../config/menuConfig';
 import {
@@ -17,12 +18,33 @@ const { confirm } = Modal;
 
 
 class MHeader extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
-      num:5
+      num:0
     }
   }
+  getService = async () => {
+
+    let result = await reqMyRequest(storageUtils.getUser().email);
+  //  const response = JSON.stringify(result.data);
+    const user = JSON.parse(result.data)
+    user.return_obj = user.return_obj.filter(item => item.status === 'pending');
+    this.setState({num:user.return_obj.length})
+    console.log("雪豹" + user.return_obj.length);
+    // if (result.code === '100') {
+    //     const { providerList, total } = result.obj;
+    //     this.setState({
+    //         provider: providerList,
+    //         total:total
+    //     })
+    // }
+}
+
+componentDidMount() {
+    this.getService();
+}
   message = () => {
     this.setState({ num : 0})
     this.props.history.replace('/provider/message');
@@ -54,12 +76,6 @@ class MHeader extends Component {
     })
     return title;
 
-  }
-  load = () => {
-    this.state.num = 5
-  }
-  componentDidMount(){
-    this.load()
   }
 
   render() {

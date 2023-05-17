@@ -3,8 +3,9 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices,reqProviders } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
 import { useHistory } from 'react-router-dom'
+import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
 const { Search } = Input;
 
@@ -14,38 +15,26 @@ export default class providermanager extends Component {
         this.columns = [
             {
                 title: 'Service  Name',
-                dataIndex: 'name',
-                width: '15%',
+                dataIndex: ['service', 'name'],
+                width: '10%',
                 align: 'center'
             },
-            // {
-            //     title: 'Description',
-            //     dataIndex: 'description',
-            //     // width: '15%',
-            //     align: 'center'
-            // },
-            // {
-            //     title: 'Address',
-            //     dataIndex: 'address',
-            //     width: '10%',
-            //     align: 'center'
-            // },
-            // {
-            //     title: 'Postcode',
-            //     dataIndex: 'postcode',
-            //     width: '10%',
-            //     align: 'center'
-            // },
-            // {
-            //     title: 'Status',
-            //     dataIndex: 'availability',
-            //     width: '10%',
-            //     align: 'center'
-            // },
+            {
+                title: 'Customer  Name',
+                dataIndex: 'sender',
+                width: '10%',
+                align: 'center'
+            },
+            {
+                title: 'Service  Price',
+                dataIndex: ['service', 'cost'],
+                width: '10%',
+                align: 'center'
+            },
             {
                 title: 'Content',
                 dataIndex: 'content',
-                width: '65%',
+                width: '50%',
                 align: 'center'
             },
             {
@@ -53,7 +42,6 @@ export default class providermanager extends Component {
                 align: 'center',
                 width: '10%',
                 render: (provider) => {
-                    let operationText = provider.availability === 'true' ? 'Delate' : 'Accpet';
                     return (
                         <div
                         style={{
@@ -69,17 +57,13 @@ export default class providermanager extends Component {
                                   }}
                                 type="primary"
                                 name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                //    memoryUtils.service = service;
-                                 //   console.log(service.availability);
-                                   // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
-                                    
-                              //      memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                             //       this.props.history.push(operationPath + service.id);
+                                onClick={async() => {
+                                    const na = provider.service.name;
+                                    const co = provider.service.cost;
+                                    console.log(provider._id);
+                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is accepted","accepted");
+                                    let user = await updateRequest(provider._id,"Your service request is accepted","accepted")
+                                    await this.getService();
                                 }}
                             >Accept
                             </Button>
@@ -93,17 +77,13 @@ export default class providermanager extends Component {
                                   }}
                                 type="primary"
                                 name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                //    memoryUtils.service = service;
-                                 //   console.log(service.availability);
-                                   // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
-                                    
-                              //      memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                             //       this.props.history.push(operationPath + service.id);
+                                onClick={async() => {
+                                    const na = provider.service.name;
+                                    const co = provider.service.cost;
+                                    console.log(provider._id);
+                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request needs further details","further details requested");
+                                    let user = await updateRequest(provider._id,"Your service request needs further details","further details requested")
+                                    await this.getService();
                                 }}
                             >Request Update
                             </Button>
@@ -117,17 +97,13 @@ export default class providermanager extends Component {
                                   }}
                                 type="primary"
                                 name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                //    memoryUtils.service = service;
-                                 //   console.log(service.availability);
-                                   // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
-                                    
-                              //      memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                             //       this.props.history.push(operationPath + service.id);
+                                onClick={ async() => {
+                                    const na = provider.service.name;
+                                    const co = provider.service.cost;
+                                    console.log(provider._id);
+                                    let result = await sendRequest(storageUtils.getUser().email,provider.sender,{na,co},"Your service request is rejected","rejected");
+                                    let user = await updateRequest(provider._id,"Your service request is rejected","rejected")
+                                    await this.getService();
                                 }}
                             >Refuse
                             </Button>
@@ -139,114 +115,52 @@ export default class providermanager extends Component {
     
     }
     
-    // handleSelect = (value) => {
-    //     //select组件直接能传出来
-    //     if (typeof value === 'undefined') {
-    //         console.log("value" + value)
-    //         this.selectValue = ''
-    //         //这个if没任何用，我也不知道为什么undefined进不来
-    //     } else { this.selectValue = value }
-    // }
-    // handleInput = (event) => {
-    //     this.inputValue = event.target.value
-    //     //这个value要探进去找，直接传的value是个对象
-    //     // 万金油用法event.target.value
-    //     // 不能用ref.current.value，原因我也不知道
-    // }
-    // getSelectandInput = () => {
-
-    //     let select = this.selectValue
-    //     let input = this.inputValue
-    //     console.log("select", select, typeof select, "input", input, typeof input);
-
-    // }
 
     constructor() {
         super()
         this.state = {
             provider: [
                 {
-                    key: '1',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '3',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '4',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '5',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '6',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '7',
-                    name: 'John Brown',
-                    content:'good company',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
+                }
             ],
             //假数据
-            total: 0 //总页数
+      //      total: 0 //总页数
         }
     }
 
     获取分页
-    getService = async (pageNum) => {
+    getService = async () => {
 
-        let result = await reqProviders(pageNum, PAGE_SIZE);
-        if (result.code === '100') {
-            const { providerList, total } = result.obj;
-            this.setState({
-                provider: providerList,
-                total:total
-            })
-        }
+        let result = await reqMyRequest(storageUtils.getUser().email);
+      //  const response = JSON.stringify(result.data);
+        const user = JSON.parse(result.data)
+        this.setState({provider:user.return_obj})
+        console.log("雪豹" + user.return_obj[0].service.name);
+       
+        // if (result.code === '100') {
+        //     const { providerList, total } = result.obj;
+        //     this.setState({
+        //         provider: providerList,
+        //         total:total
+        //     })
+        // }
     }
     componentWillMount() {
         this.initColumns();
       }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
 
     render() {
-        const {provider, total } = this.state;
+        let {provider, total } = this.state;
         // const onSearch = (value) => {
         //     console.log(value)
         //     console.log(this.state.selectType)
         // };
         // const {selectType} = this.state;
+        provider = provider.filter(item => item.status === 'pending');
         return (
             <>
 

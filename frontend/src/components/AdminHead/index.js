@@ -3,6 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import { Layout, Button, Modal, Badge } from "antd";
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
 import menuList from '../../config/menuConfig';
 import {
   NotificationOutlined,
@@ -20,7 +21,7 @@ class MHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      num:5
+      num:"*"
     }
   }
   message = () => {
@@ -29,12 +30,12 @@ class MHeader extends Component {
   }
   logout = () => {
     confirm({
-      title: '确定要退出登录吗？',
+      title: 'Log out？',
       onOk: () => {
         storageUtils.removeUser();
         // memoryUtils.user = {};
         // this.props.removeUser();
-        this.props.history.replace('/manager');
+        this.props.history.replace('/login');
       },
       onCancel() {
         console.log('Cancel');
@@ -55,12 +56,26 @@ class MHeader extends Component {
     return title;
 
   }
-  load = () => {
-    this.state.num = 5
-  }
-  componentDidMount(){
-    this.load()
-  }
+  getService = async () => {
+
+    let result = await reqMyRequest(storageUtils.getUser().email);
+  //  const response = JSON.stringify(result.data);
+    const user = JSON.parse(result.data)
+    user.return_obj = user.return_obj.filter(item => item.status != 'finished');
+    this.setState({num:user.return_obj.length})
+    console.log("雪豹" + user.return_obj.length);
+    // if (result.code === '100') {
+    //     const { providerList, total } = result.obj;
+    //     this.setState({
+    //         provider: providerList,
+    //         total:total
+    //     })
+    // }
+}
+
+componentDidMount() {
+    this.getService();
+}
 
   render() {
     const user = memoryUtils.user;
@@ -81,7 +96,7 @@ class MHeader extends Component {
             </div>
             <div className='infoButton'>
               <Badge
-                count={num}
+                count=" "
                 size="small">
                 <Button
                   icon={<NotificationOutlined />}

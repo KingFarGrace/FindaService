@@ -1,5 +1,5 @@
 import React, { Component, memo } from 'react'
-import { reqCommentbyId, reqServicebyId, reqDelComment } from '../../api'
+import { reqCommentbyId, reqServicebyId, reqDelComment,updateService,sendRequest } from '../../api'
 import storageUtils from '../../utils/storageUtils'
 import { Card, List, Tooltip, Button, Input } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -17,10 +17,11 @@ export default class newService extends Component {
             {
                 key: memoryUtils.service.key,
                 service: memoryUtils.service.service,
-                category: memoryUtils.service.category,
+                catagory: memoryUtils.service.catagory,
                 area: memoryUtils.service.area,
                 description: memoryUtils.service.description,
-                availability: memoryUtils.service.availabilityde3,
+                price: memoryUtils.service.price,
+                availability: memoryUtils.service.availability,
 
             },
             //经典假数据
@@ -74,7 +75,7 @@ export default class newService extends Component {
         this.setState({ service: updatedService });
     };
 
-    handleSave = () => {
+    handleSave = async() => {
         // Save the updated service data
         // You can make an API call here to save the data to the server
         // For demonstration purposes, let's log the updated service data
@@ -90,45 +91,57 @@ export default class newService extends Component {
             "Electrical maintenance",
             "Beauty"
         ];
-        if (!validCategories.includes(service.category)) {
+        if (!validCategories.includes(service.catagory)) {
             // Display an error message and return without saving
             alert("Please enter a valid category.");
             return;
         }
+        let av = this.state.service.availability
+        if(this.state.service.service!=memoryUtils.service.service||this.state.service.catagory!=memoryUtils.service.catagory||this.state.service.description!=memoryUtils.service.description||this.state.service.area!=memoryUtils.service.area||this.state.service.price!=memoryUtils.service.price){
+            av = false;
+        }
+        else{
+        console.log("Sdau D 的撒大")
+        const request = await updateService(storageUtils.getUser().username,this.state.service.service,this.state.service.catagory,this.state.service.description,this.state.service.area,this.state.service.availability,this.state.service.price);
+        console.log("撒大大"+storageUtils.getUser().username,this.state.service.service,this.state.service.catagory,this.state.service.description,this.state.service.area,this.state.service.availability,this.state.service.price);
+        const ser = service.service
+        const cos = service.price
+        const re = await sendRequest(storageUtils.getUser().username,"admin",{ser,cos},"edit a service","update service")
         this.props.history.push('/provider/servicelist/');
         console.log(this.state.service);
+        }
     };
 
 
-    getService = async () => {
-        console.log('拿到啦' + memoryUtils.service.service);
-        console.log(this.props.match.params.id)
-        //获取当前url结尾（service专属id）
-        const id = this.props.match.params.id;
-        const res = await reqServicebyId(id);
-        console.log(res);
-        if (res.status === 100) {
-            this.setState({ service: res.obj })
-        }
-    }
+    // getService = async () => {
+    //     console.log('拿到啦' + memoryUtils.service.service);
+    //     console.log(this.props.match.params.id)
+    //     //获取当前url结尾（service专属id）
+    //     const id = this.props.match.params.id;
+    //     const res = await reqServicebyId(id);
+    //     console.log(res);
+    //     if (res.status === 100) {
+    //         this.setState({ service: res.obj })
+    //     }
+    // }
 
-    getCommand = async () => {
-        console.log(this.props.match.params.id)
-        //获取当前url结尾（service专属id）
-        const id = this.props.match.params.id;
-        const res = await reqCommentbyId(id);
-        console.log(res);
-        if (res.status === 100) {
-            this.setState({ comment: res.review })
-        }
+    // getCommand = async () => {
+    //     console.log(this.props.match.params.id)
+    //     //获取当前url结尾（service专属id）
+    //     const id = this.props.match.params.id;
+    //     const res = await reqCommentbyId(id);
+    //     console.log(res);
+    //     if (res.status === 100) {
+    //         this.setState({ comment: res.review })
+    //     }
 
-    }
-    componentDidMount() {
+    // }
+    // componentDidMount() {
 
 
-        this.getService();
-        this.getCommand();
-    }
+    //     this.getService();
+    //     this.getCommand();
+    // }
 
     render() {
 
@@ -167,7 +180,7 @@ export default class newService extends Component {
             >
                 <List className="test" bordered itemLayout="horizontal" size="small">
                     <List.Item>
-                        <List.Item.Meta title="Service Name" />
+                        <List.Item.Meta title="Name" />
                         <Input placeholder="Please input your service name" value={service.service} onChange={(e) => this.handleInputChange('service', e)} />
                     </List.Item>
                     <List.Item>
@@ -178,7 +191,7 @@ export default class newService extends Component {
             'Pest Control',
             'Plumbing maintenance',
             'Electrical maintenance', or
-            'Beauty')" value={service.category} onChange={(e) => this.handleInputChange('category', e)} />
+            'Beauty')" value={service.catagory} onChange={(e) => this.handleInputChange('category', e)} />
                     </List.Item>
                     <List.Item>
                         <List.Item.Meta title="Area" />

@@ -8,6 +8,7 @@ import { Comment } from '@ant-design/compatible';
 
 import { Switch, Route } from 'react-router-dom';
 import memoryUtils from '../../utils/memoryUtils';
+import providerUtils from '../../utils/providerUtils';
 
 export default class Detail extends Component {
   constructor(props) {
@@ -15,86 +16,53 @@ export default class Detail extends Component {
     this.state = {
       service:
       {
-        key: '1',
-        service: 'John Brown',
-        category: 'cleaning',
-        area: 'london',
-        description: 'good cleaning services in london, love from UK',
-        availability: 'AVAILABLE',
-
+        key: memoryUtils.service.key,
+        service: memoryUtils.service.service,
+        category: memoryUtils.service.catagory,
+        area: memoryUtils.service.area,
+        description: memoryUtils.service.description,
+        price: memoryUtils.service.price,
+        availability: memoryUtils.service.availability
       },
       //经典假数据
       comment: [
-        {
-          username: 'asjflsafjl',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '2016-11-22 11:22:33',
-        },
-        {
-          username: 'ieauflva',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '2016-11-22 11:22:33',
-        },
-        {
-          username: 'asfwefd',
-          content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-          ,
-          ctime: '2016-11-22 11:22:33',
-        },
-        {//留一个老样式的假数据
-          username: 'asfweasfaw',
-          content: (
-            <p>
-              We supply a series of design principles, practical patterns and high quality design
-              resources (Sketch and Axure), to help people create their product prototypes beautifully and
-              efficiently.
-            </p>
-          ),
-          ctime: (
-            <Tooltip title="2016-11-22 10:22:33">
-              <span>9 hours ago</span>
-            </Tooltip>
-          ),
-
-
-        },
+        
       ]
 
     }
   }
 
-  getService = async () => {
-    console.log('拿到啦' + memoryUtils.service.service);
-    console.log(this.props.match.params.id)
-    //获取当前url结尾（service专属id）
-    const id = this.props.match.params.id;
-    const res = await reqServicebyId(id);
-    console.log(res);
-    if (res.status === 100) {
-      this.setState({ service: res.obj })
-    }
-  }
+  // getService = async () => {
+  //   console.log('拿到啦' + memoryUtils.service.service);
+  //   console.log(this.props.match.params.id)
+  //   //获取当前url结尾（service专属id）
+  //   const id = this.props.match.params.id;
+  //   const res = await reqServicebyId(id);
+  //   console.log(res);
+  //   if (res.status === 100) {
+  //     this.setState({ service: res.obj })
+  //   }
+  // }
 
   getCommand = async () => {
-    console.log(this.props.match.params.id)
-    //获取当前url结尾（service专属id）
-    const id = this.props.match.params.id;
-    const res = await reqCommentbyId(id);
+    // console.log(this.props.match.params.id)
+    // //获取当前url结尾（service专属id）
+   // const id = this.props.match.params.id;
+    const res = await reqCommentbyId(providerUtils.provider.provider,this.state.service.service);
     console.log(res);
-    if (res.status === 100) {
-      this.setState({ comment: res.review })
-    }
+      const user = JSON.parse(res.data)
+      const response = JSON.stringify(res.data);
+      this.setState({comment:user.return_obj})
+      console.log("雪豹" + user.return_obj);
+      console.log("雪豹" + response);
+     // this.setState({ comment: res.review })
+    
 
   }
   componentDidMount() {
 
 
-    this.getService();
+   // this.getService();
     this.getCommand();
   }
 
@@ -103,7 +71,7 @@ export default class Detail extends Component {
     const extra = (
       <Button type='primary' onClick={() => {
 
-        this.props.history.push('/manager/service');
+        this.props.history.push('/manager/providermanage/service/'+memoryUtils.service.id);
       }}
       >
 
@@ -137,40 +105,40 @@ export default class Detail extends Component {
               title="service name"
 
             />
-            {service.service}
+            {this.state.service.service}
           </List.Item>
           <List.Item>
             <List.Item.Meta
-              title="service name"
+              title="Category"
 
             />
-            {service.category}
+            {this.state.service.category}
           </List.Item>
           <List.Item>
             <List.Item.Meta
-              title="service name"
+              title="Area"
             />
-            {service.area}
+            {this.state.service.area}
           </List.Item>
           <List.Item>
             <List.Item.Meta
-              title="service name"
+              title="Description"
 
             />
-            {service.description}
+            {this.state.service.description}
           </List.Item>
           <List.Item>
             <List.Item.Meta
-              title="service name"
+              title="availability"
 
             />
-            {service.availability}
+            {this.state.service.availability}
           </List.Item>
           <List.Item>
             <List.Item.Meta
-              title="service name"
+              title="price"
             />
-            {service.price}
+            {this.state.service.price}
           </List.Item>
         </List>
         <h1> </h1>
@@ -187,6 +155,7 @@ export default class Detail extends Component {
           renderItem={(item) => (
             <li>
               <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{width:'90%'}}>
                 <Comment
                   actions={item.actions}
                   author={item.username}
@@ -200,6 +169,7 @@ export default class Detail extends Component {
                       <span>{item.ctime}</span>
                     </Tooltip>}
                 />
+                </div>
                 <Button type='primary' 
                 style={{
                   backgroundColor:'white',
@@ -211,11 +181,12 @@ export default class Detail extends Component {
                 onClick={async () => {
                   const user = storageUtils.getUser();
                   const adminKey = user.password
-                  const provider = this.state.service.provider
+                  const provider = providerUtils.provider.provider
                   const service = this.state.service.service
                   const username =item.username
+                  console.log("Sdi 是"+adminKey,provider,service,username);
                   const res = await reqDelComment(adminKey, provider, service,username);//把用户名密码传过去，用了ES6的async，await
-                  console.log(res);
+                  this.getCommand()
                   //this.props.history.push('/manager/service');
                 }}
                 >

@@ -1,6 +1,6 @@
 //接口请求函数
 import ajax from './ajax';
-const BASE = 'http://localhost:3000';
+const BASE = '';
 
 //用户名登录
 export const reqLogin_username = (username, password) => {
@@ -67,7 +67,7 @@ export const reqServiceRegister = (email, username, role, password, repeatPwd, d
 
 
 // 获取所有服务
-export const reqServices = (pageNum, pageSize,searchCategory,searchCity) => {
+export const reqServices = (pageNum, pageSize, searchCategory, searchCity) => {
     return ajax(BASE + '/service/info',
         {
             params: {
@@ -130,23 +130,24 @@ export const reqReviewRate = (serviceId) => {
 }
 
 //按service的id获取评论
-export const reqCommentbyId = (serviceId) => {
-    return ajax(BASE + '/review/info',
+export const reqCommentbyId = (provider,service) => {
+    return ajax(BASE + '/review/info?',
         {
             params: {
-                serviceId
+                provider:provider,
+                service:service
             }
         }
     )
 }
 // 订阅服务
 // 等后端通知接口
-export const reqSubscribeService = (email,password,username,role,repeatPwd) => {
+export const reqSubscribeService = (email, password, username, role, repeatPwd) => {
     return ajax.post(BASE + '待修改',
         {
             method: 'POST',
             url: BASE + '/register/customer',
-            data:{
+            data: {
                 email,
                 password,
                 username,
@@ -157,12 +158,12 @@ export const reqSubscribeService = (email,password,username,role,repeatPwd) => {
     )
 }
 
-export const reqAcptServer = (adminKey,provider,service) =>{
+export const reqAcptServer = (adminKey, provider, service) => {
     return ajax(
         {
             method: 'POST',
             url: BASE + '/service/acpt',
-            data:{
+            data: {
                 adminKey,
                 provider,
                 service
@@ -171,12 +172,12 @@ export const reqAcptServer = (adminKey,provider,service) =>{
     )
 }
 
-export const reqDelComment = (adminKey,provider,service,username) =>{
+export const reqDelComment = (adminKey, provider, service, username) => {
     return ajax(
         {
             method: 'POST',
-            url: BASE + '/service/acpt',
-            data:{
+            url: BASE + '/review/rm',
+            data: {
                 adminKey,
                 provider,
                 service,
@@ -186,23 +187,16 @@ export const reqDelComment = (adminKey,provider,service,username) =>{
     )
 }
 
-export const reqRequest = (username) => {
-    return ajax(
-        {
-            method: 'POST',
-            url: BASE + '/request',
-            data: {
-                username,
-            }
-        }
-    )
-}
-export const reqDecServer = (adminKey,provider,service) =>{
+
+
+
+
+export const reqDecServer = (adminKey, provider, service) => {
     return ajax(
         {
             method: 'POST',
             url: BASE + '/service/acpt',
-            data:{
+            data: {
                 adminKey,
                 provider,
                 service
@@ -213,30 +207,16 @@ export const reqDecServer = (adminKey,provider,service) =>{
 
 
 
-export const reqUpdateInformation = (email, username,address,postcode, description) =>{
-    return ajax(
+export const reqUpdateInformation = (email, username, address, postcode, description) => {
+    return ajax(BASE + '/user/update',
         {
-            method: 'POST',
-            url: BASE + '/user/update',
-            data:{
+            method: 'POST', 
+            data: {
                 email,
                 username,
                 address,
                 postcode,
                 description
-            }}）}
-              
-// 订阅服务
-// 等后端通知接口
-export const reqSubscribeService = (userEmail, providerEmail, serviceName, content) => {
-    return ajax.post(BASE + '待修改',
-        {
-
-            data: {
-                userEmail,
-                providerEmail,
-                serviceName,
-                content
             }
         }
     )
@@ -244,9 +224,19 @@ export const reqSubscribeService = (userEmail, providerEmail, serviceName, conte
 
 //获取正在进行的服务    
 export const reqMyRequest = (email) => {
-    return ajax(BASE + '待修改',
+    return ajax(BASE + '/request/receiver?',
         {
-            params: { email }
+            params: { email:email 
+            }
+        }
+    )
+}
+
+export const reqRequest = (email) => {
+    return ajax(BASE + '/request/sender?',
+        {
+            params: { email:email 
+            }
         }
     )
 }
@@ -342,6 +332,91 @@ export const reqRejectRequest = (id, status) => {
     )
 }
 
+export const sendRequest = (sender,receiver,service,content,status) => {
+    return ajax(BASE+'/request/send',
+    {
+        method: 'POST',
+        data:{
+            sender,
+            receiver,
+            service,
+            content,
+            status
+        }
+    }
+    )
+}
+
+export const updateRequest = (_id,content,status) => {
+    return ajax(BASE+'/request/update',
+    {
+        method: 'POST',
+        data:{
+            _id,
+            content,
+            status
+        }
+    }
+    )
+}
+
+export const addService = (provider,service,catagory,description,area,availability,price) => {
+    return ajax(BASE + '/service/add',
+    {
+        method: 'POST',
+        data:{
+            provider,
+            service,
+            catagory,
+            description,
+            area,
+            availability,
+            price
+        }
+    }
+    )
+}
+
+export const acceptPro = (adminKey,email) => {
+    return ajax(BASE + '/user/acpt',
+    {
+        method: 'POST',
+        data:{
+            adminKey,
+            email
+        }
+    }
+    )
+}
+
+export const removePro = (adminKey,email) => {
+    return ajax(BASE + '/user/rm',
+    {
+        method: 'POST',
+        data:{
+            adminKey,
+            email
+        }
+    }
+    )
+}
+
+export const updateService = (provider,service,catagory,description,area,availability,price) => {
+    return ajax(BASE + '/service/update',
+    {
+        method: 'POST',
+        data:{
+            provider,
+            service,
+            catagory,
+            description,
+            area,
+            availability,
+            price
+        }
+    }
+    )
+}
 //用户获取所有消息
 export const reqMessage = (email) => {
 
@@ -354,3 +429,47 @@ export const reqMessage = (email) => {
     )
 
 }
+
+export const reqUserInfo = (username) => {
+    return ajax(BASE + '/user/info?',
+    {
+        params: {
+            username : username
+        }
+    }
+)
+}
+
+export const reqUnProvider = () => {
+    return ajax(BASE + '/user/unavailable',
+    {
+        params: {
+        
+    }
+    }
+)
+}
+
+export const reqLowProvider = () => {
+    return ajax(BASE + '/user/lowLevel',
+    {
+        params: {
+        
+    }
+    }
+)
+}
+
+export const reqProviderService = (provider) => {
+    return ajax(BASE + '/service/info?',
+    {
+        params: {
+            provider : provider
+        }
+    }
+)
+}
+
+
+
+

@@ -3,8 +3,9 @@ import { Button, Card, Input, Select, Space, Table } from 'antd'
 import { useState } from 'react';
 import Icon from '@ant-design/icons/lib/components/Icon';
 import Link from 'antd/es/typography/Link';
-import { reqServices, reqSearchServices,reqProviders } from '../../api';
+import { reqServices, reqSearchServices,reqProviders, sendRequest,reqMyRequest, reqUnProvider, acceptPro, reqRegister, reqRequest, updateRequest, removePro } from '../../api';
 import { useHistory } from 'react-router-dom'
+import storageUtils from '../../utils/storageUtils';
 const PAGE_SIZE = 5;
 const { Search } = Input;
 
@@ -14,7 +15,7 @@ export default class servicemenu extends Component {
         this.columns = [
             {
                 title: 'Service Provider Name',
-                dataIndex: 'name',
+                dataIndex: 'username',
                 width: '15%',
                 align: 'center'
             },
@@ -33,18 +34,6 @@ export default class servicemenu extends Component {
             {
                 title: 'Postcode',
                 dataIndex: 'postcode',
-                width: '10%',
-                align: 'center'
-            },
-            {
-                title: 'Status',
-                dataIndex: 'availability',
-                width: '10%',
-                align: 'center'
-            },
-            {
-                title: 'Negative Review Rate',
-                dataIndex: 'review',
                 width: '10%',
                 align: 'center'
             },
@@ -69,20 +58,72 @@ export default class servicemenu extends Component {
                                   }}
                                 type="primary"
                                 name='judge'
-                                onClick={() => {
-                                    // console.log(service);
-                                //    memoryUtils.service = service;
-                                 //   console.log(service.availability);
-                                   // const operationPath = service.availability === 'true' ? '/manager/service/detail/' : '/manager/service/check/';
-                                    // console.log(this.props.history);
-                                    //跳转详情页面
-                                    
-                              //      memoryUtils.service = service;
-                                    // console.log('看这里'+ memoryUtils.service);
-                             //       this.props.history.push(operationPath + service.id);
+                                onClick={async() => {
+                                    console.log("s撒打算"+storageUtils.getUser().password);
+                                    console.log("的撒覅就"+provider.email);
+                                    let result = await reqRequest(provider.email)
+      //  const response = JSON.stringify(result.data);
+                                    const user = JSON.parse(result.data)
+                                    const id = user.return_obj[0]._id
+                                    const re = await updateRequest(id,"your account is passed","finished")
+                                    //const request = await sendRequest(storageUtils.getUser().email,provider.name,null,"Update your account","");
+                                    const req = await acceptPro(storageUtils.getUser().password,provider.email);
+                                    this.getService()
                                 }}
                             >Accept
                             </Button>
+                            <Button
+                                style={{
+                                    backgroundColor:'white',
+                                    color : 'black',
+                                    margin : 5,
+                                    border: '1px solid red',
+                                    borderColor: 'black',
+                                  }}
+                                type="primary"
+                                name='judge'
+                                onClick={async() => {
+                                    console.log(storageUtils.getUser().email);
+                                    console.log(provider.name);
+                                    let result = await reqRequest(provider.email)
+      //  const response = JSON.stringify(result.data);
+                                    const user = JSON.parse(result.data)
+                                    const id = user.return_obj[0]._id
+                                    const re = await updateRequest(id,"update the user's information","finished")
+                                    this.setState({provider:user.return_obj})
+                                    console.log("雪豹" + user.return_obj[0].username);
+                    
+                                    const request = await sendRequest(storageUtils.getUser().email,provider.name,null,"Update your account","Updated");
+                                    this.getService()
+                                }}
+                            >Needs for Update
+                            </Button>
+                            {/* <Button
+                                style={{
+                                    backgroundColor:'white',
+                                    color : 'black',
+                                    margin : 5,
+                                    border: '1px solid red',
+                                    borderColor: 'black',
+                                  }}
+                                type="primary"
+                                name='judge'
+                                onClick={async() => {
+                                    console.log("awed我"+storageUtils.getUser().password);
+                                    console.log("打"+provider.email);
+                                    let result = await reqRequest(provider.email)
+      //  const response = JSON.stringify(result.data);
+                                    const user = JSON.parse(result.data)
+                                    const id = user.return_obj[0]._id
+                                    const re = await updateRequest(id,"your account was rejected","finished")
+                                    this.setState({provider:user.return_obj})
+                                    console.log("雪豹" + user.return_obj[0].username);
+                                    const req = await removePro(storageUtils.getUser().password,provider.email)
+                                    const request = await sendRequest(storageUtils.getUser().email,provider.name,null,"Your account was rejected","Rejected");
+                                    this.getService()
+                                }}
+                            >Refuse
+                            </Button> */}
                         </div>
                     )
                 }
@@ -117,83 +158,6 @@ export default class servicemenu extends Component {
         super()
         this.state = {
             provider: [
-                {
-                    key: '1',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'true',
-                    review: '20%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'false',
-                    review: '2%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '3',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'true',
-                    review: '0%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '4',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'true',
-                    review: '20%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '5',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'true',
-                    review: '20%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '6',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    postcode:'123213',
-                    availability: 'true',
-                    review: '20%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
-                {
-                    key: '7',
-                    name: 'John Brown',
-                    description:'good company',
-                    address: 'New York No. 1 Lake Park',
-                    availability: 'true',
-                    postcode:'123213',
-                    review: '20%',
-                    id:'asjdflkawjefl'
-                    //每个数据一个id
-                },
             ],
             //假数据
             total: 0 //总页数
@@ -201,32 +165,38 @@ export default class servicemenu extends Component {
     }
 
     获取分页
-    getService = async (pageNum) => {
+    getService = async () => {
 
-        let result = await reqProviders(pageNum, PAGE_SIZE);
-        if (result.code === '100') {
-            const { providerList, total } = result.obj;
-            this.setState({
-                provider: providerList,
-                total:total
-            })
-        }
+        let result = await reqUnProvider();
+      //  const response = JSON.stringify(result.data);
+        const user = JSON.parse(result.data)
+        this.setState({provider:user.return_obj})
+        console.log("雪豹" + user.return_obj[0].username);
+       
+        // if (result.code === '100') {
+        //     const { providerList, total } = result.obj;
+        //     this.setState({
+        //         provider: providerList,
+        //         total:total
+        //     })
+        // }
     }
     componentWillMount() {
         this.initColumns();
       }
 
     componentDidMount() {
-        this.getService(1);
+        this.getService();
     }
 
     render() {
-        const {provider, total } = this.state;
+        let {provider, total } = this.state;
         // const onSearch = (value) => {
         //     console.log(value)
         //     console.log(this.state.selectType)
         // };
         // const {selectType} = this.state;
+        //provider = provider.filter(item => item.status === 'new account');
         return (
             <>
 

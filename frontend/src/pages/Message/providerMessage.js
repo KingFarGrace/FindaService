@@ -1,62 +1,50 @@
 import React, { Component } from 'react'
 import { Avatar, List, Card, Button, Collapse } from 'antd';
-
+import { reqServices, reqSearchServices,reqProviders, reqMyRequest, sendRequest, updateRequest } from '../../api';
+import { useHistory } from 'react-router-dom'
+import storageUtils from '../../utils/storageUtils';
 
 const { Panel } = Collapse;
-const data = [
-    {
-        serviceProviderName: 'Service provider 2',
-        serviceName:'service name 2'
-        ,serviceStatus:'service subscribe submitted'
-        ,serviceContent:'A pig is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
-    {
-        serviceProviderName: 'Service provider 2',
-        serviceName:'service name 2'
-        ,serviceStatus:'service requested update'
-        ,serviceContent:'A rat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
-    {
-        serviceProviderName: 'Service provider 3',
-        serviceName:'service name 3'
-        ,serviceStatus:'service accomplish'
-        ,serviceContent:'A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
-    {
-        serviceProviderName: 'Service provider 4',
-        serviceName:'service name'
-        ,serviceStatus:'service requested update'
-        ,serviceContent:'A cat is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
-    {
-        serviceProviderName: 'Service provider 5',
-        serviceName:'service name'
-        ,serviceStatus:'service subscribe submitted'
-        ,serviceContent:'A turtle is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
-    {
-        serviceProviderName: 'Service provider 6',
-        serviceName:'service name'
-        ,serviceStatus:'service accomplish'
-        ,serviceContent:'A phynix is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.'
-        ,key:'1'
-        ,serviceOrderNumber:'A11111122222'
-    },
 
-];
+
+
+
 export default class Message extends Component {
+    constructor() {
+        super()
+        this.state = {
+            data: [
+                {
+                }
+            ],
+            //假数据
+      //      total: 0 //总页数
+        }
+    }
+    getService = async () => {
+
+        let result = await reqMyRequest(storageUtils.getUser().email);
+      //  const response = JSON.stringify(result.data);
+        const user = JSON.parse(result.data)
+        this.setState({data:user.return_obj})
+        console.log("雪豹" + user.return_obj[0].service.name);
+       
+        // if (result.code === '100') {
+        //     const { providerList, total } = result.obj;
+        //     this.setState({
+        //         provider: providerList,
+        //         total:total
+        //     })
+        // }
+    }
+
+    componentDidMount() {
+        this.getService();
+    }
 
     render() {
+        let {data} = this.state;
+        data = data.filter(item => item.status === 'pending');
         const extra = (
             <Button type='primary' onClick={() => {
 
@@ -82,8 +70,8 @@ export default class Message extends Component {
                             extra={extra}
                         >
                             <List.Item.Meta
-                                avatar={<Avatar src={"https://robohash.org/" + item.serviceProviderName + "?set=set4"} />}
-                                title={item.serviceProviderName}
+                                avatar={<Avatar src={"https://robohash.org/" + item.sender + "?set=set4"} />}
+                                title={item.sender}
                                 description=
                                 {
                                 <Collapse
@@ -93,26 +81,27 @@ export default class Message extends Component {
 
                                         <p style={{paddingLeft: 0,}}
                                          >
-                                            {item.serviceName}
+                                            {item.sender.name}
                                         </p>
                                         <p style={{paddingLeft: 0,}}
                                          >
-                                            Order number : {item.serviceOrderNumber}
+                                            Hi, Here is a service request
                                         </p>
                                         <p style={{paddingLeft: 0,}}
                                          >
-                                            Hi, your service status has been updated.
+                                            Content : {item.content}
                                         </p>
+                                        
 
                                     <Panel 
-                                    header={item.serviceStatus} 
+                                    header={item.status} 
                                     key="2"
                                     >
                                         <p style={{paddingLeft: 24,}} >
-                                            {item.serviceProviderName} : 
+                                            {item.service.name} : 
                                         </p>
                                         <p style={{paddingLeft: 24,}} >
-                                            {item.serviceContent}
+                                            {item.service.cost}
                                         </p>
                                     </Panel>
                                 </Collapse>

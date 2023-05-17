@@ -19,6 +19,7 @@ import providermenu from '../ProviderMenu/AdminServiceMenu'
 import Userinfo from '../Userinfo/userinfo';
 import MHeader from '../../components/ProviderHead/index';
 import Message from '../Message/providerMessage';
+import finish from '../servicefinish/servicefinish'
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -53,7 +54,8 @@ const App = () => {
           <Switch>
             <Route path='/provider/providerhome' component={Home}></Route>   
             <Route path='/provider/servicelist' component={providermenu}></Route>  
-            <Route path='/provider/servicerequest' component={providermanager}></Route>  
+            <Route path='/provider/servicerequest' component={providermanager}></Route> 
+            <Route path='/provider/servicefinish' component={finish}></Route>  
             <Route path='/provider/message' component={Message}></Route>  
             <Redirect to='/provider/providerhome' />
           </Switch>
