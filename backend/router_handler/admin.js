@@ -42,7 +42,7 @@ function rmUser(req, res) {
     setUserStatus(req, res, false)
 }
 
-function activareService(req, res) {
+function activateService(req, res) {
     var body = req.body
     userModel.findOne({ role: 'admin', password: body.adminKey }).then((data, err) => {
         if (err) return rtnJson(
@@ -75,6 +75,21 @@ function activareService(req, res) {
                 ' provider: ' + body.provider + ' service: ' + body.service
             )
         })
+    })
+}
+
+function getUnavailableServices(req, res) {
+    serviceModel.find({ available: false }).then((data, err) => {
+        if (err) return rtnJson(
+            res,
+            failRtn.dbOperationError
+        )
+        return rtnJson(
+            res,
+            successRtn.retrieve,
+            ':unavailable service',
+            data
+        )
     })
 }
 
@@ -175,7 +190,8 @@ function getLowLevelProviders(req, res) {
 module.exports = {
     activateUser: activateUser,
     rmUser: rmUser,
-    activareService: activareService,
+    activateService: activateService,
+    getUnavailableServices: getUnavailableServices,
     rmReviews: rmReviews,
     getUnavailableUsers: getUnavailableUsers,
     getLowLevelProviders: getLowLevelProviders
