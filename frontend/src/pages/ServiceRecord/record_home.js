@@ -85,8 +85,9 @@ export default class Servicerecord extends Component {
                                         onOk: () => {
 
                                             this.onCancel();
-                                            // this.props.history.replace('/record');
-                                            message.success('cancel successfully');
+                                            window.location.reload()
+                                            //this.props.history.replace('/record');
+                                              message.success('cancel successfully');
                                         },
                                         onCancel() {
                                             console.log('Cancel');
@@ -125,16 +126,17 @@ export default class Servicerecord extends Component {
         let user = memoryUtils.user
         //把用户数据拿出来存起来
         let request = memoryUtils.request
-        this.serviceId = request.id
+        this.serviceId = request._id
         // const content = this.inputValue;
         const content = '';
         const userEmail = this.userEmail;
         const providerEmail = this.serviceEmail;
         const serviceName = this.serviceName;
         const id = this.serviceId;
-        const status = 'rejected'
+        console.log('id'+ id)
+        const status = 'completed'
         console.log(id, status)
-        const res = await reqRejectRequest(id, status);
+        const res = await reqUpdateRequest(id,null,status);
 
     }
 
@@ -151,105 +153,6 @@ export default class Servicerecord extends Component {
         super()
         this.state = {
             requests: [
-                {
-                    key: '1',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'true',
-                    id: '1',
-                    email: 'abc@qq.com',
-                    status: 'further details requested',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                    //每个数据一个id
-                },
-                {
-                    key: '2',
-                    catagory: 'cleaning',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    area: 'london',
-                    availability: 'true',
-                    id: '2',
-                    email: 'abc@qq.com',
-                    status: 'pending for agree',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
-                {
-                    key: '3',
-                    service: 'AAA',
-                    catagory: 'FFF',
-                    description: 'SDFSFSFSFf',
-                    area: 'CCC',
-                    availability: 'false',
-                    id: '3',
-                    email: 'abc@qq.com',
-                    status: 'need new info',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
-                {
-                    key: '4',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: '4',
-                    email: 'abc@qq.com',
-                    status: 'further details requested',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
-                {
-                    key: '5',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    status: 'active',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
-                {
-                    key: '6',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    status: 'active',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
-                {
-                    key: '7',
-                    service: 'John Brown',
-                    description: 'abcdasdfjaldkf',
-                    catagory: 'cleaning',
-                    area: 'london',
-                    availability: 'true',
-                    id: 'asdfasdklfjskl',
-                    email: 'abc@qq.com',
-                    status: 'active',
-                    email: 'abc@qq.com',
-                    provider: 'John Brown',
-                    price: '15£'
-                },
             ],
             //假数据
             total: 0 //总页数
@@ -280,7 +183,10 @@ export default class Servicerecord extends Component {
         this.getService();
 
     }
-
+    shouldComponmentUpdate(){
+        this.dataPreparation();
+        this.getService();
+    }
     render() {
         const { requests } = this.state;
         console.log(JSON.stringify(requests))

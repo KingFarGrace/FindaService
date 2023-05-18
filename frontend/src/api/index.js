@@ -140,11 +140,11 @@ export const reqCommentbyId = (provider,service) => {
     )
 }
 //获取评论
-export const reqComment = (provider, service) => {
+export const reqComment = (in_provider, in_service) => {
     return ajax(BASE + '/review/info?', {
         params: {
-            provider: provider,
-            service: service
+            provider:in_provider,
+            service:in_service
         }
     })
 }
