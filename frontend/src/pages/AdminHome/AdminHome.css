@@ -1,0 +1,15 @@
+  .content {
+    background-color: #fff;
+    border-radius: 5px;
+    height: 750px;
+    padding: 24px;
+    min-height: 200px;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+
+  
+ 

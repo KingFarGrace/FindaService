@@ -1,0 +1,60 @@
+  .content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    height: 750px;
+  }
+    
+  .personal-info {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .info-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .label {
+    min-width: 80px;
+  }
+  
+  .value {
+    flex-grow: 1;
+    margin-left: 10px;
+    position: relative;
+  }
+  
+  input[type='text'] {
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+  }
+  
+  .value span {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .value span:hover {
+    text-decoration: underline;
+  }
