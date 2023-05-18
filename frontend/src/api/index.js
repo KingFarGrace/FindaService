@@ -140,11 +140,11 @@ export const reqCommentbyId = (provider,service) => {
     )
 }
 //获取评论
-export const reqComment = (provider, service) => {
+export const reqComment = (in_provider, in_service) => {
     return ajax(BASE + '/review/info?', {
         params: {
-            provider: provider,
-            service: service
+            provider:in_provider,
+            service:in_service
         }
     })
 }
@@ -302,8 +302,8 @@ export const reqMyMessage = (in_email) => {
 export const reqHistoryRequest = (in_email) => {
     return ajax(BASE + '/request/history?',
         {
-            params: { 
-                email:in_email
+            params: {
+                email: in_email
             }
         }
     )
@@ -379,7 +379,7 @@ export const reqUpdateRequest = (in_id, in_content, in_status) => {
             data: {
                 _id: in_id,
                 content: in_content,
-                status: in_status   
+                status: in_status
             }
         }
     )
@@ -575,6 +575,47 @@ export const getunService = () => {
     return ajax(BASE + '/service/unavailable',
         {
             params: {
+            }
+        }
+    )
+}
+
+export const reqEditUser_password = (
+
+    email,
+    
+    oldPwd,
+    newPwd,
+    repeatNewPwd) => {
+    return ajax(BASE + '/pwd/update',
+        {
+            method: 'POST',
+            data: {
+
+                    email,
+                
+                oldPwd,
+                newPwd,
+                repeatNewPwd
+            }
+        }
+    )
+}
+
+export const reqEditUser_info = (email,
+    username,
+    address,
+    postcode,
+    description) => {
+    return ajax(BASE + '/user/update',
+        {
+            method: 'POST',
+            data: {
+                email,
+                username,
+                address,
+                postcode,
+                description
             }
         }
     )

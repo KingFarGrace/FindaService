@@ -5,7 +5,8 @@ import emailjs from 'emailjs-com'
 
 
 import { useHistory } from 'react-router-dom';
-import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService } from '../../api';
+import { reqServiceRegister, reqRegister, reqProviderRegister, reqAddService} from '../../api';
+
 import {
   AutoComplete,
   Button,
@@ -119,18 +120,21 @@ const sendEmail = () => {
       const res = JSON.parse(res_json.data);
       console.log(res);
       if (res.code === 110) {
+        
         openNotification();
         sendrequest(email)
         history.replace('/login')
       } else {
         message.error(res.msg);
-
       }
     }
   };
+
   const sendrequest = async (email) => {
-    const res = await reqAddService(email, 'admin@admin.com', null, null, null, 'newaccount')
+    const res = await reqAddService(email,'admin@admin.com',null,null,null,'newaccount')
   }
+
+
   const handleRoleChange = (e) => {
     const roleValue = e.target.value;
     setShowDescription(roleValue === 'serviceProvider');

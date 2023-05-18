@@ -60,6 +60,7 @@ export default class History_detail extends Component {
             onOk: () => {
                 this.onSubmit();
                 const id = this.props.match.params.id;
+                
                 this.props.history.push('/history/comment/' + id);
                 //前后端连上把注释去掉
                 

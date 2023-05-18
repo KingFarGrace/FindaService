@@ -85,8 +85,9 @@ export default class Servicerecord extends Component {
                                         onOk: () => {
 
                                             this.onCancel();
-                                            // this.props.history.replace('/record');
-                                            message.success('cancel successfully');
+                                            window.location.reload()
+                                            //this.props.history.replace('/record');
+                                              message.success('cancel successfully');
                                         },
                                         onCancel() {
                                             console.log('Cancel');
@@ -125,16 +126,17 @@ export default class Servicerecord extends Component {
         let user = memoryUtils.user
         //把用户数据拿出来存起来
         let request = memoryUtils.request
-        this.serviceId = request.id
+        this.serviceId = request._id
         // const content = this.inputValue;
         const content = '';
         const userEmail = this.userEmail;
         const providerEmail = this.serviceEmail;
         const serviceName = this.serviceName;
         const id = this.serviceId;
-        const status = 'rejected'
+        console.log('id'+ id)
+        const status = 'completed'
         console.log(id, status)
-        const res = await reqRejectRequest(id, status);
+        const res = await reqUpdateRequest(id,null,status);
 
     }
 
@@ -151,7 +153,6 @@ export default class Servicerecord extends Component {
         super()
         this.state = {
             requests: [
-              
             ],
             //假数据
             total: 0 //总页数
@@ -182,7 +183,10 @@ export default class Servicerecord extends Component {
         this.getService();
 
     }
-
+    shouldComponmentUpdate(){
+        this.dataPreparation();
+        this.getService();
+    }
     render() {
         const { requests } = this.state;
         console.log(JSON.stringify(requests))

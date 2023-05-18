@@ -15,7 +15,8 @@ import {
 } from 'antd';
 import './userinfo_edit.css'
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { reqEditUser } from '../../api';
+import { reqEditUser_info } from '../../api';
+import memoryUtils from '../../utils/memoryUtils';
 
 const { confirm } = Modal;
 export default class Userinfo_edit extends Component {
@@ -24,9 +25,9 @@ export default class Userinfo_edit extends Component {
         confirm({
             title: 'Do you sure you want to change your imformation?',
             onOk: () => {
-                console.log('Received values of form: ', values.email, values.username, values.address, values.postcode, values.description)
-                const res = reqEditUser(values.email, values.username, values.address, values.postcode, values.description);
-                this.props.history.push('/user');
+                console.log('Received values of form: ',  values.address, values.postcode, values.description)
+                this.setInfo(values.address, values.postcode, values.description)
+                // this.props.history.push('/user');
                 //前后端连上把注释去掉
                 message.success('submitted successfully');
             },
@@ -34,6 +35,23 @@ export default class Userinfo_edit extends Component {
                 console.log('Cancel');
             },
         });
+    }
+    setInfo = async (
+        address,
+        postcode,
+        description) => {
+
+            let user = memoryUtils.user
+            const email =user.email
+            const username = user.username
+            console.log(email, username)
+        const res = await reqEditUser_info(email,
+            username,
+            address,
+            postcode,
+            description)
+            console.log(res)
+
     }
 
     render() {
