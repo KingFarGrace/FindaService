@@ -20,7 +20,6 @@ const App = () => {
     // // 跳转测试,实际用的应该replace好一些，因为replace没有后退，push有。
     // console.log('Received values of form: ', values);
     // message.success('login successfully')
-
     // const { email, password } = values;
     // const res_json = await reqLogin_email(email, password);//把用户名密码传过去，用了ES6的async，await
     // console.log("芝士res" + res_json.data);
@@ -53,22 +52,30 @@ const App = () => {
     if (res.code === 100) {
       const user = res.userInfo;
       storageUtils.saveUser(res.return_obj);
+      console.log("跳1")
       // 跳转到导航页面
       if (res.return_obj.role === "customer") {
+        console.log("跳2")
         history.replace('/')
         message.success('login successfully')
       } else if (res.return_obj.role === "admin") {
         history.replace('/manager')
         message.success('login successfully')
       } else if (res.return_obj.role === "serviceProvider") {
+        console.log("跳3")
+        console.log(JSON.stringify(res.return_obj))
+        console.log("Available:", res.return_obj.available);
         if (res.return_obj.available ) {
+          console.log("跳4")
           history.replace('/provider')
           message.success('login successfully')
         }
         else {
+          console.log("跳5")
           history.replace('/waitProvider')
           message.info('Require further information')
         }
+        
       }
     } else {
       message.error(res.msg);
@@ -88,22 +95,30 @@ const App = () => {
     if (res.code === 100) {
       const user = res.userInfo;
       storageUtils.saveUser(res.return_obj);
+      console.log("跳1")
       // 跳转到导航页面
       if (res.return_obj.role === "customer") {
+        console.log("跳2")
         history.replace('/')
         message.success('login successfully')
       } else if (res.return_obj.role === "admin") {
         history.replace('/manager')
         message.success('login successfully')
       } else if (res.return_obj.role === "serviceProvider") {
+        console.log("跳3")
+        console.log(JSON.stringify(res.return_obj))
+        console.log("Available:", res.return_obj.available);
         if (res.return_obj.available ) {
+          console.log("跳4")
           history.replace('/provider')
           message.success('login successfully')
         }
         else {
+          console.log("跳5")
           history.replace('/waitProvider')
           message.info('Require further information')
         }
+        
       }
     } else {
       message.error(res.msg);
